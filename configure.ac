@@ -56,7 +56,7 @@ fi
 AC_SUBST([guilesitedir])
 
 AC_CONFIG_FILES([Makefile build-aux/am/Makefile build-aux/Makefile tests/Makefile])
-AC_CONFIG_FILES([doc/Makefile build-aux/m4/Makefile modules/Makefile modules/deck/Makefile])
+AC_CONFIG_FILES([build-aux/m4/Makefile modules/deck/Makefile])
 
 dnl texinfo package required to make the documentation in Texinfo format.
 AC_CHECK_PROG(MAKEINFO_CHECK, makeinfo, yes)
