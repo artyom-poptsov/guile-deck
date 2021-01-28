@@ -1,5 +1,6 @@
 (define-module (deck core types matrix-id)
   #:use-module (oop goops)
+  #:use-module (srfi srfi-1)
   #:export (<matrix-id>
             matrix-id-type
             matrix-id-identity
