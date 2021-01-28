@@ -1,4 +1,4 @@
-(define-module (matrix core types matrix-content-uri)
+(define-module (deck core types matrix-content-uri)
   #:use-module (oop goops)
   #:export (<matrix-content-uri>
             matrix-content-uri-server
