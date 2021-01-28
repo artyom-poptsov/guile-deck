@@ -1,13 +1,15 @@
 (define-module (deck core types matrix-id)
   #:use-module (oop goops)
   #:use-module (srfi srfi-1)
+  #:use-module (ice-9 regex)
   #:export (<matrix-id>
             matrix-id-type
             matrix-id-identity
             matrix-id-server
             matrix-type->char
             char->matrix-type
-            matrix-id->string))
+            matrix-id->string
+            string->matrix-id))
 
 
 (define %type-mapping
@@ -54,9 +56,13 @@
 
 (define-method (string->matrix-id (string <string>))
   (let ((type     (char->matrix-type (string-ref string 0)))
-        (identity (string-match "/.?([^:]+):.*/" string))
-        (server   (string-match "/.?[^:]+:(.*)/" string)))
-    (if (and type id server)
+        (identity (let ((m (string-match ".?([^:]+):.*" string)))
+                    (and m
+                         (match:substring m 1))))
+        (server   (let ((m (string-match ".?[^:]+:(.*)" string)))
+                    (and m
+                         (match:substring m 1)))))
+    (if (and type identity server)
         (make <matrix-id>
           #:type       type
           #:identity   identity
