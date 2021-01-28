@@ -18,7 +18,8 @@
 ## along with Guile-Deck.  If not, see <http://www.gnu.org/licenses/>.
 
 SCM_TESTS = \
-	matrix-id.scm
+	matrix-id.scm	\
+	http-client.scm
 
 TESTS = ${SCM_TESTS}
 
