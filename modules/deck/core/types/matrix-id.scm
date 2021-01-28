@@ -38,9 +38,9 @@
 
 
 (define-method (matrix-type->char (identity <symbol>))
-  (let ((result (find (find (lambda (e) (equal? (cdr e) 'user)) %type-mapping))))
+  (let ((result (find (lambda (e) (equal? (cdr e) identity)) %type-mapping)))
     (and result
-         (cdr result))))
+         (car result))))
 
 (define-method (char->matrix-type (ch <char>))
   (assoc-ref %type-mapping ch))
