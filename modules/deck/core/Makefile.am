@@ -22,7 +22,8 @@ include $(top_srcdir)/build-aux/am/guilec
 SUBDIRS = types net
 
 SOURCES = \
-	room.scm
+	room.scm	\
+	error.scm
 
 GOBJECTS = $(SOURCES:%.scm=%.go)
 moddir=$(guilesitedir)/deck/core/
