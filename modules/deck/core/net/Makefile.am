@@ -20,7 +20,7 @@
 include $(top_srcdir)/build-aux/am/guilec
 
 SOURCES = \
-	http-client.scm
+	client.scm
 
 GOBJECTS = $(SOURCES:%.scm=%.go)
 moddir=$(guilesitedir)/deck/core/net/
