@@ -3,3 +3,9 @@
 # Guile-Deck
 
 GNU Guile SDK for the Matrix network ([[https://matrix.org]])
+
+* Requirements
+  - Guile 2.2
+  - Guile-JSON
+  - Guile-GCrypt
+  - Guile-Gnutls
