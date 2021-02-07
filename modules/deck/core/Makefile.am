@@ -23,7 +23,8 @@ SUBDIRS = types net
 
 SOURCES = \
 	room.scm	\
-	error.scm
+	error.scm	\
+	mac.scm
 
 GOBJECTS = $(SOURCES:%.scm=%.go)
 moddir=$(guilesitedir)/deck/core/
