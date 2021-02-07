@@ -6,7 +6,8 @@
   #:export (<session>
             session-user-id
             session-token
-            session-create-room))
+            session-create-room
+            session-join-room))
 
 
 (define-class <session> ()
@@ -59,5 +60,15 @@
     (make <room>
       #:id    (string->matrix-id (assoc-ref result "room_id"))
       #:alias (assoc-ref result "room_alias"))))
+
+(define-method (session-join-room (session <session>)
+                                  (room-id <matrix-id>))
+  (let* ((query  `(("access_token" . ,(session-token session))))
+         (result (client-post (session-client session)
+                              (string-append "/_matrix/client/r0/join/"
+                                             (matrix-id->string room-id))
+                              '()
+                              #:query query)))
+    (make <room> #:id room-id)))
 
 
