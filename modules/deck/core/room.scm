@@ -3,6 +3,7 @@
   #:use-module (deck core types matrix-id)
   #:use-module (deck core types matrix-content-uri)
   #:export (<room>
+            room?
             room-alias
             room-id))
 
@@ -38,5 +39,10 @@
 (define-method (write (room <room>))
   (next-method)
   (display room (current-output-port)))
+
+
+
+(define-method (room? object)
+  (is-a? object <room>))
 
 
