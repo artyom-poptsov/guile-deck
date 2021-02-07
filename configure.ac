@@ -47,8 +47,6 @@ GUILE_PKG([3.0 2.0 2.2])
 GUILE_PROGS
 GUILE_SITE_DIR
 
-GUILE_MODULE_REQUIRED([string transform])
-
 pkgdatadir="$datadir/$PACKAGE"
 if test "x$guilesitedir" = "x"; then
    guilesitedir="$pkgdatadir"
