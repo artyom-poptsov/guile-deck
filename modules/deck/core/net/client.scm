@@ -35,7 +35,7 @@
 (define* (client-get client
                      resource
                      #:key
-                     (query #f))
+                     (query '()))
   (let* ((server (client-server-uri client))
          (uri    (build-uri (uri-scheme server)
                             #:host   (uri-host server)
@@ -50,7 +50,7 @@
 
 (define* (client-post client resource body
                       #:key
-                      (query #f))
+                      (query '()))
   (let* ((server (client-server-uri client))
          (uri    (build-uri (uri-scheme server)
                             #:host   (uri-host server)
