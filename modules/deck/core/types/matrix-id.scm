@@ -3,6 +3,7 @@
   #:use-module (srfi srfi-1)
   #:use-module (ice-9 regex)
   #:export (<matrix-id>
+            matrix-id?
             matrix-id-type
             matrix-id-identity
             matrix-id-server
@@ -70,3 +71,6 @@
         (error "Wrong matrix ID"))))
 
 
+
+(define (matrix-id? object)
+  (is-a? object <matrix-id>))
