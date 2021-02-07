@@ -5,13 +5,16 @@
   #:use-module (json)
   #:use-module (web uri)
   #:use-module (deck core net client)
+  #:use-module (deck core types matrix-id)
   #:use-module (deck core mac)
+  #:use-module (deck core session)
   #:export (<matrix>
             matrix-shared-secret
             matrix-server
             matrix-versions
             matrix-debug-mode?
             matrix-register
+            matrix-login
             matrix-request-nonce))
 
 
@@ -89,3 +92,23 @@
     (client-post (matrix-client matrix)
                  "/_matrix/client/r0/admin/register"
                  body)))
+
+
+;; Try to authenticate on the Matrix server with the given credentials.
+;; Return a new session instance.
+(define-method (matrix-login (matrix   <matrix>)
+                             (type     <string>)
+                             (user     <string>)
+                             (password <string>))
+  (let ((response (client-post (matrix-client matrix)
+                               "/_matrix/client/r0/login"
+                               `((type     . ,type)
+                                 (user     . ,user)
+                                 (password . ,password)))))
+    (unless response
+      (error "Could not authenticate"))
+    (format #f "matrix-login: response: ~a~%" response)
+    (make <session>
+      #:user-id (string->matrix-id (assoc-ref response "user_id"))
+      #:token   (assoc-ref response "access_token"))))
+
