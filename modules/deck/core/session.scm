@@ -7,7 +7,8 @@
             session-user-id
             session-token
             session-create-room
-            session-join-room))
+            session-join-room
+            session-joined-rooms))
 
 
 (define-class <session> ()
@@ -70,5 +71,15 @@
                               '()
                               #:query query)))
     (make <room> #:id room-id)))
+
+(define-method (session-joined-rooms (session <session>))
+  (let* ((query `(("access_token" . ,(session-token session))))
+         (result (client-get (session-client session)
+                              "/_matrix/client/r0/joined_rooms"
+                              #:query query)))
+    (unless result
+      (error "Could not get the list of joined rooms"))
+    (map (lambda (id) (make <room> #:id id))
+         (vector->list (assoc-ref result "joined_rooms")))))
 
 
