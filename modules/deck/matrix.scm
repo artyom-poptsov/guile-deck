@@ -47,9 +47,11 @@
 
 
 
+;; Gets the versions of the specification supported by the server.
 (define-method (matrix-versions (matrix <matrix>))
   (client-get (matrix-client matrix) "/_matrix/client/versions"))
 
+;; Get 'nonce' hash from a server.
 (define-method (matrix-request-nonce (matrix <matrix>))
   (let ((result (client-get (matrix-client matrix)
                             "/_matrix/client/r0/admin/register")))
@@ -68,6 +70,7 @@
                           "notadmin"))))
 
 
+;; Register a new user on the MATRIX server with the specified password.
 (define* (matrix-register matrix user password
                           #:key
                           (admin?    #f)
