@@ -63,7 +63,7 @@
                              body
                              #:query query)))
     (make <room>
-      #:id    (string->matrix-id (assoc-ref result "room_id"))
+      #:id    (assoc-ref result "room_id")
       #:alias (assoc-ref result "room_alias"))))
 
 (define-method (session-join-room (session <session>)
@@ -83,7 +83,7 @@
                               #:query query)))
     (unless result
       (error "Could not get the list of joined rooms"))
-    (map (lambda (id) (make <room> #:id (string->matrix-id id)))
+    (map (lambda (id) (make <room> #:id id))
          (vector->list (assoc-ref result "joined_rooms")))))
 
 
