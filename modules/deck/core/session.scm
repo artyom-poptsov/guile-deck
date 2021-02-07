@@ -4,6 +4,7 @@
   #:use-module (deck core room)
   #:use-module (deck core net client)
   #:export (<session>
+            session?
             session-user-id
             session-token
             session-create-room
@@ -49,6 +50,9 @@
   (display session (current-output-port)))
 
 
+
+(define (session? object)
+  (is-a? object <session>))
 
 (define-method (session-create-room (session <session>)
                                     (name    <string>))
