@@ -12,7 +12,8 @@
             room-session
             room-invite
             room-join
-            room-leave))
+            room-leave
+            room-messages))
 
 
 
@@ -128,6 +129,31 @@
                               #:query query)))
     result))
 
+(define* (room-messages room
+                        #:key
+                        (limit  10)
+                        (from   #f)
+                        (to     #f)
+                        (filter #f))
+  (unless (session-token (room-session room))
+    (error "Not logged in"))
+  (let* ((query  `(("access_token" . ,(session-token (room-session room)))
+                   ("limit"        . ,(number->string limit))))
+         (query  (if from
+                     (acons "from" from query)
+                     query))
+         (query  (if to
+                     (acons "to" to query)
+                     query))
+         (query  (if filter
+                     (acons "filter" filter query)
+                     query))
+         (body   `())
+         (result (client-get (session-client (room-session room))
+                             (format #f "/_matrix/client/r0/rooms/~a/messages"
+                                     (matrix-id->string (room-id room)))
+                             #:query query)))
+    result))
 
 
 
