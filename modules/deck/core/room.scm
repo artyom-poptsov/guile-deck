@@ -87,7 +87,7 @@
 (define-method (room-invite (room    <room>)
                             (user-id <matrix-id>))
   (unless (session-token (room-session room))
-    (error "Not logged it"))
+    (error "Not logged in"))
   (let* ((query  `(("access_token" . ,(session-token (room-session room)))))
          (body   `(("user_id"      . ,(matrix-id->string user-id))))
          (result (client-post (session-client (room-session room))
