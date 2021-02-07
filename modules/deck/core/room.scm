@@ -10,7 +10,8 @@
             room-alias
             room-id
             room-session
-            room-invite))
+            room-invite
+            room-join))
 
 
 
@@ -99,6 +100,20 @@
 (define-method (room-invite (room    <room>)
                             (user-id <string>))
   (room-invite room (string->matrix-id user-id)))
+
+
+
+(define-method (room-join (room <room>))
+  (unless (session-token (room-session room))
+    (error "Not logged in"))
+  (let* ((query  `(("access_token" . ,(session-token (room-session room)))))
+         (body   `())
+         (result (client-post (session-client (room-session room))
+                              (format #f "/_matrix/client/r0/rooms/~a/join"
+                                      (matrix-id->string (room-id room)))
+                              body
+                              #:query query)))
+    result))
 
 
 
