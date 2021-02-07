@@ -9,7 +9,8 @@
             session-token
             session-create-room
             session-join-room
-            session-joined-rooms))
+            session-joined-rooms
+            session-logout))
 
 
 (define-class <session> ()
@@ -85,5 +86,13 @@
       (error "Could not get the list of joined rooms"))
     (map (lambda (id) (make <room> #:id id))
          (vector->list (assoc-ref result "joined_rooms")))))
+
+(define-method (session-logout (session <session>))
+  (let* ((query `(("access_token" . ,(session-token session))))
+         (result (client-post (session-client session)
+                              "/_matrix/client/r0/logout"
+                              '()
+                              #:query query)))
+    result))
 
 
