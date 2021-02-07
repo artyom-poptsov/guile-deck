@@ -79,7 +79,7 @@
                               #:query query)))
     (unless result
       (error "Could not get the list of joined rooms"))
-    (map (lambda (id) (make <room> #:id id))
+    (map (lambda (id) (make <room> #:id (string->matrix-id id)))
          (vector->list (assoc-ref result "joined_rooms")))))
 
 
