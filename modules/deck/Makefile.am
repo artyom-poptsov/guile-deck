@@ -21,7 +21,7 @@ include $(top_srcdir)/build-aux/am/guilec
 
 SUBDIRS = core
 
-SOURCES = deck.scm
+SOURCES = matrix.scm
 
 GOBJECTS = $(SOURCES:%.scm=%.go)
 
