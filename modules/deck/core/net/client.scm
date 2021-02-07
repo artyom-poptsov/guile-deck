@@ -45,7 +45,6 @@
                             #:port   (uri-port server)
                             #:path   resource))
          (json-body (scm->json-string body)))
-    (display "aa\n")
     (receive (response response-body)
         (http-post uri
                    #:headers '((Content-Type . "application/json"))
@@ -53,5 +52,4 @@
                    #:body    json-body)
       (display response)
       (newline)
-      (and (= (response-code response) 200)
-           (json-string->scm (bytevector->string response-body "UTF-8"))))))
+      (json-string->scm (bytevector->string response-body "UTF-8")))))
