@@ -2,14 +2,25 @@
   #:use-module (oop goops)
   #:use-module (deck core types matrix-id)
   #:use-module (deck core types matrix-content-uri)
+  #:use-module (deck core net client)
+  #:use-module (deck core session)
+  #:use-module (deck core room)
   #:export (<room>
             room?
             room-alias
-            room-id))
+            room-id
+            room-session
+            room-invite))
 
 
 
 (define-class <room> ()
+  ;; <session>
+  (session
+   #:init-value   #f
+   #:init-keyword #:session
+   #:getter       room-session)
+
   ;; <matrix-id>
   (alias
    #:init-value   #f
@@ -69,3 +80,26 @@
   (is-a? object <room>))
 
 
+
+(define-generic room-invite)
+
+(define-method (room-invite (room    <room>)
+                            (user-id <matrix-id>))
+  (unless (session-token (room-session room))
+    (error "Not logged it"))
+  (let* ((query  `(("access_token" . ,(session-token (room-session room)))))
+         (body   `(("user_id"      . ,(matrix-id->string user-id))))
+         (result (client-post (session-client (room-session room))
+                              (format #f "/_matrix/client/r0/rooms/~a/invite"
+                                      (matrix-id->string (room-id room)))
+                              body
+                              #:query query)))
+    result))
+
+(define-method (room-invite (room    <room>)
+                            (user-id <string>))
+  (room-invite room (string->matrix-id user-id)))
+
+
+
+
