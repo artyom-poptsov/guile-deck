@@ -22,3 +22,21 @@
    #:getter       room-id))
 
 
+
+(define-method (display (room <room>) (port <port>))
+  (format port "#<room ~a ~a>"
+          (matrix-id->string (room-id room))
+          (number->string (object-address pipe) 16)))
+
+(define-method (write (room <room>) (port <port>))
+  (display room port))
+
+(define-method (display (room <room>))
+  (next-method)
+  (display room (current-output-port)))
+
+(define-method (write (room <room>))
+  (next-method)
+  (display room (current-output-port)))
+
+
