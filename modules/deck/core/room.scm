@@ -20,7 +20,30 @@
   (id
    #:init-value   #f
    #:init-keyword #:id
-   #:getter       room-id))
+   #:getter       room-id
+   #:setter       room-id-set!))
+
+
+
+(define-method (initialize (room <room>) initargs)
+  (next-method)
+  (let ((id (and (memq #:id initargs)
+                 (cadr (memq #:id initargs)))))
+
+    (unless id
+      (error "No room Id was provided"))
+
+    (cond
+     ((string? id)
+      (let ((matrix-id (string->matrix-id id)))
+        (unless (equal? (matrix-id-type matrix-id) 'room)
+          (error "Wrong Matrix ID for room" matrix-id))
+        (room-id-set! room matrix-id)))
+     ((matrix-id? id)
+      (unless (equal? (matrix-id-type id) 'room)
+        (error "Wrong Matrix ID for room" id)))
+     (else
+      (error "Wrong Matrix ID for room" id)))))
 
 
 
