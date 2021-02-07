@@ -109,6 +109,7 @@
       (error "Could not authenticate"))
     (format #f "matrix-login: response: ~a~%" response)
     (make <session>
+      #:client  (matrix-client matrix)
       #:user-id (string->matrix-id (assoc-ref response "user_id"))
       #:token   (assoc-ref response "access_token"))))
 

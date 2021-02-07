@@ -1,12 +1,21 @@
 (define-module (deck core session)
   #:use-module (oop goops)
   #:use-module (deck core types matrix-id)
+  #:use-module (deck core room)
+  #:use-module (deck core net client)
   #:export (<session>
             session-user-id
-            session-token))
+            session-token
+            session-create-room))
 
 
 (define-class <session> ()
+  ;; <client>
+  (client
+   #:init-value   #f
+   #:init-keyword #:client
+   #:getter       session-client)
+
   ;; <matrix-id>
   (user-id
    #:init-value   #f
@@ -36,5 +45,19 @@
 (define-method (write (session <session>))
   (next-method)
   (display session (current-output-port)))
+
+
+
+(define-method (session-create-room (session <session>)
+                                    (name    <string>))
+  (let* ((body   `((room_alias_name . ,name)))
+         (query  `((access_token . ,(session-token session))))
+         (result (client-post (session-client session)
+                             "/_matrix/client/r0/createRoom"
+                             body
+                             #:query query)))
+    (make <room>
+      #:id    (string->matrix-id (assoc-ref result "room_id"))
+      #:alias (assoc-ref result "room_alias"))))
 
 
