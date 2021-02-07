@@ -22,6 +22,16 @@
    #:getter       client-server-uri))
 
 
+
+(define-method (uri-parameters->string (params <list>))
+  (if (null? params)
+      ""
+      (string-join (map (lambda (p)
+                          (string-append (car p) "=" (cdr p)))
+                        params)
+                   "&")))
+
+
 (define* (client-get client
                      resource
                      #:key
@@ -31,7 +41,7 @@
                             #:host   (uri-host server)
                             #:port   (uri-port server)
                             #:path   resource
-                            #:query  query)))
+                            #:query  (uri-parameters->string query))))
     (receive (response body)
         (http-get uri)
       (and (= (response-code response) 200)
@@ -46,7 +56,7 @@
                             #:host   (uri-host server)
                             #:port   (uri-port server)
                             #:path   resource
-                            #:query  query))
+                            #:query  (uri-parameters->string query)))
          (json-body (scm->json-string body)))
     (receive (response response-body)
         (http-post uri

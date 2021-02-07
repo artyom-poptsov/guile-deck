@@ -19,6 +19,7 @@
 
 SCM_TESTS = \
 	matrix-id.scm	\
+	client.scm	\
 	mac.scm
 
 TESTS = ${SCM_TESTS}
