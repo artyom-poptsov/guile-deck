@@ -38,12 +38,15 @@
            (json-string->scm (bytevector->string body "UTF-8"))))))
 
 
-(define* (client-post client resource body)
+(define* (client-post client resource body
+                      #:key
+                      (query #f))
   (let* ((server (client-server-uri client))
          (uri    (build-uri (uri-scheme server)
                             #:host   (uri-host server)
                             #:port   (uri-port server)
-                            #:path   resource))
+                            #:path   resource
+                            #:query  query))
          (json-body (scm->json-string body)))
     (receive (response response-body)
         (http-post uri
