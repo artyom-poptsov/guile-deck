@@ -11,7 +11,8 @@
             room-id
             room-session
             room-invite
-            room-join))
+            room-join
+            room-leave))
 
 
 
@@ -114,6 +115,19 @@
                               body
                               #:query query)))
     result))
+
+(define-method (room-leave (room <room>))
+  (unless (session-token (room-session room))
+    (error "Not logged in"))
+  (let* ((query  `(("access_token" . ,(session-token (room-session room)))))
+         (body   `())
+         (result (client-post (session-client (room-session room))
+                              (format #f "/_matrix/client/r0/rooms/~a/leave"
+                                      (matrix-id->string (room-id room)))
+                              body
+                              #:query query)))
+    result))
+
 
 
 
