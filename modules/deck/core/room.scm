@@ -1,5 +1,6 @@
 (define-module (deck core room)
   #:use-module (oop goops)
+  #:use-module (deck core types matrix-event)
   #:use-module (deck core types matrix-id)
   #:use-module (deck core types matrix-content-uri)
   #:use-module (deck core net client)
@@ -13,7 +14,8 @@
             room-invite
             room-join
             room-leave
-            room-messages))
+            room-messages
+            room-state))
 
 
 
@@ -154,6 +156,19 @@
                                      (matrix-id->string (room-id room)))
                              #:query query)))
     result))
+
+;; Get the state events for the current state of a ROOM.
+(define-method (room-state (room <room>))
+  (unless (session-token (room-session room))
+    (error "Not logged in"))
+  (let* ((query  `(("access_token" . ,(session-token (room-session room)))))
+         (result (client-get (session-client (room-session room))
+                             (format #f "/_matrix/client/r0/rooms/~a/state"
+                                     (matrix-id->string (room-id room)))
+                             #:query query)))
+    (if result
+        (map alist->matrix-event (vector->list result))
+        result)))
 
 
 
