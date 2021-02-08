@@ -18,7 +18,8 @@
             room-leave
             room-members
             room-messages
-            room-state))
+            room-state
+            room-event))
 
 
 
@@ -209,6 +210,24 @@
     (if result
         (map alist->matrix-event (vector->list result))
         result)))
+
+
+
+(define-generic room-event)
+
+(define-method (room-event (room <room>) (event-id <matrix-id>))
+  (assert-token room)
+  (let* ((query  `(("access_token" . ,(session-token (room-session room)))))
+         (result (client-get (session-client (room-session room))
+                             (format #f "/_matrix/client/r0/rooms/~a/event/~a"
+                                     (matrix-id->string (room-id room))
+                                     (matrix-id->string event-id))
+                             #:query query)))
+    (and result
+         (alist->matrix-event result))))
+
+(define-method (room-event (room <room>) (event-id <string>))
+  (room-event room (string->matrix-id event-id)))
 
 
 
