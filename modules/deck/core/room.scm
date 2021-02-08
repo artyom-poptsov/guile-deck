@@ -11,6 +11,8 @@
             room-alias
             room-id
             room-session
+            room-access-token
+            room-has-access-token?
             room-invite
             room-join
             room-leave
@@ -87,12 +89,23 @@
 
 
 
+(define-method (room-access-token (room <room>))
+  (session-token (room-session room)))
+
+(define-method (room-has-access-token? (room <room>))
+  (not (equal? (room-access-token room) #f)))
+
+(define-method (assert-token (room <room>))
+  (unless (room-has-access-token? room)
+    (error "Not logged in")))
+
+
+
 (define-generic room-invite)
 
 (define-method (room-invite (room    <room>)
                             (user-id <matrix-id>))
-  (unless (session-token (room-session room))
-    (error "Not logged in"))
+  (assert-token room)
   (let* ((query  `(("access_token" . ,(session-token (room-session room)))))
          (body   `(("user_id"      . ,(matrix-id->string user-id))))
          (result (client-post (session-client (room-session room))
@@ -109,8 +122,7 @@
 
 
 (define-method (room-join (room <room>))
-  (unless (session-token (room-session room))
-    (error "Not logged in"))
+  (assert-token room)
   (let* ((query  `(("access_token" . ,(session-token (room-session room)))))
          (body   `())
          (result (client-post (session-client (room-session room))
@@ -121,8 +133,7 @@
     result))
 
 (define-method (room-leave (room <room>))
-  (unless (session-token (room-session room))
-    (error "Not logged in"))
+  (assert-token room)
   (let* ((query  `(("access_token" . ,(session-token (room-session room)))))
          (body   `())
          (result (client-post (session-client (room-session room))
@@ -140,8 +151,7 @@
                        (at             #f)
                        (membership     #f)
                        (not-membership #f))
-  (unless (session-token (room-session room))
-    (error "Not logged in"))
+  (assert-token room)
   (let* ((query  `(("access_token" . ,(session-token (room-session room)))))
          (query  (if at
                      (acons "at" at query)
@@ -169,8 +179,7 @@
                         (from   #f)
                         (to     #f)
                         (filter #f))
-  (unless (session-token (room-session room))
-    (error "Not logged in"))
+  (assert-token room)
   (let* ((query  `(("access_token" . ,(session-token (room-session room)))
                    ("limit"        . ,(number->string limit))))
          (query  (if from
@@ -191,8 +200,7 @@
 
 ;; Get the state events for the current state of a ROOM.
 (define-method (room-state (room <room>))
-  (unless (session-token (room-session room))
-    (error "Not logged in"))
+  (assert-token room)
   (let* ((query  `(("access_token" . ,(session-token (room-session room)))))
          (result (client-get (session-client (room-session room))
                              (format #f "/_matrix/client/r0/rooms/~a/state"
