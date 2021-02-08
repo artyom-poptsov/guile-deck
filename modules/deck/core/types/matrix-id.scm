@@ -68,7 +68,7 @@
           #:type       type
           #:identity   identity
           #:server     server)
-        (error "Wrong matrix ID"))))
+        (error "Wrong matrix ID" string))))
 
 
 
