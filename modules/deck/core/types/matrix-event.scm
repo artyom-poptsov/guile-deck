@@ -8,7 +8,9 @@
             matrix-event-room-id
             matrix-event-sender-id
             matrix-event-type
-            matrix-event-content))
+            matrix-event-content
+            alist->matrix-event
+            matrix-event->alist))
 
 
 
@@ -50,3 +52,19 @@
 
 
 
+(define-method (alist->matrix-event (lst <list>))
+  (make <matrix-event>
+    #:id        (assoc-ref lst "event_id")
+    #:room-id   (assoc-ref lst "room_id")
+    #:sender-id (assoc-ref lst "sender")
+    #:type      (assoc-ref lst "type")
+    #:content   (assoc-ref lst "content")))
+
+(define-method (matrix-event->alist (event <matrix-event>))
+  `((event_id  . ,(matrix-event-id event))
+    (room_id   . ,(matrix-event-room-id event))
+    (sender    . ,(matrix-event-sender-id event))
+    (type      . ,(matrix-event-type event))
+    (content   . ,(matrix-event-content event))))
+
+
