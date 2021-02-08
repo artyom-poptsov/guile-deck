@@ -40,6 +40,24 @@
    #:getter       matrix-id-identity))
 
 
+
+(define-method (display (matrix-id <matrix-id>) (port <port>))
+  (format port "#<matrix-id ~a ~a>"
+          (matrix-id->string matrix-id)
+          (number->string (object-address pipe) 16)))
+
+(define-method (write (matrix-id <matrix-id>) (port <port>))
+  (display matrix-id port))
+
+(define-method (display (matrix-id <matrix-id>))
+  (next-method)
+  (display matrix-id (current-output-port)))
+
+(define-method (write (matrix-id <matrix-id>))
+  (next-method)
+  (display matrix-id (current-output-port)))
+
+
 (define-method (matrix-type->char (identity <symbol>))
   (let ((result (find (lambda (e) (equal? (cdr e) identity)) %type-mapping)))
     (and result
