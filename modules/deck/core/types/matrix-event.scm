@@ -81,8 +81,6 @@
 
 
 (define-method (alist->matrix-event (lst <list>))
-  (display lst)
-  (newline)
   (make <matrix-event>
     #:id        (catch
                   #t
