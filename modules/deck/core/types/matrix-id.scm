@@ -68,25 +68,42 @@
 
 
 (define-method (matrix-id->string (id <matrix-id>))
-  (format #f "~a~a:~a"
+  (format #f "~a~a~a"
           (matrix-type->char (matrix-id-type id))
           (matrix-id-identity id)
-          (matrix-id-server id)))
+          (if (matrix-id-server id)
+              (string-append ":" (matrix-id-server id))
+              "")))
+
+
+(define %identity-regexp         ".?([^:]+):.*")
+
+;; https://matrix.org/docs/spec/rooms/v3
+(define %event-identity-regexp-3 ".?([^:]+)$")
+
+(define %server-regexp           ".?[^:]+:(.*)")
 
 (define-method (string->matrix-id (string <string>))
-  (let ((type     (char->matrix-type (string-ref string 0)))
-        (identity (let ((m (string-match ".?([^:]+):.*" string)))
-                    (and m
-                         (match:substring m 1))))
-        (server   (let ((m (string-match ".?[^:]+:(.*)" string)))
-                    (and m
-                         (match:substring m 1)))))
-    (if (and type identity server)
-        (make <matrix-id>
-          #:type       type
-          #:identity   identity
-          #:server     server)
-        (error "Wrong matrix ID" string))))
+  (let ((type (char->matrix-type (string-ref string 0))))
+    (cond
+     ((and (equal? type 'event)
+           (string-match %event-identity-regexp-3 string))
+      (make <matrix-id>
+        #:type type
+        #:identity (match:substring
+                    (string-match %event-identity-regexp-3 string)
+                    1)))
+     (else
+      (let ((identity (let ((m (string-match %identity-regexp string)))
+                        (and m (match:substring m 1))))
+            (server   (let ((m (string-match %server-regexp string)))
+                        (and m (match:substring m 1)))))
+        (if (and type identity server)
+            (make <matrix-id>
+              #:type       type
+              #:identity   identity
+              #:server     server)
+            (error "Wrong matrix ID" string)))))))
 
 
 
