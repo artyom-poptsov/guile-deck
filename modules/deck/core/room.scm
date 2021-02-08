@@ -14,6 +14,7 @@
             room-invite
             room-join
             room-leave
+            room-members
             room-messages
             room-state))
 
@@ -130,6 +131,37 @@
                               body
                               #:query query)))
     result))
+
+;; Get the list of members for this room.
+;;
+;; Returns 3 values: an event list, "start"" and "end" tokens.
+(define* (room-members room
+                       #:key
+                       (at             #f)
+                       (membership     #f)
+                       (not-membership #f))
+  (unless (session-token (room-session room))
+    (error "Not logged in"))
+  (let* ((query  `(("access_token" . ,(session-token (room-session room)))))
+         (query  (if at
+                     (acons "at" at query)
+                     query))
+         (query  (if membership
+                     (acons "membership" membership query)
+                     query))
+         (query  (if not-membership
+                     (acons "not_membership" not-membership query)
+                     query))
+         (result (client-get (session-client (room-session room))
+                             (format #f "/_matrix/client/r0/rooms/~a/messages"
+                                     (matrix-id->string (room-id room)))
+                             #:query query)))
+    (and result
+         (let ((events (map alist->matrix-event
+                            (vector->list (assoc-ref result "chunk"))))
+               (start  (assoc-ref result "start"))
+               (end    (assoc-ref result "end")))
+           (values events start end)))))
 
 (define* (room-messages room
                         #:key
