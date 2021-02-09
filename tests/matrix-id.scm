@@ -48,6 +48,8 @@
                        #:identity "room-id"
                        #:server   "example.org")))
 
+
+
 (test-equal "string->matrix-id: room type"
   'room
   (matrix-id-type (string->matrix-id "!room-id:example.org")))
@@ -65,6 +67,17 @@
     (and (equal? (matrix-id-type id)     'room)
          (equal? (matrix-id-identity id) "room-id")
          (equal? (matrix-id-server id)   "example.org"))))
+
+
+(test-equal "string->matrix-id: event identity"
+  "abc123"
+  (matrix-id-identity
+   (string->matrix-id "$abc123:matrix.org")))
+
+(test-equal "string->matrix-id: event identity (v3)"
+  "tkNd9FVwPyAlcKYvLfgAbFseQ5pAJRKlWB_clzvloqY"
+  (matrix-id-identity
+   (string->matrix-id "$tkNd9FVwPyAlcKYvLfgAbFseQ5pAJRKlWB_clzvloqY")))
 
 
 (test-end "matrix-id")
