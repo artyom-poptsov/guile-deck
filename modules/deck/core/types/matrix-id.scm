@@ -76,12 +76,12 @@
               "")))
 
 
-(define %identity-regexp         ".?([^:]+):.*")
+(define %identity-regexp         "^.([^:]+):.*")
 
 ;; https://matrix.org/docs/spec/rooms/v3
-(define %event-identity-regexp-3 ".?([^:]+)$")
+(define %event-identity-regexp-3 "^.([^:]+)$")
 
-(define %server-regexp           ".?[^:]+:(.*)")
+(define %server-regexp           "^.[^:]+:(.*)")
 
 (define-method (string->matrix-id (string <string>))
   (let ((type (char->matrix-type (string-ref string 0))))
