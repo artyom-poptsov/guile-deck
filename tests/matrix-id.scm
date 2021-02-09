@@ -41,6 +41,12 @@
 
 
 
+(test-assert "matrix-id?"
+  (and (matrix-id? (make <matrix-id>))
+       (not (matrix-id? "not ID"))))
+
+
+
 (test-equal "matrix-id->string: room"
   "!room-id:example.org"
   (matrix-id->string (make <matrix-id>
