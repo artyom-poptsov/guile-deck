@@ -95,10 +95,11 @@
     #:content   (assoc-ref lst "content")))
 
 (define-method (matrix-event->alist (event <matrix-event>))
-  `((event_id  . ,(matrix-event-id event))
-    (room_id   . ,(matrix-event-room-id event))
-    (sender    . ,(matrix-event-sender-id event))
-    (type      . ,(matrix-event-type event))
-    (content   . ,(matrix-event-content event))))
+  `(("event_id"  . ,(matrix-id->string (matrix-event-id event)))
+    ("user_id"   . ,(matrix-id->string (matrix-event-user-id event)))
+    ("room_id"   . ,(matrix-id->string (matrix-event-room-id event)))
+    ("sender"    . ,(matrix-id->string (matrix-event-sender-id event)))
+    ("type"      . ,(matrix-event-type event))
+    ("content"   . ,(matrix-event-content event))))
 
 
