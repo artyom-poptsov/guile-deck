@@ -2,6 +2,9 @@
 -L modules -e main -s
 !#
 
+;; Usage example:
+;;   ./send-message.scm "matrix.org" "alice" "qwerty123" '!room-id:matrix.org' "Hello World!"
+
 (use-modules (srfi srfi-1)
              (oop goops)
              (web uri)
