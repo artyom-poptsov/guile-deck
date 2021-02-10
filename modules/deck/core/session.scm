@@ -7,6 +7,7 @@
             session?
             session-user-id
             session-token
+            session-token/alist
             session-client
             session-create-room
             session-join-room
@@ -57,51 +58,51 @@
 (define (session? object)
   (is-a? object <session>))
 
+(define-method (session-token/alist (session <session>))
+  `(("access_token" . ,(session-token session))))
+
+
+
 (define-method (session-create-room (session <session>)
                                     (name    <string>))
   (let* ((body   `((room_alias_name . ,name)))
-         (query  `((access_token . ,(session-token session))))
          (result (client-post (session-client session)
                              "/_matrix/client/r0/createRoom"
                              body
-                             #:query query)))
+                             #:query (session-token/alist session))))
     (make <room>
       #:id    (assoc-ref result "room_id")
       #:alias (assoc-ref result "room_alias"))))
 
 (define-method (session-join-room (session <session>)
                                   (room-id <matrix-id>))
-  (let* ((query  `(("access_token" . ,(session-token session))))
-         (result (client-post (session-client session)
-                              (string-append "/_matrix/client/r0/join/"
-                                             (matrix-id->string room-id))
-                              '()
-                              #:query query)))
+  (let ((result (client-post (session-client session)
+                             (string-append "/_matrix/client/r0/join/"
+                                            (matrix-id->string room-id))
+                             '()
+                             #:query (session-token/alist session))))
     (make <room> #:session session #:id room-id)))
 
 (define-method (session-joined-rooms (session <session>))
-  (let* ((query `(("access_token" . ,(session-token session))))
-         (result (client-get (session-client session)
-                              "/_matrix/client/r0/joined_rooms"
-                              #:query query)))
+  (let ((result (client-get (session-client session)
+                            "/_matrix/client/r0/joined_rooms"
+                            #:query (session-token/alist session))))
     (unless result
       (error "Could not get the list of joined rooms"))
     (map (lambda (id) (make <room> #:session session #:id id))
          (vector->list (assoc-ref result "joined_rooms")))))
 
 (define-method (session-logout (session <session>))
-  (let* ((query `(("access_token" . ,(session-token session))))
-         (result (client-post (session-client session)
+  (let ((result (client-post (session-client session)
                               "/_matrix/client/r0/logout"
                               '()
-                              #:query query)))
+                              #:query (session-token/alist session))))
     result))
 
 (define-method (session-whoami (session <session>))
-  (let* ((query `(("access_token" . ,(session-token session))))
-         (result (client-get (session-client session)
-                              "/_matrix/client/r0/account/whoami"
-                              #:query query)))
+  (let ((result (client-get (session-client session)
+                            "/_matrix/client/r0/account/whoami"
+                            #:query (session-token/alist session))))
     (if result
         (cond
          ((assoc-ref result "error")
