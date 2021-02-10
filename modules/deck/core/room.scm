@@ -19,7 +19,8 @@
             room-members
             room-messages
             room-state
-            room-event))
+            room-event
+            room-send))
 
 
 
@@ -228,6 +229,33 @@
 
 (define-method (room-event (room <room>) (event-id <string>))
   (room-event room (string->matrix-id event-id)))
+
+
+
+(define-generic room-send)
+
+(define-method (room-send (room <room>)
+                          (type <string>)
+                          (body <list>)
+                          (transaction-id <string>))
+  (assert-token room)
+  (let ((result (client-put (session-client (room-session room))
+                            (format #f "/_matrix/client/r0/rooms/~a/send/~a/~a"
+                                    (matrix-id->string (room-id room))
+                                    type
+                                    transaction-id)
+                            body
+                            #:query (session-token/alist (room-session room)))))
+    (if result
+        (cond
+         ((assoc-ref result "error")
+          (error (assoc-ref result "error") room type body transaction-id))
+         (else
+          (string->matrix-id (assoc-ref result "event_id"))))
+        (error "Could not send an event" room type body transaction-id))))
+
+(define-method (room-send (room <room>) (type <string>) (body <list>))
+  (room-send room type body ""))
 
 
 
