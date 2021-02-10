@@ -47,6 +47,24 @@
       (and (= (response-code response) 200)
            (json-string->scm (bytevector->string body "UTF-8"))))))
 
+(define* (client-put client resource body
+                      #:key
+                      (query '()))
+  (let* ((server (client-server-uri client))
+         (uri    (build-uri (uri-scheme server)
+                            #:host   (uri-host server)
+                            #:port   (uri-port server)
+                            #:path   resource
+                            #:query  (uri-parameters->string query)))
+         (json-body (scm->json-string body)))
+    (receive (response response-body)
+        (http-put uri
+                  #:headers '((Content-Type . "application/json"))
+                  #:port    (open-socket-for-uri uri)
+                  #:body    json-body)
+      (display response)
+      (newline)
+      (json-string->scm (bytevector->string response-body "UTF-8")))))
 
 (define* (client-post client resource body
                       #:key
