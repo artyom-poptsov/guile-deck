@@ -1,0 +1,52 @@
+#!/usr/bin/guile-2.2 \
+-L modules -e main -s
+!#
+
+(use-modules (srfi srfi-1)
+             (oop goops)
+             (web uri)
+             (deck matrix)
+             (deck core types matrix-id)
+             (deck core types matrix-event)
+             (deck core room)
+             (deck core session))
+
+
+(define (main args)
+  "Entry point"
+  (display args)
+  (let* ((hs           (list-ref args 1))
+         (user         (list-ref args 2))
+         (password     (list-ref args 3))
+         (target-room  (list-ref args 4))
+         (message      (list-ref args 5))
+         (matrix       (make <matrix>
+                     #:use-https? #f
+                     #:home-server (build-uri 'https #:host hs))))
+    (format #t "Logging in ...~%")
+    (let ((session (matrix-login matrix "m.login.password" user password)))
+      (format #t "Logging in ... done~%")
+      (format #t "Getting list of joined rooms ...~%")
+      (let ((joined-rooms (session-joined-rooms session)))
+        (format #t "Getting list of joined rooms ... done: ~a~%" joined-rooms)
+        (format #t "Searching for a room with ID ~a ... ~%"
+                target-room)
+        (let ((room (find (lambda (r) (string=? (matrix-id->string (room-id r))
+                                           target-room))
+                          joined-rooms)))
+          (format #t "Searching for a room with ID ~a ... done: ~a~%"
+                  target-room room)
+          (format #t "  found ID: ~a~%"
+                  (room-id room))
+
+          (unless room
+            (error "No joined room found with the given ID" target-room))
+
+          (format #t "Sending a message ...~%")
+
+          (let ((id (room-send room
+                               "m.room.message"
+                               `(("body"    . ,message)
+                                 ("msgtype" . "m.text")))))
+            (format #t "Sending a message ... done: event ID: ~a~%"
+                    (matrix-id->string id))))))))
