@@ -11,7 +11,8 @@
             session-create-room
             session-join-room
             session-joined-rooms
-            session-logout))
+            session-logout
+            session-whoami))
 
 
 (define-class <session> ()
@@ -95,5 +96,18 @@
                               '()
                               #:query query)))
     result))
+
+(define-method (session-whoami (session <session>))
+  (let* ((query `(("access_token" . ,(session-token session))))
+         (result (client-get (session-client session)
+                              "/_matrix/client/r0/account/whoami"
+                              #:query query)))
+    (if result
+        (cond
+         ((assoc-ref result "error")
+          (error (assoc-ref result "error")))
+         (else
+          (string->matrix-id (assoc-ref result "user_id"))))
+        (error "Could not make a whoami request" session))))
 
 
