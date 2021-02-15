@@ -13,6 +13,7 @@
             session-join-room
             session-joined-rooms
             session-logout
+            session-logout/all
             session-whoami))
 
 
@@ -92,6 +93,7 @@
     (map (lambda (id) (make <room> #:session session #:id id))
          (vector->list (assoc-ref result "joined_rooms")))))
 
+
 (define-method (session-logout (session <session>))
   (let ((result (client-post (session-client session)
                               "/_matrix/client/r0/logout"
@@ -99,6 +101,14 @@
                               #:query (session-token/alist session))))
     result))
 
+(define-method (session-logout/all (session <session>))
+  (let ((result (client-post (session-client session)
+                             "/_matrix/client/r0/logout/all"
+                             '()
+                             #:query (session-token/alist session))))
+    result))
+
+
 (define-method (session-whoami (session <session>))
   (let ((result (client-get (session-client session)
                             "/_matrix/client/r0/account/whoami"
