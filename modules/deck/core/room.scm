@@ -16,6 +16,8 @@
             room-invite
             room-join
             room-leave
+            room-ban
+            room-unban
             room-members
             room-messages
             room-state
@@ -144,6 +146,52 @@
                               body
                               #:query query)))
     result))
+
+
+
+
+(define-generic room-ban)
+
+;; Ban a user with USER-ID in the ROOM. If the user is currently in the room,
+;; also kick them. When a user is banned from a room, they may not join it or
+;; be invited to it until they are unbanned.
+;;
+;; The caller must have the required power level in order to perform this
+;; operation.
+(define-method (room-ban (room <room>) (user-id <matrix-id>) (reason <string>))
+  (assert-token room)
+  (let* ((query  `(("access_token" . ,(session-token (room-session room)))))
+         (body   `(("reason"  . ,reason)
+                   ("user_id" . ,(matrix-id->string user-id))))
+         (result (client-post (session-client (room-session room))
+                              (format #f "/_matrix/client/r0/rooms/~a/ban"
+                                      (matrix-id->string (room-id room)))
+                              body
+                              #:query query)))
+    result))
+
+;; Shorter version of ban method without a reason.
+(define-method (room-ban (room <room>) (user-id <matrix-id>))
+  (room-ban room user-id ""))
+
+;; Unban a user with USER-ID from the ROOM. This allows them to be invited to
+;; the room, and join if they would otherwise be allowed to join according to
+;; its join rules.
+;;
+;; The caller must have the required power level in order to perform this
+;; operation.
+(define-method (room-unban (room <room>) (user-id <matrix-id>))
+  (assert-token room)
+  (let* ((query  `(("access_token" . ,(session-token (room-session room)))))
+         (body   `(("user_id" . ,(matrix-id->string user-id))))
+         (result (client-post (session-client (room-session room))
+                              (format #f "/_matrix/client/r0/rooms/~a/unban"
+                                      (matrix-id->string (room-id room)))
+                              body
+                              #:query query)))
+    result))
+
+
 
 ;; Get the list of members for this room.
 ;;
