@@ -20,6 +20,7 @@
             room-unban
             room-members
             room-messages
+            room-receipt
             room-state
             room-event
             room-send))
@@ -188,6 +189,25 @@
                               (format #f "/_matrix/client/r0/rooms/~a/unban"
                                       (matrix-id->string (room-id room)))
                               body
+                              #:query query)))
+    result))
+
+
+
+;; This API updates the marker for the given receipt TYPE to the EVENT
+;; specified.
+(define* (room-receipt room event
+                       #:key
+                       (type "m.read")
+                       (receipt '()))
+  (assert-token room)
+  (let* ((query  `(("access_token" . ,(session-token (room-session room)))))
+         (result (client-post (session-client (room-session room))
+                              (format #f "/_matrix/client/r0/rooms/~a/receipt/~a/~a"
+                                      (matrix-id->string (room-id room))
+                                      type
+                                      (matrix-id->string (event-id event)))
+                              receipt
                               #:query query)))
     result))
 
