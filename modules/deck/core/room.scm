@@ -23,6 +23,7 @@
             room-receipt
             room-state
             room-event
+            room-event-context
             room-send))
 
 
@@ -107,6 +108,29 @@
 (define-method (assert-token (room <room>))
   (unless (room-has-access-token? room)
     (error "Not logged in")))
+
+
+;; This API returns a number of events in ROOM that happened just before and
+;; after the specified EVENT.  This allows clients to get the context
+;; surrounding an event.
+(define* (room-event-context room event
+                             #:key
+                             (limit 10)
+                             (filter #f))
+  (assert-token room)
+  (let* ((query  (room-access-token/alist room))
+         (query  (acons "limit" (number->string limit) query))
+         (query  (if filter
+                     (acons "filter" filter query)
+                     query))
+         (result (client-get (session-client (room-session room))
+                             (format #f "/_matrix/client/r0/rooms/~a/context/~a"
+                                     (matrix-id->string (room-id room))
+                                     (if (string? event)
+                                         event
+                                         (matrix-id->string (matrix-event-id event))))
+                             #:query query)))
+    result))
 
 
 
