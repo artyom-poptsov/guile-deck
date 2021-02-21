@@ -223,7 +223,7 @@
                              (format #f "/_matrix/client/r0/rooms/~a/receipt/~a/~a"
                                      (matrix-id->string (room-id room))
                                      type
-                                     (matrix-id->string (event-id event)))
+                                     (matrix-id->string (matrix-event-id event)))
                              receipt
                              #:query (room-access-token/alist room))))
     result))
