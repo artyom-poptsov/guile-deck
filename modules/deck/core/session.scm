@@ -9,6 +9,7 @@
             session-token
             session-token/alist
             session-client
+            session-sync
             session-create-room
             session-join-room
             session-joined-rooms
@@ -61,6 +62,12 @@
 
 (define-method (session-token/alist (session <session>))
   `(("access_token" . ,(session-token session))))
+
+
+(define-method (session-sync (session <session>))
+  (let ((result (client-get (session-client session) "/_matrix/client/r0/sync"
+                            #:query (session-token/alist session))))
+    result))
 
 
 
