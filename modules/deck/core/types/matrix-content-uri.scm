@@ -15,7 +15,7 @@
 
   ;; <string>
   (protocol
-   #:init-value   #f
+   #:init-value   "mxc"
    #:init-keyword #:protocol
    #:getter       matrix-content-uri-protocol)
 
@@ -24,6 +24,26 @@
    #:init-value   #f
    #:init-keyword #:media-id
    #:getter       matrix-content-uri-media-id))
+
+
+
+(define-method (display (uri <matrix-content-uri>) (port <port>))
+  (format port "#<matrix-content-uri ~a://~a/~a ~a>"
+          (matrix-content-uri-protocol uri)
+          (matrix-content-uri-server uri)
+          (matrix-content-uri-media-id uri)
+          (number->string (object-address pipe) 16)))
+
+(define-method (write (uri <matrix-content-uri>) (port <port>))
+  (display uri port))
+
+(define-method (display (uri <matrix-content-uri>))
+  (next-method)
+  (display uri (current-output-port)))
+
+(define-method (write (uri <matrix-content-uri>))
+  (next-method)
+  (display uri (current-output-port)))
 
 
 
