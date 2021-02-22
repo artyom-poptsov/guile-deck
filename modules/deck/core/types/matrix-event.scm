@@ -6,6 +6,7 @@
   #:export (<matrix-event>
             matrix-event?
             matrix-event-id
+            matrix-event-id/string
             matrix-event-user-id
             matrix-event-room-id
             matrix-event-sender-id
@@ -54,11 +55,16 @@
 
 
 
+(define-method (matrix-event-id/string (event <matrix-event>))
+  (if (string? (matrix-event-id event))
+      (matrix-event-id event)
+      (matrix-id->string (matrix-event-id event))))
+
+
+
 (define-method (display (event <matrix-event>) (port <port>))
   (format port "#<matrix-event ~a type: ~a ~a>"
-          (if (string? (matrix-event-id event))
-              (matrix-event-id event)
-              (matrix-id->string (matrix-event-id event)))
+          (matrix-event-id/string event)
           (matrix-event-type event)
           (number->string (object-address pipe) 16)))
 
@@ -95,7 +101,7 @@
     #:content   (assoc-ref lst "content")))
 
 (define-method (matrix-event->alist (event <matrix-event>))
-  `(("event_id"  . ,(matrix-id->string (matrix-event-id event)))
+  `(("event_id"  . ,(matrix-event-id/string event))
     ("user_id"   . ,(matrix-id->string (matrix-event-user-id event)))
     ("room_id"   . ,(matrix-id->string (matrix-event-room-id event)))
     ("sender"    . ,(matrix-id->string (matrix-event-sender-id event)))

@@ -146,7 +146,7 @@
                               (room-id/string room)
                               (if (string? event)
                                   event
-                                  (matrix-id->string (matrix-event-id event))))
+                                  (matrix-event-id/string event)))
                       #:query query)))
     result))
 
@@ -236,7 +236,7 @@
                       (format #f "/_matrix/client/r0/rooms/~a/receipt/~a/~a"
                               (room-id/string room)
                               type
-                              (matrix-id->string (matrix-event-id event)))
+                              (matrix-event-id/string event))
                       receipt)))
     result))
 
