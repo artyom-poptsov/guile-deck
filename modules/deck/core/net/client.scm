@@ -23,6 +23,24 @@
 
 
 
+(define-method (display (client <client>) (port <port>))
+  (format port "#<client ~a ~a>"
+          (client-server-uri client)
+          (number->string (object-address pipe) 16)))
+
+(define-method (write (client <client>) (port <port>))
+  (display client port))
+
+(define-method (display (client <client>))
+  (next-method)
+  (display client (current-output-port)))
+
+(define-method (write (client <client>))
+  (next-method)
+  (display client (current-output-port)))
+
+
+
 (define-method (uri-parameters->string (params <list>))
   (if (null? params)
       ""
