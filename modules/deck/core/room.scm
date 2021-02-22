@@ -10,6 +10,7 @@
             room?
             room-alias
             room-id
+            room-id/string
             room-session
             room-access-token
             room-has-access-token?
@@ -95,6 +96,9 @@
 
 
 
+(define-method (room-id/string (room <room>))
+  (matrix-id->string (room-id room)))
+
 (define-method (room-access-token (room <room>))
   (session-token (room-session room)))
 
@@ -139,7 +143,7 @@
                      query))
          (result (get room
                       (format #f "/_matrix/client/r0/rooms/~a/context/~a"
-                              (matrix-id->string (room-id room))
+                              (room-id/string room)
                               (if (string? event)
                                   event
                                   (matrix-id->string (matrix-event-id event))))
@@ -155,7 +159,7 @@
   (assert-token room)
   (let ((result (post room
                       (format #f "/_matrix/client/r0/rooms/~a/invite"
-                              (matrix-id->string (room-id room)))
+                              (room-id/string room))
                       `(("user_id" . ,(matrix-id->string user-id))))))
     result))
 
@@ -169,7 +173,7 @@
   (assert-token room)
   (let ((result (client-post (session-client (room-session room))
                              (format #f "/_matrix/client/r0/rooms/~a/join"
-                                     (matrix-id->string (room-id room)))
+                                     (room-id/string room))
                              '())))
     result))
 
@@ -177,7 +181,7 @@
   (assert-token room)
   (let ((result (post room
                       (format #f "/_matrix/client/r0/rooms/~a/leave"
-                              (matrix-id->string (room-id room)))
+                              (room-id/string room))
                       '())))
     result))
 
@@ -196,7 +200,7 @@
   (assert-token room)
   (let ((result (post room
                       (format #f "/_matrix/client/r0/rooms/~a/ban"
-                              (matrix-id->string (room-id room)))
+                              (room-id/string room))
                       `(("reason"  . ,reason)
                         ("user_id" . ,(matrix-id->string user-id))))))
     result))
@@ -215,7 +219,7 @@
   (assert-token room)
   (let ((result (post room
                       (format #f "/_matrix/client/r0/rooms/~a/unban"
-                              (matrix-id->string (room-id room)))
+                              (room-id/string room))
                       `(("user_id" . ,(matrix-id->string user-id))))))
     result))
 
@@ -230,7 +234,7 @@
   (assert-token room)
   (let ((result (post room
                       (format #f "/_matrix/client/r0/rooms/~a/receipt/~a/~a"
-                              (matrix-id->string (room-id room))
+                              (room-id/string room)
                               type
                               (matrix-id->string (matrix-event-id event)))
                       receipt)))
@@ -258,7 +262,7 @@
                      query))
          (result (get room
                       (format #f "/_matrix/client/r0/rooms/~a/messages"
-                              (matrix-id->string (room-id room)))
+                              (room-id/string room))
                       #:query query)))
     (and result
          (let ((events (map alist->matrix-event
@@ -287,7 +291,7 @@
          (body   `())
          (result (get room
                       (format #f "/_matrix/client/r0/rooms/~a/messages"
-                              (matrix-id->string (room-id room)))
+                              (room-id/string room))
                       #:query query)))
     result))
 
@@ -296,7 +300,7 @@
   (assert-token room)
   (let ((result (get room
                      (format #f "/_matrix/client/r0/rooms/~a/state"
-                             (matrix-id->string (room-id room))))))
+                             (room-id/string room)))))
     (if result
         (map alist->matrix-event (vector->list result))
         result)))
@@ -309,7 +313,7 @@
   (assert-token room)
   (let ((result (get room
                      (format #f "/_matrix/client/r0/rooms/~a/event/~a"
-                             (matrix-id->string (room-id room))
+                             (room-id/string room)
                              (matrix-id->string event-id)))))
     (and result
          (alist->matrix-event result))))
@@ -328,7 +332,7 @@
   (assert-token room)
   (let ((result (put room
                      (format #f "/_matrix/client/r0/rooms/~a/send/~a/~a"
-                             (matrix-id->string (room-id room))
+                             (room-id/string room)
                              type
                              transaction-id)
                      body)))
