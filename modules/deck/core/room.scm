@@ -110,6 +110,21 @@
     (error "Not logged in")))
 
 
+;; Room-specific request methods.
+
+(define* (get room resource #:key (query '()))
+  (client-get (session-client (room-session room)) resource
+              #:query (append query (room-access-token/alist room))))
+
+(define* (put room resource body #:key (query '()))
+  (client-put (session-client (room-session room)) resource body
+              #:query (append query (room-access-token/alist room))))
+
+(define* (post room resource body #:key (query '()))
+  (client-post (session-client (room-session room)) resource body
+               #:query (append query (room-access-token/alist room))))
+
+
 ;; This API returns a number of events in ROOM that happened just before and
 ;; after the specified EVENT.  This allows clients to get the context
 ;; surrounding an event.
@@ -118,18 +133,17 @@
                              (limit 10)
                              (filter #f))
   (assert-token room)
-  (let* ((query  (room-access-token/alist room))
-         (query  (acons "limit" (number->string limit) query))
+  (let* ((query  `(("limit" . ,(number->string limit))))
          (query  (if filter
                      (acons "filter" filter query)
                      query))
-         (result (client-get (session-client (room-session room))
-                             (format #f "/_matrix/client/r0/rooms/~a/context/~a"
-                                     (matrix-id->string (room-id room))
-                                     (if (string? event)
-                                         event
-                                         (matrix-id->string (matrix-event-id event))))
-                             #:query query)))
+         (result (get room
+                      (format #f "/_matrix/client/r0/rooms/~a/context/~a"
+                              (matrix-id->string (room-id room))
+                              (if (string? event)
+                                  event
+                                  (matrix-id->string (matrix-event-id event))))
+                      #:query query)))
     result))
 
 
@@ -139,11 +153,10 @@
 (define-method (room-invite (room    <room>)
                             (user-id <matrix-id>))
   (assert-token room)
-  (let ((result (client-post (session-client (room-session room))
-                             (format #f "/_matrix/client/r0/rooms/~a/invite"
-                                     (matrix-id->string (room-id room)))
-                             `(("user_id" . ,(matrix-id->string user-id)))
-                             #:query (room-access-token/alist room))))
+  (let ((result (post room
+                      (format #f "/_matrix/client/r0/rooms/~a/invite"
+                              (matrix-id->string (room-id room)))
+                      `(("user_id" . ,(matrix-id->string user-id))))))
     result))
 
 (define-method (room-invite (room    <room>)
@@ -157,17 +170,15 @@
   (let ((result (client-post (session-client (room-session room))
                              (format #f "/_matrix/client/r0/rooms/~a/join"
                                      (matrix-id->string (room-id room)))
-                             '()
-                             #:query (room-access-token/alist room))))
+                             '())))
     result))
 
 (define-method (room-leave (room <room>))
   (assert-token room)
-  (let ((result (client-post (session-client (room-session room))
-                             (format #f "/_matrix/client/r0/rooms/~a/leave"
-                                     (matrix-id->string (room-id room)))
-                             '()
-                             #:query (room-access-token/alist room))))
+  (let ((result (post room
+                      (format #f "/_matrix/client/r0/rooms/~a/leave"
+                              (matrix-id->string (room-id room)))
+                      '())))
     result))
 
 
@@ -183,12 +194,11 @@
 ;; operation.
 (define-method (room-ban (room <room>) (user-id <matrix-id>) (reason <string>))
   (assert-token room)
-  (let ((result (client-post (session-client (room-session room))
-                             (format #f "/_matrix/client/r0/rooms/~a/ban"
-                                     (matrix-id->string (room-id room)))
-                             `(("reason"  . ,reason)
-                               ("user_id" . ,(matrix-id->string user-id)))
-                             #:query (room-access-token/alist room))))
+  (let ((result (post room
+                      (format #f "/_matrix/client/r0/rooms/~a/ban"
+                              (matrix-id->string (room-id room)))
+                      `(("reason"  . ,reason)
+                        ("user_id" . ,(matrix-id->string user-id))))))
     result))
 
 ;; Shorter version of ban method without a reason.
@@ -203,11 +213,10 @@
 ;; operation.
 (define-method (room-unban (room <room>) (user-id <matrix-id>))
   (assert-token room)
-  (let ((result (client-post (session-client (room-session room))
-                             (format #f "/_matrix/client/r0/rooms/~a/unban"
-                                     (matrix-id->string (room-id room)))
-                             `(("user_id" . ,(matrix-id->string user-id)))
-                             #:query (room-access-token/alist room))))
+  (let ((result (post room
+                      (format #f "/_matrix/client/r0/rooms/~a/unban"
+                              (matrix-id->string (room-id room)))
+                      `(("user_id" . ,(matrix-id->string user-id))))))
     result))
 
 
@@ -219,13 +228,12 @@
                        (type "m.read")
                        (receipt '()))
   (assert-token room)
-  (let ((result (client-post (session-client (room-session room))
-                             (format #f "/_matrix/client/r0/rooms/~a/receipt/~a/~a"
-                                     (matrix-id->string (room-id room))
-                                     type
-                                     (matrix-id->string (matrix-event-id event)))
-                             receipt
-                             #:query (room-access-token/alist room))))
+  (let ((result (post room
+                      (format #f "/_matrix/client/r0/rooms/~a/receipt/~a/~a"
+                              (matrix-id->string (room-id room))
+                              type
+                              (matrix-id->string (matrix-event-id event)))
+                      receipt)))
     result))
 
 
@@ -239,20 +247,19 @@
                        (membership     #f)
                        (not-membership #f))
   (assert-token room)
-  (let* ((query  (room-access-token/alist room))
-         (query  (if at
-                     (acons "at" at query)
-                     query))
+  (let* ((query  (if at
+                     `(("at" . ,at))
+                     '()))
          (query  (if membership
                      (acons "membership" membership query)
                      query))
          (query  (if not-membership
                      (acons "not_membership" not-membership query)
                      query))
-         (result (client-get (session-client (room-session room))
-                             (format #f "/_matrix/client/r0/rooms/~a/messages"
-                                     (matrix-id->string (room-id room)))
-                             #:query query)))
+         (result (get room
+                      (format #f "/_matrix/client/r0/rooms/~a/messages"
+                              (matrix-id->string (room-id room)))
+                      #:query query)))
     (and result
          (let ((events (map alist->matrix-event
                             (vector->list (assoc-ref result "chunk"))))
@@ -267,8 +274,7 @@
                         (to     #f)
                         (filter #f))
   (assert-token room)
-  (let* ((query  `(("access_token" . ,(session-token (room-session room)))
-                   ("limit"        . ,(number->string limit))))
+  (let* ((query  `(("limit" . ,(number->string limit))))
          (query  (if from
                      (acons "from" from query)
                      query))
@@ -279,19 +285,18 @@
                      (acons "filter" filter query)
                      query))
          (body   `())
-         (result (client-get (session-client (room-session room))
-                             (format #f "/_matrix/client/r0/rooms/~a/messages"
-                                     (matrix-id->string (room-id room)))
-                             #:query query)))
+         (result (get room
+                      (format #f "/_matrix/client/r0/rooms/~a/messages"
+                              (matrix-id->string (room-id room)))
+                      #:query query)))
     result))
 
 ;; Get the state events for the current state of a ROOM.
 (define-method (room-state (room <room>))
   (assert-token room)
-  (let ((result (client-get (session-client (room-session room))
-                            (format #f "/_matrix/client/r0/rooms/~a/state"
-                                    (matrix-id->string (room-id room)))
-                            #:query (room-access-token/alist room))))
+  (let ((result (get room
+                     (format #f "/_matrix/client/r0/rooms/~a/state"
+                             (matrix-id->string (room-id room))))))
     (if result
         (map alist->matrix-event (vector->list result))
         result)))
@@ -302,11 +307,10 @@
 
 (define-method (room-event (room <room>) (event-id <matrix-id>))
   (assert-token room)
-  (let ((result (client-get (session-client (room-session room))
-                            (format #f "/_matrix/client/r0/rooms/~a/event/~a"
-                                    (matrix-id->string (room-id room))
-                                    (matrix-id->string event-id))
-                            #:query (room-access-token/alist room))))
+  (let ((result (get room
+                     (format #f "/_matrix/client/r0/rooms/~a/event/~a"
+                             (matrix-id->string (room-id room))
+                             (matrix-id->string event-id)))))
     (and result
          (alist->matrix-event result))))
 
@@ -322,13 +326,12 @@
                           (body <list>)
                           (transaction-id <string>))
   (assert-token room)
-  (let ((result (client-put (session-client (room-session room))
-                            (format #f "/_matrix/client/r0/rooms/~a/send/~a/~a"
-                                    (matrix-id->string (room-id room))
-                                    type
-                                    transaction-id)
-                            body
-                            #:query (room-access-token/alist room))))
+  (let ((result (put room
+                     (format #f "/_matrix/client/r0/rooms/~a/send/~a/~a"
+                             (matrix-id->string (room-id room))
+                             type
+                             transaction-id)
+                     body)))
     (if result
         (cond
          ((assoc-ref result "error")
