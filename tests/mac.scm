@@ -12,6 +12,8 @@
   (bin->hex (string->utf8 "hello")))
 
 
+(define exit-status (test-runner-fail-count (test-runner-current)))
+
 (test-end "mac")
 
-(exit (= (test-runner-fail-count (test-runner-current)) 0))
+(exit exit-status)

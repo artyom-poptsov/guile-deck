@@ -11,6 +11,8 @@
   (uri-parameters->string '(("a" . "b") ("c" . "d"))))
 
 
+(define exit-status (test-runner-fail-count (test-runner-current)))
+
 (test-end "http-client")
 
-(exit (= (test-runner-fail-count (test-runner-current)) 0))
+(exit exit-status)

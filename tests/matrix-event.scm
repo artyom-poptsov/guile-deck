@@ -24,6 +24,8 @@
     (equal? lst (matrix-event->alist e))))
 
 
+(define exit-status (test-runner-fail-count (test-runner-current)))
+
 (test-end "matrix-event")
 
-(exit (= (test-runner-fail-count (test-runner-current)) 0))
+(exit exit-status)

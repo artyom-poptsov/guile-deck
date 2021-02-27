@@ -86,6 +86,8 @@
    (string->matrix-id "$tkNd9FVwPyAlcKYvLfgAbFseQ5pAJRKlWB_clzvloqY")))
 
 
+(define exit-status (test-runner-fail-count (test-runner-current)))
+
 (test-end "matrix-id")
 
-(exit (= (test-runner-fail-count (test-runner-current)) 0))
+(exit exit-status)
