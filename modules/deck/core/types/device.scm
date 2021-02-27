@@ -4,7 +4,8 @@
             device-id
             device-display-name
             device-last-seen-ip
-            device-last-seen-timestamp))
+            device-last-seen-timestamp
+            alist->device))
 
 
 ;; Description:
@@ -66,5 +67,13 @@
   (display device (current-output-port)))
 
 
+
+;; Convert an alist to a <device> instance.
+(define-method (alist->device (alist <list>))
+  (make <device>
+    #:id (assoc-ref alist "device_id")
+    #:dispaly-name (assoc-ref alist "display_name")
+    #:last-seen-ip (assoc-ref alist "last_seen_ip")
+    #:last-seen-timestamp (assoc-ref alist "last_seen_ts")))
 
 ;;; device.scm ends here.
