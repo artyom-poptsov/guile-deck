@@ -22,7 +22,8 @@ include $(top_srcdir)/build-aux/am/guilec
 SOURCES = \
 	matrix-id.scm	\
 	matrix-content-uri.scm	\
-	matrix-event.scm
+	matrix-event.scm 	\
+	device.scm
 
 GOBJECTS = $(SOURCES:%.scm=%.go)
 moddir=$(guilesitedir)/deck/core/types/
