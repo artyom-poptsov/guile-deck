@@ -1,11 +1,13 @@
 (define-module (deck core session)
   #:use-module (oop goops)
   #:use-module (deck core types matrix-id)
+  #:use-module (deck core types device)
   #:use-module (deck core room)
   #:use-module (deck core net client)
   #:export (<session>
             session?
             session-user-id
+            session-devices
             session-token
             session-token/alist
             session-client
@@ -68,6 +70,24 @@
   (let ((result (client-get (session-client session) "/_matrix/client/r0/sync"
                             #:query (session-token/alist session))))
     result))
+
+
+
+;; Gets information about all devices for the current user.
+;;
+;; Description:
+;;   <https://matrix.org/docs/api/client-server/#!/Device32management/getDevices>
+(define-method (session-devices (session <session>))
+  (let ((result (client-get (session-client session)
+                            "/_matrix/client/r0/devices"
+                            #:query (session-token/alist session))))
+    (if result
+        (cond
+         ((assoc-ref result "error")
+          (error (assoc-ref result "error") session))
+         (else
+          (map alist->device
+               (vector->list (assoc-ref result "devices"))))))))
 
 
 
