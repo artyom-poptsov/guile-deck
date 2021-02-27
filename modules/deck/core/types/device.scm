@@ -72,7 +72,7 @@
 (define-method (alist->device (alist <list>))
   (make <device>
     #:id (assoc-ref alist "device_id")
-    #:dispaly-name (assoc-ref alist "display_name")
+    #:display-name (assoc-ref alist "display_name")
     #:last-seen-ip (assoc-ref alist "last_seen_ip")
     #:last-seen-timestamp (assoc-ref alist "last_seen_ts")))
 
