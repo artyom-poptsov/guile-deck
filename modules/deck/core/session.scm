@@ -2,6 +2,7 @@
   #:use-module (oop goops)
   #:use-module (deck core types matrix-id)
   #:use-module (deck core types device)
+  #:use-module (deck core types turn-server)
   #:use-module (deck core room)
   #:use-module (deck core net client)
   #:export (<session>
@@ -162,7 +163,7 @@
          ((assoc-ref result "error")
           (error (assoc-ref result "error")))
          (else
-          result))
+          (alist->turn-server result)))
         (error "Could not make a request" session))))
 
 
