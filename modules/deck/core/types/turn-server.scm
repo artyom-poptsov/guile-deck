@@ -1,7 +1,11 @@
 (define-module (deck core types turn-server)
   #:use-module (oop goops)
   #:use-module (deck core types matrix-id)
-  #:export ())
+  #:export (<turn-server>
+            turn-server-password
+            turn-server-ttl
+            turn-server-uris
+            turn-server-username))
 
 
 ;; See <https://matrix.org/docs/api/client-server/#!/VOIP/getTurnServer>
@@ -28,7 +32,7 @@
   (username
    #:init-value   #:f
    #:init-keyword #:username
-   #:getter       #:username))
+   #:getter       turn-server-username))
 
 
 
@@ -46,5 +50,15 @@
 (define-method (write (turn-server <turn-server>))
   (next-method)
   (display turn-server (current-output-port)))
+
+
+
+;; Convert an ALIST to a <turn-server> instance.
+(define-method (alist->turn-server (alist <list>))
+  (make <turn-server>
+    #:password (assoc-ref alist "password")
+    #:ttl      (assoc-ref alist "ttl")
+    #:uris     (assoc-ref alist "uris")
+    #:username (assoc-ref alist "username")))
 
 
