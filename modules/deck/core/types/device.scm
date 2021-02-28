@@ -68,6 +68,14 @@
 
 
 
+(define-method (equal? (d1 <device>) (d2 <device>))
+  (and (equal? (device-id d1) (device-id d2))
+       (equal? (device-display-name d1) (device-display-name d2))
+       (equal? (device-last-seen-ip d1) (device-last-seen-ip d2))
+       (equal? (device-last-seen-timestamp d1) (device-last-seen-timestamp d2))))
+
+
+
 ;; Convert an alist to a <device> instance.
 (define-method (alist->device (alist <list>))
   (make <device>
