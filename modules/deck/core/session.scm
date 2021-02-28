@@ -17,7 +17,8 @@
             session-joined-rooms
             session-logout
             session-logout/all
-            session-whoami))
+            session-whoami
+            session-voip-turn-server))
 
 
 (define-class <session> ()
@@ -147,5 +148,21 @@
          (else
           (string->matrix-id (assoc-ref result "user_id"))))
         (error "Could not make a whoami request" session))))
+
+
+
+;; This API provides credentials for the client to use when initiating calls.
+;; See <https://matrix.org/docs/api/client-server/#!/VOIP/getTurnServer>
+(define-method (session-voip-turn-server (session <session>))
+  (let ((result (client-get (session-client session)
+                            "/_matrix/client/r0/voip/turnServer"
+                            #:query (session-token/alist session))))
+    (if result
+        (cond
+         ((assoc-ref result "error")
+          (error (assoc-ref result "error")))
+         (else
+          result))
+        (error "Could not make a request" session))))
 
 
