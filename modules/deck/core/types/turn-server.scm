@@ -5,7 +5,8 @@
             turn-server-password
             turn-server-ttl
             turn-server-uris
-            turn-server-username))
+            turn-server-username
+            alist->turn-server))
 
 
 ;; See <https://matrix.org/docs/api/client-server/#!/VOIP/getTurnServer>
