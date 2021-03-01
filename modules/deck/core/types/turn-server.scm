@@ -2,6 +2,7 @@
   #:use-module (oop goops)
   #:use-module (deck core types matrix-id)
   #:export (<turn-server>
+            turn-server?
             turn-server-password
             turn-server-ttl
             turn-server-uris
@@ -51,6 +52,11 @@
 (define-method (write (turn-server <turn-server>))
   (next-method)
   (display turn-server (current-output-port)))
+
+
+
+(define (turn-server? object)
+  (is-a? object <turn-server>))
 
 
 
