@@ -1,6 +1,7 @@
 (define-module (deck core types device)
   #:use-module (oop goops)
   #:export (<device>
+            device?
             device-id
             device-display-name
             device-last-seen-ip
@@ -65,6 +66,11 @@
 (define-method (write (device <device>))
   (next-method)
   (display device (current-output-port)))
+
+
+
+(define (device? object)
+  (is-a? object <device>))
 
 
 
