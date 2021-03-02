@@ -3,7 +3,8 @@
   #:export (<matrix-content-uri>
             matrix-content-uri-server
             matrix-content-uri-protocol
-            matrix-content-uri-media-id))
+            matrix-content-uri-media-id
+            string->matrix-content-uri))
 
 
 (define-class <matrix-content-uri> ()
@@ -47,3 +48,26 @@
 
 
 
+(define-method (matrix-content-uri-protocol (string <string>))
+  (let ((m (string-match "([a-z]+)://*" string)))
+    (and m
+         (match:substring m 1))))
+
+(define-method (matrix-content-uri-server (string <string>))
+  (let ((m (string-match "[a-z]+://([^/]+)/*" string)))
+    (and m
+         (match:substring m 1))))
+
+(define-method (matrix-content-uri-media-id (string <string>))
+  (let ((m (string-match "[a-z]+://[^/]+/(.*)" string)))
+    (and m
+         (match:substring m 1))))
+
+  
+(define-method (string->matrix-content-uri (string <string>))
+  (make <matrix-content-uri>
+    #:server   (matrix-content-uri-server string)
+    #:protocol (matrix-content-uri-protocol string)
+    #:media-id (matrix-content-uri-media-id string)))
+
+  
