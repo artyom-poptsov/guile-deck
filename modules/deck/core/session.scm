@@ -19,6 +19,7 @@
             session-logout
             session-logout/all
             session-whoami
+            session-avatar-uri
             session-voip-turn-server))
 
 
@@ -149,6 +150,21 @@
          (else
           (string->matrix-id (assoc-ref result "user_id"))))
         (error "Could not make a whoami request" session))))
+
+
+
+(define-method (session-avatar-uri (session <session>))
+  (let ((result (client-get (session-client session)
+                            (format #f "/_matrix/client/r0/profile/~a/avatar_url"
+                                    (session-user-id session))
+                            #:query (session-token/alist session))))
+    (if result
+        (cond
+         ((assoc-ref result "error")
+          (error (assoc-ref result "error")))
+         (else
+          (string->matrix-content-uri (assoc-ref result "avatar_url"))))
+        (error "Could not make a request" session))))
 
 
 
