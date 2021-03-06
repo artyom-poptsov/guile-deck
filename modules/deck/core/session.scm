@@ -3,6 +3,7 @@
   #:use-module (deck core types matrix-id)
   #:use-module (deck core types device)
   #:use-module (deck core types turn-server)
+  #:use-module (deck core types state)
   #:use-module (deck core room)
   #:use-module (deck core net client)
   #:export (<session>
@@ -72,7 +73,13 @@
 (define-method (session-sync (session <session>))
   (let ((result (client-get (session-client session) "/_matrix/client/r0/sync"
                             #:query (session-token/alist session))))
-    result))
+    (if result
+        (cond
+         ((assoc-ref result "error")
+          (error (assoc-ref result "error")))
+         (else
+          (alist->state result)))
+        (error "Could not make a request" session))))
 
 
 
