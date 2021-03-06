@@ -70,9 +70,37 @@
   `(("access_token" . ,(session-token session))))
 
 
-(define-method (session-sync (session <session>))
-  (let ((result (client-get (session-client session) "/_matrix/client/r0/sync"
-                            #:query (session-token/alist session))))
+;; Synchronise the client's state with the latest state on the server. Clients
+;; use this API when they first log in to get an initial snapshot of the state
+;; on the server, and then continue to call this API to get incremental deltas
+;; to the state, and to receive new messages.
+;;
+;; See <https://matrix.org/docs/api/client-server/#!/Room32participation/sync>
+(define* (session-sync session
+                       #:key
+                       (filter       #f)
+                       (since        #f)
+                       (full-state   #f)
+                       (set-presense #f)
+                       (timeout      #f))
+  (let* ((query (session-token/alist session))
+         (query (if filter
+                    (acons "filter" filter query)
+                    query))
+         (query (if since
+                    (acons "since" since query)
+                    query))
+         (query (if full-state
+                    (acons "full_state" full-state query)
+                    query))
+         (query (if set-presense
+                    (acons "set_presence" set-presense query)
+                    query))
+         (query (if timeout
+                    (acons "timeout" timeout query)
+                    query))
+         (result (client-get (session-client session) "/_matrix/client/r0/sync"
+                             #:query query)))
     (if result
         (cond
          ((assoc-ref result "error")
