@@ -76,6 +76,18 @@
 
 
 
+(define-method (equal? (s1 <state>) (s2 <state>))
+  (and (equal? (state-account-data               s1) (state-account-data s2))
+       (equal? (state-device-lists               s1) (state-device-lists s2))
+       (equal? (state-device-one-time-keys-count s1)
+               (state-device-one-time-keys-count s2))
+       (equal? (state-next-batch                 s1) (state-next-batch s2))
+       (equal? (state-presense                   s1) (state-presense s2))
+       (equal? (state-rooms                      s1) (state-rooms s2))
+       (equal? (state-to-device                  s1) (state-to-device s2))))
+
+
+
 (define-method (alist->state (alist <list>))
   (make <state>
     #:account-data (assoc-ref alist "account_data")
