@@ -1,6 +1,7 @@
 (define-module (deck core types matrix-content-uri)
   #:use-module (oop goops)
   #:export (<matrix-content-uri>
+            matrix-content-uri?
             matrix-content-uri-server
             matrix-content-uri-protocol
             matrix-content-uri-media-id
@@ -45,6 +46,11 @@
 (define-method (write (uri <matrix-content-uri>))
   (next-method)
   (display uri (current-output-port)))
+
+
+
+(define-method (matrix-content-uri? object)
+  (is-a? object <matrix-content-uri>))
 
 
 
