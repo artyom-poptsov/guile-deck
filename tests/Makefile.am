@@ -21,6 +21,7 @@ SCM_TESTS = \
 	matrix-id.scm	\
 	matrix-event.scm	\
 	device.scm	\
+	state.scm	\
 	client.scm	\
 	mac.scm
 
