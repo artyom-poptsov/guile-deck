@@ -5,7 +5,8 @@
             matrix-content-uri-server
             matrix-content-uri-protocol
             matrix-content-uri-media-id
-            string->matrix-content-uri))
+            string->matrix-content-uri
+            matrix-content-uri->string))
 
 
 (define-class <matrix-content-uri> ()
@@ -75,5 +76,11 @@
     #:server   (matrix-content-uri-server string)
     #:protocol (matrix-content-uri-protocol string)
     #:media-id (matrix-content-uri-media-id string)))
+
+(define-method (matrix-content-uri->string (uri <matrix-content-uri>))
+  (format #f "~a://~a/~a"
+          (matrix-content-uri-protocol uri)
+          (matrix-content-uri-server uri)
+          (matrix-content-uri-media-id)))
 
   
