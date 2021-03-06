@@ -11,7 +11,9 @@
             client-get
             client-put
             client-post
-            uri-parameters->string))
+            uri-parameters->string
+            client-set-debug!
+            client-debug?))
 
 
 (define-class <client> ()
@@ -19,7 +21,14 @@
   (server-uri
    #:init-value   #f
    #:init-keyword #:server
-   #:getter       client-server-uri))
+   #:getter       client-server-uri)
+
+  ;; <boolean>
+  (debug?
+   #:init-value   #f
+   #:init-keyword #:debug?
+   #:getter       client-debug?
+   #:setter       client-set-debug!))
 
 
 
@@ -62,6 +71,9 @@
                             #:query  (uri-parameters->string query))))
     (receive (response body)
         (http-get uri)
+      (when (client-debug? client)
+        (display response)
+        (newline))
       (and (= (response-code response) 200)
            (json-string->scm (bytevector->string body "UTF-8"))))))
 
@@ -80,8 +92,9 @@
                   #:headers '((Content-Type . "application/json"))
                   #:port    (open-socket-for-uri uri)
                   #:body    json-body)
-      (display response)
-      (newline)
+      (when (client-debug? client)
+        (display response)
+        (newline))
       (json-string->scm (bytevector->string response-body "UTF-8")))))
 
 (define* (client-post client resource body
@@ -99,6 +112,7 @@
                    #:headers '((Content-Type . "application/json"))
                    #:port    (open-socket-for-uri uri)
                    #:body    json-body)
-      (display response)
-      (newline)
+      (when (client-debug? client)
+        (display response)
+        (newline))
       (json-string->scm (bytevector->string response-body "UTF-8")))))
