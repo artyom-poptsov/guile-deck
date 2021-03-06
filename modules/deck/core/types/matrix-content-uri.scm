@@ -1,5 +1,6 @@
 (define-module (deck core types matrix-content-uri)
   #:use-module (oop goops)
+  #:use-module (ice-9 regex)
   #:export (<matrix-content-uri>
             matrix-content-uri?
             matrix-content-uri-server
