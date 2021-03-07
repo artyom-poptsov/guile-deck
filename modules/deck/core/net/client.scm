@@ -8,6 +8,7 @@
   #:use-module (json)
   #:export (<client>
             client-server-uri
+            client-build-uri
             client-get
             client-put
             client-post
@@ -58,17 +59,22 @@
                         params)
                    "&")))
 
+;; Build an URI based on the CLIENT parameters, a RESOURCE and a QUERY alist.
+;; Returns the new URI.
+(define-method (client-build-uri (client <client>) (resource <string>) (query <list>))
+  (let ((server (client-server-uri client)))
+    (build-uri (uri-scheme server)
+               #:host   (uri-host server)
+               #:port   (uri-port server)
+               #:path   resource
+               #:query  (uri-parameters->string query))))
+
 
 (define* (client-get client
                      resource
                      #:key
                      (query '()))
-  (let* ((server (client-server-uri client))
-         (uri    (build-uri (uri-scheme server)
-                            #:host   (uri-host server)
-                            #:port   (uri-port server)
-                            #:path   resource
-                            #:query  (uri-parameters->string query))))
+  (let ((uri (client-build-uri client resource query)))
     (receive (response body)
         (http-get uri)
       (when (client-debug? client)
@@ -80,13 +86,8 @@
 (define* (client-put client resource body
                       #:key
                       (query '()))
-  (let* ((server (client-server-uri client))
-         (uri    (build-uri (uri-scheme server)
-                            #:host   (uri-host server)
-                            #:port   (uri-port server)
-                            #:path   resource
-                            #:query  (uri-parameters->string query)))
-         (json-body (scm->json-string body)))
+  (let ((uri       (client-build-uri client resource query))
+        (json-body (scm->json-string body)))
     (receive (response response-body)
         (http-put uri
                   #:headers '((Content-Type . "application/json"))
@@ -100,13 +101,8 @@
 (define* (client-post client resource body
                       #:key
                       (query '()))
-  (let* ((server (client-server-uri client))
-         (uri    (build-uri (uri-scheme server)
-                            #:host   (uri-host server)
-                            #:port   (uri-port server)
-                            #:path   resource
-                            #:query  (uri-parameters->string query)))
-         (json-body (scm->json-string body)))
+  (let ((uri       (client-build-uri client resource query))
+        (json-body (scm->json-string body)))
     (receive (response response-body)
         (http-post uri
                    #:headers '((Content-Type . "application/json"))
