@@ -25,7 +25,8 @@ SOURCES = \
 	matrix-event.scm 	\
 	device.scm		\
 	turn-server.scm		\
-	state.scm
+	state.scm		\
+	filter.scm
 
 GOBJECTS = $(SOURCES:%.scm=%.go)
 moddir=$(guilesitedir)/deck/core/types/
