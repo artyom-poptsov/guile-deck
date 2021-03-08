@@ -1,6 +1,7 @@
 # -*- mode: org; -*-
 
 # Guile-Deck
+[[https://github.com/artyom-poptsov/guile-deck/actions/workflows/guile2.2.yml/badge.svg]]
 
 GNU Guile SDK for the Matrix network ([[https://matrix.org]])
 
