@@ -1,0 +1,169 @@
+\input texinfo
+@c -*-texinfo-*-
+@c %**start of header
+@setfilename guile-deck.info
+@documentencoding UTF-8
+@settitle Guile-Deck Reference Manual
+@c %**end of header
+@include version.texi
+
+@copying
+This manual documents Guile-Deck version @value{VERSION}.
+
+Copyright (C) 2021 Artyom V. Poptsov @email{poptsov.artyom@@gmail.com}
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.  A
+copy of the license is included in the section entitled ``GNU Free
+Documentation License.''
+@end copying
+
+@dircategory The Algorithmic Language Scheme
+@direntry
+* Guile-Deck: (guile-deck).  GNU Guile SDK for the Matrix network.
+@end direntry
+
+@setchapternewpage odd
+
+@titlepage
+@sp 10
+
+@title Guile-Deck Reference Manual
+@subtitle For Guile-Deck @value{VERSION}
+
+@author Artyom V. Poptsov
+
+@page
+@vskip 0pt plus 1filll
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@finalout
+@headings double
+
+@ifnottex
+@node Top, Introduction, (dir), (dir)
+@top The Guile-Udev Reference Manual
+
+@insertcopying
+@sp 1
+@end ifnottex
+
+@menu
+* Introduction::
+* Installation::
+* API Reference::
+
+Appendices
+
+* GNU Free Documentation License::  The license of this manual.
+
+@end menu
+
+@contents
+
+@node Introduction
+@chapter Introduction
+
+Guile-Deck is an SDK for the @url{https://matrix.org, Matrix} network for
+programs written in @url{https://www.gnu.org/software/guile/, GNU Guile}.
+
+@node Installation
+@chapter Installation
+
+Guile-Deck sources are available from GitHub at
+@url{https://github.com/artyom-poptsov/guile-deck/}. This section describes
+requirements of Guile-Deck and installation process.
+
+Guile-Deck depends on the following packages:
+
+@itemize
+@item @url{https://www.gnu.org/software/guile/, GNU Guile}, 2.2
+@item @url{https://github.com/aconchillo/guile-json, Guile-JSON}
+@item @url{https://notabug.org/cwebber/guile-gcrypt, Guile-GCrypt}
+@item @url{https://gnutls.org/, Guile-Gnutls}
+@end itemize
+
+Get the sources of Guile-Deck from GitHub using Git (a good introduction to
+Git is @url{https://git-scm.com/book/en/v2, Pro Git} book, which is available
+online):
+
+@example
+$ git clone git@@github.com:artyom-poptsov/guile-deck.git
+@end example
+
+Configure the sources:
+
+@example
+$ cd guile-deck/
+$ autoreconf -vif
+$ ./configure
+@end example
+
+Build and install the library:
+
+@example
+$ make
+$ make install
+@end example
+
+For a basic explanation of the installation of the package, see the
+@file{INSTALL} file.
+
+@strong{important} You probably want to call @command{configure} with
+the @option{--with-guilesitedir} option so that this package is
+installed in Guile's default path.  But, if you don't know where your
+Guile site directory is, run @command{configure} without the option,
+and it will give you a suggestion.
+
+@node API Reference
+@chapter API Reference
+
+@section Matrix
+
+These procedures are available from the module @code{(deck matrix)}.
+
+@deffn {Scheme Procedure} matrix-shared-secret matrix
+Get the shared secret from the @var{matrix} object.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-server matrix
+Get the server URI from the @var{matrix} object.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-versions matrix
+Gets the versions of the specification supported by the a @var{matrix}
+instance.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-debug-mode? matrix
+Check if a @var{matrix} instance is in the debug mode.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-register matrix user password [#:admin? #f] [#:device-id #f]
+Register a new user on the @var{matrix} server with the specified password.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-login matrix type user password
+Try to authenticate on a @var{matrix} server with the given credentials.
+Return a new session instance.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-request-nonce matrix type user password
+Get 'nonce' hash from a server.
+@end deffn
+
+@deffn {Scheme Procedure} udev? x
+Check if @var{x} is an udev object. Return @code{#t} if it is, or @code{#f}
+otherwise.
+@end deffn
+
+@node GNU Free Documentation License
+@appendix GNU Free Documentation License
+
+@include fdl.texi
+
+@bye
