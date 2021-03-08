@@ -21,6 +21,20 @@
             state-filter?
             ))
 
+(define-syntax cons-or-null
+  (syntax-rules ()
+    ((_ key value)
+     (if value
+         (cons key value)
+         '()))
+    ((_ key value converter)
+     (if value
+         (cons key (converter value))
+         '()))))
+
+(define (make-sieved-list . elements)
+  (delete '() elements))
+
 
 (define-class <event-filter> ()
   ;; <number>
@@ -59,22 +73,12 @@
 ;; Convert a FILTER instance to an association list suitable for using with
 ;; the Matrix API.
 (define-method (event-filter->alist (filter <event-filter>))
-  (let ((result (list (if (event-filter-limit filter)
-                          `("limit"       . ,(event-filter-limit filter))
-                          '())
-                      (if (event-filter-not-senders filter)
-                          `("not_senders" . ,(list->vector (event-filter-not-senders filter)))
-                          '())
-                      (if (event-filter-not-types   filter)
-                          `("not_types"   . ,(list->vector (event-filter-not-types   filter)))
-                          '())
-                      (if (event-filter-senders     filter)
-                          `("senders"     . ,(list->vector (event-filter-senders     filter)))
-                          '())
-                      (if (event-filter-types       filter)
-                          `("types"       . ,(list->vector (event-filter-types       filter)))
-                          '()))))
-    (delete '() result)))
+  (make-sieved-list
+   (cons-or-null "limit"       (event-filter-limit filter))
+   (cons-or-null "not_senders" (event-filter-not-senders filter) list->vector)
+   (cons-or-null "not_types"   (event-filter-not-types   filter) list->vector)
+   (cons-or-null "senders"     (event-filter-senders     filter) list->vector)
+   (cons-or-null "types"       (event-filter-types       filter) list->vector)))
 
 
 (define-class <room-filter> ()
@@ -124,30 +128,21 @@
 ;; Convert a ROOM-FILTER instance to an association list suitable for using
 ;; with the Matrix API.
 (define-method (room-filter->alist (room-filter <room-filter>))
-  (delete
-   '()
-   (list
-    (if (room-filter-account-data room-filter)
-        `("account_data" . ,(event-filter->alist (room-filter-account-data room-filter)))
-        '())
-    (if (room-filter-ephemeral room-filter)
-        `("ephemeral" . ,(event-filter->alist (room-filter-ephemeral room-filter)))
-        '())
-    (if (room-filter-include-leave? room-filter)
-        `("include_leave" . ,(room-filter-include-leave? room-filter))
-        '())
-    (if (room-filter-not-rooms room-filter)
-        `("not_rooms" . ,(list->vector (room-filter-not-rooms room-filter)))
-        '())
-    (if (room-filter-rooms room-filter)
-        `("rooms" . ,(list->vector (room-filter-rooms room-filter)))
-        '())
-    ;; TODO:
-    ;; (if (room-filter-state room-filter)
-    ;;     `("state" . ,(state-filter->alist (room-filter-state room-filter))))
-    (if (room-filter-timeline room-filter)
-        `("timeline" . ,(event-filter->alist (room-filter-timeline room-filter)))
-        '()))))
+  (make-sieved-list
+   (cons-or-null "account_data" (room-filter-account-data room-filter)
+                 event-filter->alist)
+   (cons-or-null "ephemeral" (room-filter-ephemeral room-filter)
+                 event-filter->alist)
+   (cons-or-null "include_leave" (room-filter-include-leave? room-filter))
+   (cons-or-null "not_rooms" (room-filter-not-rooms room-filter)
+                 list->vector)
+   (cons-or-null "rooms" (room-filter-rooms room-filter)
+                 list->vector)
+   ;; TODO:
+   ;; (cons-or-null "state" (room-filter-state room-filter)
+   ;;               state-filter->alist)
+   (cons-or-null "timeline" (room-filter-timeline room-filter)
+                 event-filter->alist)))
 
 
 
@@ -210,8 +205,6 @@
    #:init-value   #f
    #:init-keyword #:rooms
    #:getter       state-filter-rooms))
-
-
 
 (define-method (state-filter? object)
   (is-a? object <state-filter>))
