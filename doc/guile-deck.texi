@@ -46,7 +46,7 @@ Documentation License.''
 
 @ifnottex
 @node Top, Introduction, (dir), (dir)
-@top The Guile-Udev Reference Manual
+@top The Guile-Deck Reference Manual
 
 @insertcopying
 @sp 1
@@ -125,6 +125,10 @@ and it will give you a suggestion.
 @section Matrix
 
 These procedures are available from the module @code{(deck matrix)}.
+
+@deffn {Class} <matrix>
+This class provides an entry point for Matrix network.
+@end deffn
 
 @deffn {Scheme Procedure} matrix-shared-secret matrix
 Get the shared secret from the @var{matrix} object.
