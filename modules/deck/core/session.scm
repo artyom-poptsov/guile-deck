@@ -4,6 +4,7 @@
   #:use-module (deck core types device)
   #:use-module (deck core types turn-server)
   #:use-module (deck core types state)
+  #:use-module (deck core types filter)
   #:use-module (deck core room)
   #:use-module (deck core net client)
   #:export (<session>
