@@ -55,6 +55,24 @@
                   #:rooms        '("!included-room:matrix.org"))))
     (state-filter->alist filter)))
 
+(test-equal "room-filter->alist"
+  `(("account_data"  . (("limit" . 10)))
+    ("ephemeral"     . (("limit" . 20)))
+    ("include_leave" . #f)
+    ("not_rooms"     . ,(vector "!excluded-room:matrix.org"))
+    ("rooms"         . ,(vector "!included-room:matrix.org"))
+    ("state"         . ,(list (cons "types"   (vector "some-type-1"))))
+    ("timeline"      . ,(list (cons "senders" (vector "@alice:matrix.org")))))
+  (let ((filter (make <room-filter>
+                  #:account-data   (make <event-filter> #:limit 10)
+                  #:ephemeral      (make <event-filter> #:limit 20)
+                  #:include-leave? #f
+                  #:not-rooms      '("!excluded-room:matrix.org")
+                  #:rooms          '("!included-room:matrix.org")
+                  #:state          (make <state-filter> #:types '("some-type-1"))
+                  #:timeline       (make <event-filter> #:senders '("@alice:matrix.org")))))
+    (room-filter->alist filter)))
+
 
 (define exit-status (test-runner-fail-count (test-runner-current)))
 
