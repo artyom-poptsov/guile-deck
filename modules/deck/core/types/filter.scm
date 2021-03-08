@@ -120,7 +120,7 @@
 
   (timeline
    #:init-value   'undefined
-   #:init-keyword #:state
+   #:init-keyword #:timeline
    #:getter       room-filter-timeline))
 
 (define-method (room-filter? object)
@@ -139,9 +139,8 @@
                  list->vector)
    (cons-or-null "rooms" (room-filter-rooms room-filter)
                  list->vector)
-   ;; TODO:
-   ;; (cons-or-null "state" (room-filter-state room-filter)
-   ;;               state-filter->alist)
+   (cons-or-null "state" (room-filter-state room-filter)
+                 state-filter->alist)
    (cons-or-null "timeline" (room-filter-timeline room-filter)
                  event-filter->alist)))
 
