@@ -14,6 +14,7 @@
 
             <room-filter>
             room-filter?
+            room-filter->alist
             ;; alist->room-filter
 
             <state-filter>
@@ -117,10 +118,36 @@
    #:init-keyword #:state
    #:getter       room-filter-timeline))
 
-
-
 (define-method (room-filter? object)
   (is-a? object <room-filter>))
+
+;; Convert a ROOM-FILTER instance to an association list suitable for using
+;; with the Matrix API.
+(define-method (room-filter->alist (room-filter <room-filter>))
+  (delete
+   '()
+   (list
+    (if (room-filter-account-data room-filter)
+        `("account_data" . ,(event-filter->alist (room-filter-account-data room-filter)))
+        '())
+    (if (room-filter-ephemeral room-filter)
+        `("ephemeral" . ,(event-filter->alist (room-filter-ephemeral room-filter)))
+        '())
+    (if (room-filter-include-leave? room-filter)
+        `("include_leave" . ,(room-filter-include-leave? room-filter))
+        '())
+    (if (room-filter-not-rooms room-filter)
+        `("not_rooms" . ,(list->vector (room-filter-not-rooms room-filter)))
+        '())
+    (if (room-filter-rooms room-filter)
+        `("rooms" . ,(list->vector (room-filter-rooms room-filter)))
+        '())
+    ;; TODO:
+    ;; (if (room-filter-state room-filter)
+    ;;     `("state" . ,(state-filter->alist (room-filter-state room-filter))))
+    (if (room-filter-timeline room-filter)
+        `("timeline" . ,(event-filter->alist (room-filter-timeline room-filter)))
+        '()))))
 
 
 
