@@ -280,4 +280,12 @@
 (define-method (filter? object)
   (is-a? object <filter>))
 
+(define-method (filter->alist (filter <filter>))
+  (make-sieved-list
+   (cons-or-null "account_data" (filter-account-data filter) filter->alist)
+   (cons-or-null "event_fields" (filter-event-fields filter) list->vector)
+   (cons-or-null "event_format" (filter-event-format filter))
+   (cons-or-null "presence"     (filter-presence     filter) filter->alist)
+   (cons-or-null "room"         (filter-room         filter) filter->alist)))
+
 

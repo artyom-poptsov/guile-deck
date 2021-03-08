@@ -73,6 +73,20 @@
                   #:timeline       (make <event-filter> #:senders '("@alice:matrix.org")))))
     (filter->alist filter)))
 
+(test-equal "filter: filter->alist"
+  `(("account_data" . (("limit" . 10)))
+    ("event_fields" . ,(vector "f1" "f2"))
+    ("event_format" . client)
+    ("presence"     . (("limit" . 20)))
+    ("room"         . (("include_leave" . #t))))
+  (let ((filter (make <filter>
+                  #:account-data (make <event-filter> #:limit 10)
+                  #:event-fields '("f1" "f2")
+                  #:event-format 'client
+                  #:presense     (make <event-filter> #:limit 20)
+                  #:room         (make <room-filter>  #:include-leave? #t))))
+    (filter->alist filter)))
+
 
 (define exit-status (test-runner-fail-count (test-runner-current)))
 
