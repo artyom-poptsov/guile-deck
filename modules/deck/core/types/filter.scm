@@ -14,6 +14,8 @@
             <room-filter>
             ;; room-filter?
             ;; alist->room-filter
+
+            <state-filter>
             ))
 
 
@@ -89,6 +91,68 @@
    #:init-value   #f
    #:init-keyword #:state
    #:getter       room-filter-timeline))
+
+
+
+(define-class <state-filter> ()
+  ;; <number>
+  (limit
+   #:init-value   #f
+   #:init-keyword #:limit
+   #:getter       state-filter-limit)
+
+  ;; <list> of <string>
+  (not-senders
+   #:init-value   #f
+   #:init-keyword #:not-senders
+   #:getter       state-filter-not-senders)
+
+  ;; <list> of <string>
+  (not-types
+   #:init-value   #f
+   #:init-keyword #:not-types
+   #:getter       state-filter-not-types)
+
+  ;; <list> of <string>
+  (senders
+   #:init-value   #f
+   #:init-keyword #:senders
+   #:getter       state-filter-senders)
+
+  ;; <list> of <string>
+  (types
+   #:init-value   #f
+   #:init-keyword #:types
+   #:getter       state-filter-types)
+
+  ;; <boolean>
+  (contains-url?
+   #:init-value   #f
+   #:init-keyword #:contains-url
+   #:getter       state-filter-contains-url?)
+
+  ;; <boolean>
+  (include-redundant-members?
+   #:init-value   #f
+   #:init-keyword #:include-redundant-members?
+   #:getter       state-filter-include-redundant-members?)
+
+  ;; <boolean>
+  (lazy-load-members?
+   #:init-value   #f
+   #:init-keyword #:lazy-load-members?
+   #:getter       state-filter-lazy-load-members?)
+
+  ;; <list> of <string>
+  (not-rooms
+   #:init-value   #f
+   #:init-keyword #:not-rooms
+   #:getter       state-filter-not-rooms)
+
+  (rooms
+   #:init-value   #f
+   #:init-keyword #:rooms
+   #:getter       state-filter-rooms))
 
 
 (define-class <filter> ()
