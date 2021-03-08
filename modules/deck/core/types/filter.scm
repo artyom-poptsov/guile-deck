@@ -19,16 +19,17 @@
 
             <state-filter>
             state-filter?
+            state-filter->alist
             ))
 
 (define-syntax cons-or-null
   (syntax-rules ()
     ((_ key value)
-     (if value
+     (if (not (equal? value 'undefined))
          (cons key value)
          '()))
     ((_ key value converter)
-     (if value
+     (if (not (equal? value 'undefined))
          (cons key (converter value))
          '()))))
 
@@ -37,33 +38,33 @@
 
 
 (define-class <event-filter> ()
-  ;; <number>
+  ;; <number> | 'undefined
   (limit
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:limit
    #:getter       event-filter-limit)
 
-  ;; <list> of <string>
+  ;; <list> of <string> | 'undefined
   (not-senders
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:not-senders
    #:getter       event-filter-not-senders)
 
   ;; <list> of <string>
   (not-types
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:not-types
    #:getter       event-filter-not-types)
 
   ;; <list> of <string>
   (senders
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:senders
    #:getter       event-filter-senders)
 
   ;; <list> of <string>
   (types
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:types
    #:getter       event-filter-types))
 
@@ -84,41 +85,41 @@
 (define-class <room-filter> ()
   ;; <event-filter>
   (account-data
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:account-data
    #:getter       room-filter-account-data)
 
   ;; <event-filter>
   (ephemeral
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:ephemeral
    #:getter       room-filter-ephemeral)
 
   ;; <boolean>
   (include-leave?
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:include-leave?
    #:getter       room-filter-include-leave?)
 
   ;; <list> of <string>
   (not-rooms
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:not-rooms
    #:getter       room-filter-not-rooms)
 
   (rooms
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:rooms
    #:getter       room-filter-rooms)
 
   ;; <state-filter>
   (state
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:state
    #:getter       room-filter-state)
 
   (timeline
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:state
    #:getter       room-filter-timeline))
 
@@ -149,65 +150,86 @@
 (define-class <state-filter> ()
   ;; <number>
   (limit
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:limit
    #:getter       state-filter-limit)
 
   ;; <list> of <string>
   (not-senders
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:not-senders
    #:getter       state-filter-not-senders)
 
   ;; <list> of <string>
   (not-types
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:not-types
    #:getter       state-filter-not-types)
 
   ;; <list> of <string>
   (senders
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:senders
    #:getter       state-filter-senders)
 
   ;; <list> of <string>
   (types
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:types
    #:getter       state-filter-types)
 
-  ;; <boolean>
+  ;; <boolean> | undefined
   (contains-url?
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:contains-url
    #:getter       state-filter-contains-url?)
 
-  ;; <boolean>
+  ;; <boolean> | undefined
   (include-redundant-members?
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:include-redundant-members?
    #:getter       state-filter-include-redundant-members?)
 
-  ;; <boolean>
+  ;; <boolean> | undefined
   (lazy-load-members?
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:lazy-load-members?
    #:getter       state-filter-lazy-load-members?)
 
   ;; <list> of <string>
   (not-rooms
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:not-rooms
    #:getter       state-filter-not-rooms)
 
   (rooms
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:rooms
    #:getter       state-filter-rooms))
 
 (define-method (state-filter? object)
   (is-a? object <state-filter>))
+
+(define-method (state-filter->alist (state-filter <state-filter>))
+  (make-sieved-list
+   (cons-or-null "limit" (state-filter-limit state-filter))
+   (cons-or-null "not_senders" (state-filter-not-senders state-filter)
+                 list->vector)
+   (cons-or-null "not_types" (state-filter-not-types state-filter)
+                 list->vector)
+   (cons-or-null "senders" (state-filter-senders state-filter)
+                 list->vector)
+   (cons-or-null "types" (state-filter-types state-filter)
+                 list->vector)
+   (cons-or-null "contains_url" (state-filter-contains-url? state-filter))
+   (cons-or-null "include_redundant_members"
+                 (state-filter-include-redundant-members? state-filter))
+   (cons-or-null "lazy_load_members"
+                 (state-filter-lazy-load-members? state-filter))
+   (cons-or-null "not_rooms" (state-filter-not-rooms state-filter)
+                 list->vector)
+   (cons-or-null "rooms" (state-filter-rooms state-filter)
+                 list->vector)))
 
 
 (define-class <filter> ()
@@ -215,7 +237,7 @@
   ;;
   ;; <event-filter>
   (account-data
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:account-data
    #:getter       filter-account-data)
 
@@ -227,7 +249,7 @@
   ;;
   ;; <list> of <string>
   (event-fields
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:event-fields
    #:getter       filter-event-fields)
 
@@ -237,7 +259,7 @@
   ;;
   ;; <symbol>
   (event-format
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:event-format
    #:getter       filter-event-format)
 
@@ -245,7 +267,7 @@
   ;;
   ;; <event-filter>
   (presence
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:presense
    #:getter       filter-presence)
 
@@ -253,7 +275,7 @@
   ;;
   ;; <room-filter>
   (room
-   #:init-value   #f
+   #:init-value   'undefined
    #:init-keyword #:room
    #:getter       filter-room))
 
