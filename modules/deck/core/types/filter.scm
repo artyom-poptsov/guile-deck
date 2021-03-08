@@ -9,6 +9,7 @@
 
             <event-filter>
             event-filter?
+            event-filter->alist
             ;; alist->event-filter
 
             <room-filter>
@@ -53,6 +54,26 @@
 
 (define-method (event-filter? object)
   (is-a? object <event-filter>))
+
+;; Convert a FILTER instance to an association list suitable for using with
+;; the Matrix API.
+(define-method (event-filter->alist (filter <event-filter>))
+  (let ((result (list (if (event-filter-limit filter)
+                          `("limit"       . ,(event-filter-limit filter))
+                          '())
+                      (if (event-filter-not-senders filter)
+                          `("not_senders" . ,(list->vector (event-filter-not-senders filter)))
+                          '())
+                      (if (event-filter-not-types   filter)
+                          `("not_types"   . ,(list->vector (event-filter-not-types   filter)))
+                          '())
+                      (if (event-filter-senders     filter)
+                          `("senders"     . ,(list->vector (event-filter-senders     filter)))
+                          '())
+                      (if (event-filter-types       filter)
+                          `("types"       . ,(list->vector (event-filter-types       filter)))
+                          '()))))
+    (delete '() result)))
 
 
 (define-class <room-filter> ()
