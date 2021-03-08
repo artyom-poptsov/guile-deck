@@ -147,7 +147,7 @@ instance.
 Check if a @var{matrix} instance is in the debug mode.
 @end deffn
 
-@deffn {Scheme Procedure} matrix-register matrix user password [#:admin? #f] [#:device-id #f]
+@deffn {Scheme Procedure} matrix-register matrix user password [#:admin?=#f] [#:device-id=#f]
 Register a new user on the @var{matrix} server with the specified password.
 @end deffn
 
@@ -158,6 +158,156 @@ Return a new session instance.
 
 @deffn {Scheme Procedure} matrix-request-nonce matrix type user password
 Get 'nonce' hash from a server.
+@end deffn
+
+@section Core
+
+@subsection MAC
+
+@deffn {Scheme Procedure} bin->hex bytevector
+Convert a @var{bytevector} to a HEX string.
+@end deffn
+
+@deffn {Scheme Procedure} generate-mac (shared-secret <string>) (data <list>)
+Generate a MAC based on a @var{shared-secret} and @var{data}.
+@end deffn
+
+@subsection Room
+@deffn {Class} <room>
+This class describes a Matrix room.
+@end deffn
+
+@deffn {Scheme Procedure} room? x
+Check if a @var{x} is a <room> instance.
+@end deffn
+
+@deffn {Scheme Procedure} room-alias (room <room>)
+
+@end deffn
+
+@deffn {Scheme Procedure} room-id (room <room>)
+Get the Matrix ID for a given @var{room}.
+@end deffn
+
+@deffn {Scheme Procedure} room-id/string (room <room>)
+Get the Matrix ID as a string for a given @var{room}.
+@end deffn
+
+@deffn {Scheme Procedure} room-session (room <room>)
+Get the current session for a given @var{room}.
+@end deffn
+
+@deffn {Scheme Procedure} room-access-token (room <room>)
+Get the access token for a given @var{room}.
+@end deffn
+
+@deffn {Scheme Procedure} room-has-access-token? (room <room>)
+Check if a @var{room} has an access token.
+@end deffn
+
+@deffn {Scheme Procedure} room-invite (room <room>) (user-id <matrix-id>)
+@deffnx {Scheme Procedure} room-invite (room <room>) (user-id <string>)
+Invite a user with a @var{user-id} to the @var{room}.
+@end deffn
+
+@deffn {Scheme Procedure} room-join (room <room>)
+Join a @var{room}.
+@end deffn
+
+@deffn {Scheme Procedure} room-leave (room <room>)
+Leave a @var{room}.
+@end deffn
+
+@deffn {Scheme Procedure} room-ban (room <room>) (user-id <matrix-id>) (reason <string>)
+@deffnx {Scheme Procedure} room-ban (room <room>) (user-id <matrix-id>)
+Ban a user with @var{user-id} in the @var{room}. If the user is currently in
+the room, also kick them. When a user is banned from a room, they may not join
+it or be invited to it until they are unbanned.
+
+The caller must have the required power level in order to perform this
+operation.
+@end deffn
+
+@deffn {Scheme Procedure} room-unban (room <room>) (user-id <matrix-id>)
+Unban a user with @var{user-id} from the @var{room}. This allows them to be
+invited to the room, and join if they would otherwise be allowed to join
+according to its join rules.
+
+The caller must have the required power level in order to perform this
+operation.
+@end deffn
+
+@deffn {Scheme Procedure} room-receipt (room <room>) (event <matrix-event>) [#:type=``m.read''] [#:receipt='()]
+This API updates the marker in a @var{room} for the given receipt @var{type}
+to the @var{event} specified.
+@end deffn
+
+@deffn {Scheme Procedure} room-members (room <room>) [#:at=#f] [#:membership=#f] [#:not-membership=#f]
+Get the list of members for the @var{room}.
+
+Returns 3 values: an event list, ``start'' and ``end'' tokens.
+@end deffn
+
+@subsection Session
+
+@deffn {Class} <session>
+This class describes a Matrix network session.
+@end deffn
+
+@deffn {Scheme Procedure} session? x
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} session-token/alist (session <session>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} session-user-id (session <session>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} session-devices (session <session>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} session-sync (session <session>) [#:filter=#f] [#:since=#f] [#:full-state=#f] [#:set-presense=#f] [#:timeout=#f]
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} session-create-filter (session <session>) (filter <filter>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} session-create-room (session <session>) (name <string>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} session-join-room (session <session>) (room-id <matrix-id>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} session-joined-rooms (session <session>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} session-logout (session <session>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} session-logout/all (session <session>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} session-whoami (session <session>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} session-avatar-uri (session <session>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} session-voip-turn-server (session <session>)
+TODO:
 @end deffn
 
 @node GNU Free Documentation License
