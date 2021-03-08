@@ -7,7 +7,7 @@
 
 (test-begin "filter")
 
-(test-equal "event-filter->alist: All fields present"
+(test-equal "event: filter->alist: All fields present"
   `(("limit"       . 10)
     ("not_senders" . ,(vector "@bob:matrix.org" "@malory:matrix.org"))
     ("not_types"   . ,(vector "some-excluded-type-1" "some-excluded-type-2"))
@@ -19,9 +19,9 @@
                   #:not-types   '("some-excluded-type-1" "some-excluded-type-2")
                   #:senders     '("@alice:matrix.org")
                   #:types       '("some-type-1"))))
-    (event-filter->alist filter)))
+    (filter->alist filter)))
 
-(test-equal "event-filter->alist: Some fields absent"
+(test-equal "event: filter->alist: Some fields absent"
   `(("limit"       . 10)
     ("senders"     . ,(vector "@alice:matrix.org"))
     ("types"       . ,(vector "some-type-1")))
@@ -29,9 +29,9 @@
                   #:limit   10
                   #:senders     '("@alice:matrix.org")
                   #:types       '("some-type-1"))))
-    (event-filter->alist filter)))
+    (filter->alist filter)))
 
-(test-equal "state-filter->alist"
+(test-equal "state: filter->alist"
   `(("limit"        . 10)
     ("not_senders"  . ,(vector "@bob:matrix.org" "@malory:matrix.org"))
     ("not_types"    . ,(vector "some-excluded-type-1" "some-excluded-type-2"))
@@ -53,9 +53,9 @@
                   #:lazy-load-members?         #f
                   #:not-rooms    '("!excluded-room:matrix.org")
                   #:rooms        '("!included-room:matrix.org"))))
-    (state-filter->alist filter)))
+    (filter->alist filter)))
 
-(test-equal "room-filter->alist"
+(test-equal "room: filter->alist"
   `(("account_data"  . (("limit" . 10)))
     ("ephemeral"     . (("limit" . 20)))
     ("include_leave" . #f)
@@ -71,7 +71,7 @@
                   #:rooms          '("!included-room:matrix.org")
                   #:state          (make <state-filter> #:types '("some-type-1"))
                   #:timeline       (make <event-filter> #:senders '("@alice:matrix.org")))))
-    (room-filter->alist filter)))
+    (filter->alist filter)))
 
 
 (define exit-status (test-runner-fail-count (test-runner-current)))

@@ -6,20 +6,18 @@
   #:export (<filter>
             filter?
             ;; alist->filter
+            filter->alist
 
             <event-filter>
             event-filter?
-            event-filter->alist
             ;; alist->event-filter
 
             <room-filter>
             room-filter?
-            room-filter->alist
             ;; alist->room-filter
 
             <state-filter>
             state-filter?
-            state-filter->alist
             ))
 
 (define-syntax cons-or-null
@@ -71,9 +69,11 @@
 (define-method (event-filter? object)
   (is-a? object <event-filter>))
 
+(define-generic filter->alist)
+
 ;; Convert a FILTER instance to an association list suitable for using with
 ;; the Matrix API.
-(define-method (event-filter->alist (filter <event-filter>))
+(define-method (filter->alist (filter <event-filter>))
   (make-sieved-list
    (cons-or-null "limit"       (event-filter-limit filter))
    (cons-or-null "not_senders" (event-filter-not-senders filter) list->vector)
@@ -128,21 +128,18 @@
 
 ;; Convert a ROOM-FILTER instance to an association list suitable for using
 ;; with the Matrix API.
-(define-method (room-filter->alist (room-filter <room-filter>))
+(define-method (filter->alist (room-filter <room-filter>))
   (make-sieved-list
    (cons-or-null "account_data" (room-filter-account-data room-filter)
-                 event-filter->alist)
+                 filter->alist)
    (cons-or-null "ephemeral" (room-filter-ephemeral room-filter)
-                 event-filter->alist)
+                 filter->alist)
    (cons-or-null "include_leave" (room-filter-include-leave? room-filter))
    (cons-or-null "not_rooms" (room-filter-not-rooms room-filter)
                  list->vector)
-   (cons-or-null "rooms" (room-filter-rooms room-filter)
-                 list->vector)
-   (cons-or-null "state" (room-filter-state room-filter)
-                 state-filter->alist)
-   (cons-or-null "timeline" (room-filter-timeline room-filter)
-                 event-filter->alist)))
+   (cons-or-null "rooms"    (room-filter-rooms room-filter) list->vector)
+   (cons-or-null "state"    (room-filter-state room-filter) filter->alist)
+   (cons-or-null "timeline" (room-filter-timeline room-filter) filter->alist)))
 
 
 
@@ -209,7 +206,7 @@
 (define-method (state-filter? object)
   (is-a? object <state-filter>))
 
-(define-method (state-filter->alist (state-filter <state-filter>))
+(define-method (filter->alist (state-filter <state-filter>))
   (make-sieved-list
    (cons-or-null "limit" (state-filter-limit state-filter))
    (cons-or-null "not_senders" (state-filter-not-senders state-filter)
