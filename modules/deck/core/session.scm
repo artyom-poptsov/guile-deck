@@ -13,6 +13,7 @@
             session-token
             session-token/alist
             session-client
+            session-create-filter
             session-sync
             session-create-room
             session-join-room
@@ -108,6 +109,27 @@
          (else
           (alist->state result)))
         (error "Could not make a request" session))))
+
+;; Uploads a new filter definition to the homeserver. Returns a filter ID that
+;; may be used in future requests to restrict which events are returned to the
+;; client.
+;;
+;; See:
+;;   <https://matrix.org/docs/api/client-server/#!/Room32participation/defineFilter>
+(define-method (session-create-filter (session <session>) (filter <filter>))
+  (let ((result (client-post (session-client session)
+                             (format #f "/_matrix/client/r0/user/~a/filter"
+                                     (session-user-id session))
+                             (filter->alist filter)
+                             #:query (session-token/alist session))))
+    (unless result
+      (error "Could not make a request" session))
+
+    (cond
+     ((assoc-ref result "error")
+      (error (assoc-ref result "error")))
+     (else
+      (assoc-ref result "filter_id")))))
 
 
 
