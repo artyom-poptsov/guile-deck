@@ -156,11 +156,6 @@ Return a new session instance.
 Get 'nonce' hash from a server.
 @end deffn
 
-@deffn {Scheme Procedure} udev? x
-Check if @var{x} is an udev object. Return @code{#t} if it is, or @code{#f}
-otherwise.
-@end deffn
-
 @node GNU Free Documentation License
 @appendix GNU Free Documentation License
 
