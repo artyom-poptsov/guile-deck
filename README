@@ -6,7 +6,7 @@
 GNU Guile SDK for the Matrix network ([[https://matrix.org]])
 
 * Requirements
-  - Guile 2.2
-  - Guile-JSON
-  - Guile-GCrypt
-  - Guile-Gnutls
+  - [[https://www.gnu.org/software/guile/][GNU Guile]] 2.2
+  - [[https://github.com/aconchillo/guile-json][Guile-JSON]]
+  - [[https://notabug.org/cwebber/guile-gcrypt][Guile-GCrypt]]
+  - [[https://gnutls.org/][Guile-Gnutls]]
