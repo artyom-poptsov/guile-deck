@@ -4,18 +4,19 @@
 (define-module (deck core types filter)
   #:use-module (oop goops)
   #:export (<filter>
-            ;; filter?
+            filter?
             ;; alist->filter
 
             <event-filter>
-            ;; event-filter?
+            event-filter?
             ;; alist->event-filter
 
             <room-filter>
-            ;; room-filter?
+            room-filter?
             ;; alist->room-filter
 
             <state-filter>
+            state-filter?
             ))
 
 
@@ -49,6 +50,9 @@
    #:init-value   #f
    #:init-keyword #:types
    #:getter       event-filter-types))
+
+(define-method (event-filter? object)
+  (is-a? object <event-filter>))
 
 
 (define-class <room-filter> ()
@@ -91,6 +95,11 @@
    #:init-value   #f
    #:init-keyword #:state
    #:getter       room-filter-timeline))
+
+
+
+(define-method (room-filter? object)
+  (is-a? object <room-filter>))
 
 
 
@@ -155,6 +164,11 @@
    #:getter       state-filter-rooms))
 
 
+
+(define-method (state-filter? object)
+  (is-a? object <state-filter>))
+
+
 (define-class <filter> ()
   ;; The user account data that isn't associated with rooms to include.
   ;;
@@ -201,3 +215,10 @@
    #:init-value   #f
    #:init-keyword #:room
    #:getter       filter-room))
+
+
+
+(define-method (filter? object)
+  (is-a? object <filter>))
+
+
