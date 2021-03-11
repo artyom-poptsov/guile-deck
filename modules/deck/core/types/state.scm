@@ -14,6 +14,8 @@
 ;; See <https://matrix.org/docs/api/client-server/#!/Room32participation/sync>
 (define-class <state> ()
   ;; The global private data created by this user.
+  ;;
+  ;; <list> of <matrix-event>
   (account-data
    #:init-keyword #:account-data
    #:getter       state-account-data)
@@ -37,6 +39,8 @@
    #:getter        state-next-batch)
 
   ;; The updates to the presence status of other users.
+  ;;
+  ;; <list> of <matrix-event>
   (presense
    #:init-keyword  #:presense
    #:getter        state-presense)
