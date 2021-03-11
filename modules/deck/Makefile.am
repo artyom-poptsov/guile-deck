@@ -21,7 +21,7 @@ include $(top_srcdir)/build-aux/am/guilec
 
 SUBDIRS = core
 
-SOURCES = matrix.scm
+SOURCES = matrix.scm matrix-client.scm
 
 GOBJECTS = $(SOURCES:%.scm=%.go)
 
