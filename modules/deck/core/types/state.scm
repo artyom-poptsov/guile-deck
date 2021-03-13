@@ -7,7 +7,11 @@
             state-device-one-time-keys-count
             state-next-batch
             state-presense
+            state-presense-events
             state-rooms
+            state-rooms-invite
+            state-rooms-join
+            state-rooms-leave
             alist->state))
 
 
@@ -89,6 +93,20 @@
        (equal? (state-presense                   s1) (state-presense s2))
        (equal? (state-rooms                      s1) (state-rooms s2))
        (equal? (state-to-device                  s1) (state-to-device s2))))
+
+
+
+(define-method (state-rooms-invite (state <state>))
+  (assoc-ref (state-rooms state) "invite"))
+
+(define-method (state-rooms-join (state <state>))
+  (assoc-ref (state-rooms state) "join"))
+
+(define-method (state-rooms-leave (state <state>))
+  (assoc-ref (state-rooms state) "leave"))
+
+(define-method (state-presense-events (state <state>))
+  (assoc-ref (state-presense state) "events"))
 
 
 
