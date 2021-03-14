@@ -2,6 +2,7 @@
   #:use-module (oop goops)
   #:use-module (ice-9 threads)
   #:use-module (deck core types state)
+  #:use-module (deck core types filter)
   #:use-module (deck core session)
   #:export (<matrix-client>
             matrix-client?
@@ -22,6 +23,15 @@
             matrix-client-add-ephemeral-callback!
 
             matrix-client-start!))
+
+
+
+;; Default filter for synchronization.
+(define %default-filter
+  (make <filter>
+    #:room (make <room-filter>
+             #:timeline (make <event-filter>
+                          #:limit 10))))
 
 
 ;; This class describes a Matrix asynchronous client.
@@ -52,6 +62,12 @@
    #:init-value   #f
    #:getter       matrix-client-sync-token
    #:setter       matrix-client-sync-token-set!)
+
+  ;; <string> or <filter>
+  (sync-filter
+   #:init-value   %default-filter
+   #:init-keyword #:sync-filter
+   #:getter       matrix-client-sync-filter)
 
   ;; <list> of <procedure>
   (callbacks
@@ -128,7 +144,10 @@
                                         (timeout       <number>))
   (let* ((session (matrix-client-session matrix-client))
          (token   (matrix-client-sync-token matrix-client))
-         (state   (session-sync session #:since token)))
+         (filter  (matrix-client-sync-filter matrix-client))
+         (state   (session-sync session
+                                #:since  token
+                                #:filter filter)))
     (matrix-client-sync-token-set! matrix-client (state-next-batch state))
     (let ((events  (state-presense-events state)))
       ;; (format #t "presence: ~a~%" presence)
