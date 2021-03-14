@@ -103,7 +103,7 @@
                       (cadr (memq #:session initargs)))))
 
     (unless session
-      (error "No home server URI provided"))))
+      (error "No session provided"))))
 
 
 
