@@ -3,10 +3,12 @@
 
 (define-module (deck core types filter)
   #:use-module (oop goops)
+  #:use-module (json)
   #:export (<filter>
             filter?
             ;; alist->filter
             filter->alist
+            filter->json-string
 
             <event-filter>
             event-filter?
@@ -287,5 +289,8 @@
    (cons-or-null "event_format" (filter-event-format filter))
    (cons-or-null "presence"     (filter-presence     filter) filter->alist)
    (cons-or-null "room"         (filter-room         filter) filter->alist)))
+
+(define-method (filter->json-string (filter <filter>))
+  (scm->json-string (filter->alist filter)))
 
 
