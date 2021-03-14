@@ -290,7 +290,20 @@
    (cons-or-null "presence"     (filter-presence     filter) filter->alist)
    (cons-or-null "room"         (filter-room         filter) filter->alist)))
 
+
+
+(define-generic filter->json-string)
+
 (define-method (filter->json-string (filter <filter>))
+  (scm->json-string (filter->alist filter)))
+
+(define-method (filter->json-string (filter <room-filter>))
+  (scm->json-string (filter->alist filter)))
+
+(define-method (filter->json-string (filter <state-filter>))
+  (scm->json-string (filter->alist filter)))
+
+(define-method (filter->json-string (filter <event-filter>))
   (scm->json-string (filter->alist filter)))
 
 
