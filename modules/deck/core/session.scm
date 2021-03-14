@@ -87,7 +87,11 @@
                        (timeout      #f))
   (let* ((query (session-token/alist session))
          (query (if filter
-                    (acons "filter" filter query)
+                    (acons "filter"
+                           (if (filter? filter)
+                               (filter->json-string filter)
+                               filter)
+                           query)
                     query))
          (query (if since
                     (acons "since" since query)
