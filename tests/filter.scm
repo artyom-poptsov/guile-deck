@@ -87,6 +87,14 @@
                   #:room         (make <room-filter>  #:include-leave? #t))))
     (filter->alist filter)))
 
+(test-equal "filter: filter->json-string"
+  "{\"room\":{\"timeline\":{\"limit\":10}}}"
+  (let ((filter (make <filter>
+                  #:room (make <room-filter>
+                           #:timeline (make <event-filter>
+                                        #:limit 10)))))
+    (filter->json-string filter)))
+
 
 (define exit-status (test-runner-fail-count (test-runner-current)))
 
