@@ -310,6 +310,30 @@ TODO:
 TODO:
 @end deffn
 
+@section Core Types
+
+@subsection Devices
+
+@subsection Filters
+
+@deffn {Class} <filter>
+Matrix filter.
+@end deffn
+
+@deffn {Scheme Procedure} filter? object
+Check if an @var{object} is a @code{<filter>} instance.
+@end deffn
+
+@deffn {Scheme Procedure} filter->alist (filter <filter>)
+Convert a @var{filter} instance to an alist.
+@end deffn
+
+@deffn {Scheme Procedure} filter->json-string (filter <filter>)
+Convert a @var{filter} instance to a JSON string.
+@end deffn
+
+@subsection State
+
 @node GNU Free Documentation License
 @appendix GNU Free Documentation License
 
