@@ -8,6 +8,7 @@
             state-next-batch
             state-presense
             state-presense-events
+            state-presense-events-available?
             state-rooms
             state-rooms-invite
             state-rooms-join
@@ -107,6 +108,9 @@
 
 (define-method (state-presense-events (state <state>))
   (assoc-ref (state-presense state) "events"))
+
+(define-method (state-presense-events-available? (state <state>))
+  (> (vector-length (state-presense-events state)) 0))
 
 
 

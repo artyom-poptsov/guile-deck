@@ -23,6 +23,10 @@
                   ("rooms"                      . 6)
                   ("to_device"                  . 7))))
 
+(test-assert "state-presense-events-available?"
+  (let ((state (make <state> #:presense `(("events" . ,(vector "this" "is" "event"))))))
+    (state-presense-events-available? state)))
+
 
 (define exit-status (test-runner-fail-count (test-runner-current)))
 
