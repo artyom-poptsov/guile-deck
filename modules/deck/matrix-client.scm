@@ -12,15 +12,13 @@
             matrix-client-callbacks-set!
             matrix-client-presence-callbacks
             matrix-client-presence-callbacks-set!
-            matrix-client-rooms-callbacks
-            matrix-client-rooms-callbacks-set!
+            matrix-client-on-invite
+            matrix-client-on-update
+            matrix-client-on-leave
             matrix-client-ephemeral-callbacks
             matrix-client-ephemeral-callbacks-set!
 
             matrix-client-add-callback!
-            matrix-client-add-presence-callback!
-            matrix-client-add-invite-callback!
-            matrix-client-add-ephemeral-callback!
 
             matrix-client-start!))
 
@@ -83,12 +81,29 @@
    #:getter       matrix-client-presence-callbacks
    #:setter       matrix-client-presence-callbacks-set!)
 
-  ;; <list> of <procedure>
-  (rooms-callbacks
+  ;; Callbacks that handle room invites.
+  ;;
+  ;; <list> of <procedure> | <procedure>
+  (on-invite-callbacks
    #:init-value   '()
-   #:init-keyword #:rooms-callbacks
-   #:getter       matrix-client-rooms-callbacks
-   #:setter       matrix-client-rooms-callbacks-set!)
+   #:init-keyword #:on-invite
+   #:getter       matrix-client-on-invite)
+
+  ;; Callbacks that handle updates to joined rooms.
+  ;;
+  ;; <list> of <procedure> | <procedure>
+  (on-update-callbacks
+   #:init-value   '()
+   #:init-keyword #:on-update
+   #:getter       matrix-client-on-update)
+
+  ;; Callbacks that called when the current user left a room.
+  ;;
+  ;; <list> of <procedure> | <procedure>
+  (on-leave-callbacks
+   #:init-value   '()
+   #:init-keyword #:on-leave
+   #:getter       matrix-client-on-leave)
 
   ;; <list> of <procedure>
   (ephemeral-callbacks
@@ -155,12 +170,22 @@
                   (for-each (lambda (proc) (proc event))
                             (matrix-client-presence-callbacks matrix-client)))
                 (vector->list (state-presense-events state))))
-    (when (state-rooms-any-available? state)
-      (let ((invite (state-rooms-invite state))
-            (join   (state-rooms-join state))
-            (leave  (state-rooms-leave state)))
-        (for-each (lambda (proc) (proc invite join leave))
-                  (matrix-client-rooms-callbacks matrix-client))))
+
+    (when (state-rooms-invite-available? state)
+      (let ((invite (state-rooms-invite state)))
+        (for-each (lambda (proc) (proc invite))
+                  (matrix-client-on-invite matrix-client))))
+
+    (when (state-rooms-join-available? state)
+      (let ((join (state-rooms-join state)))
+        (for-each (lambda (proc) (proc join))
+                  (matrix-client-on-update matrix-client))))
+
+    (when (state-rooms-leave-available? state)
+      (let ((leave (state-rooms-leave state)))
+        (for-each (lambda (proc) (proc leave))
+                  (matrix-client-on-leave matrix-client))))
+
     (usleep timeout)
     (matrix-client-main-loop matrix-client timeout)))
 
