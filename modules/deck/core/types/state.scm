@@ -11,8 +11,12 @@
             state-presense-events-available?
             state-rooms
             state-rooms-invite
+            state-rooms-invite-available?
             state-rooms-join
+            state-rooms-join-available?
             state-rooms-leave
+            state-rooms-leave-available?
+            state-rooms-any-available?
             alist->state))
 
 
@@ -100,11 +104,25 @@
 (define-method (state-rooms-invite (state <state>))
   (assoc-ref (state-rooms state) "invite"))
 
+(define-method (state-rooms-invite-available? (state <state>))
+  (> (length (state-rooms-invite state)) 0))
+
 (define-method (state-rooms-join (state <state>))
   (assoc-ref (state-rooms state) "join"))
 
+(define-method (state-rooms-join-available? (state <state>))
+  (> (length (state-rooms-join state)) 0))
+
 (define-method (state-rooms-leave (state <state>))
   (assoc-ref (state-rooms state) "leave"))
+
+(define-method (state-rooms-leave-available? (state <state>))
+  (> (length (state-rooms-leave state)) 0))
+
+(define-method (state-rooms-any-available? (state <state>))
+  (or (state-rooms-invite-available? state)
+      (state-rooms-join-available? state)
+      (state-rooms-leave-available? state)))
 
 (define-method (state-presense-events (state <state>))
   (assoc-ref (state-presense state) "events"))
