@@ -17,7 +17,12 @@
             state-rooms-leave
             state-rooms-leave-available?
             state-rooms-any-available?
-            alist->state))
+            alist->state
+
+            <room-update>
+            list->room-update
+            room-update-id
+            room-update-content))
 
 
 ;; See <https://matrix.org/docs/api/client-server/#!/Room32participation/sync>
@@ -59,10 +64,50 @@
    #:init-keyword  #:rooms
    #:getter        state-rooms)
 
-  ;; Information on the send-to-device messages for the client device.
+   ;; Information on the send-to-device messages for the client device.
   (to-device
    #:init-keyword #:to-device
    #:getter       state-to-device))
+
+
+
+;; This class describes an update to a room.
+(define-class <room-update> ()
+  ;; ID of the room.
+  ;;
+  ;; <matrix-id>
+  (id
+   #:init-keyword #:id
+   #:getter       room-update-id)
+
+  ;; The content of the update.
+  ;;
+  ;; <list>
+  (content
+   #:init-keyword #:content
+   #:getter       room-update-content))
+
+(define-method (display (update <room-update>) (port <port>))
+  (format port "#<room-update ~a ~a>"
+          (room-update-id update)
+          (number->string (object-address pipe) 16)))
+
+(define-method (write (update <room-update>) (port <port>))
+  (display update port))
+
+(define-method (display (update <room-update>))
+  (next-method)
+  (display update (current-output-port)))
+
+(define-method (write (update <room-update>))
+  (next-method)
+  (display update (current-output-port)))
+
+;; Convert a list LST from a "sync" response to a room update.
+(define-method (list->room-update (lst <list>))
+  (make <room-update>
+    #:id      (car lst)
+    #:content (cdr lst)))
 
 
 
@@ -133,12 +178,24 @@
 
 
 (define-method (alist->state (alist <list>))
-  (make <state>
-    #:account-data (assoc-ref alist "account_data")
-    #:device-lists (assoc-ref alist "device_lists")
-    #:device-one-time-keys-count (assoc-ref alist "device_one_time_keys_count")
-    #:next-batch   (assoc-ref alist "next_batch")
-    #:presense     (assoc-ref alist "presence")
-    #:rooms        (assoc-ref alist "rooms")
-    #:to-device    (assoc-ref alist "to_device")))
+  (let* ((rooms-updates (assoc-ref alist "rooms"))
+         (invite        (assoc-ref rooms-updates "invite"))
+         (join          (assoc-ref rooms-updates "join"))
+         (leave         (assoc-ref rooms-updates "leave")))
+    (make <state>
+      #:account-data (assoc-ref alist "account_data")
+      #:device-lists (assoc-ref alist "device_lists")
+      #:device-one-time-keys-count (assoc-ref alist "device_one_time_keys_count")
+      #:next-batch   (assoc-ref alist "next_batch")
+      #:presense     (assoc-ref alist "presence")
+      #:rooms        `(,(if (null? invite)
+                            (cons "invite" '())
+                            (cons "invite" (map list->room-update invite)))
+                       ,(if (null? join)
+                            (cons "join" '())
+                            (cons "join" (map list->room-update join)))
+                       ,(if (null? leave)
+                            (cons "leave" '())
+                            (cons "leave" (map list->room-update leave))))
+      #:to-device    (assoc-ref alist "to_device"))))
 
