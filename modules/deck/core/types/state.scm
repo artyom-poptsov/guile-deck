@@ -1,5 +1,6 @@
 (define-module (deck core types state)
   #:use-module (oop goops)
+  #:use-module (deck core types matrix-id)
   #:export (<state>
             state?
             state-account-data
@@ -106,8 +107,12 @@
 ;; Convert a list LST from a "sync" response to a room update.
 (define-method (list->room-update (lst <list>))
   (make <room-update>
-    #:id      (car lst)
+    #:id      (string->matrix-id (car lst))
     #:content (cdr lst)))
+
+(define-method (equal? (obj1 <room-update>) (obj2 <room-update>))
+  (and (equal? (room-update-id obj1) (room-update-id obj2))
+       (equal? (room-update-content obj1) (room-update-content obj2))))
 
 
 
