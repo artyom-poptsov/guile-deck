@@ -44,7 +44,7 @@
 (define-method (display (matrix-id <matrix-id>) (port <port>))
   (format port "#<matrix-id ~a ~a>"
           (matrix-id->string matrix-id)
-          (number->string (object-address pipe) 16)))
+          (number->string (object-address matrix-id) 16)))
 
 (define-method (write (matrix-id <matrix-id>) (port <port>))
   (display matrix-id port))
