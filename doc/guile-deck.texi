@@ -337,6 +337,36 @@ Convert a @var{filter} instance to a JSON string.
 @node GNU Free Documentation License
 @appendix GNU Free Documentation License
 
+@section Matrix Client
+
+@deffn {Class} <matrix-client>
+This class describes a Matrix asynchronous client.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-client? object
+Check if @var{object} is a @code{<matrix-client>} instance.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-client-session (matrix-client <matrix-client>)
+Get the current session from a @var{matrix-client}.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-client-on-invite (matrix-client <matrix-client>)
+Get the callbacks for invitation updates.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-client-on-update (matrix-client <matrix-client>)
+Get the callbacks for updates to rooms the user joined to.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-client-on-leave (matrix-client <matrix-client>)
+Get the callbacks for leaving updates.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-client-start! (matrix-client <matrix-client>)
+Start the @var{matrix-client}.
+@end deffn
+
 @include fdl.texi
 
 @bye
