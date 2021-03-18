@@ -90,7 +90,7 @@
 
 (define-method (display (update <room-update>) (port <port>))
   (format port "#<room-update ~a ~a>"
-          (room-update-id update)
+          (matrix-id->string (room-update-id update))
           (number->string (object-address pipe) 16)))
 
 (define-method (write (update <room-update>) (port <port>))
