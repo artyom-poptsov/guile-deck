@@ -57,6 +57,11 @@
   (next-method)
   (display matrix-id (current-output-port)))
 
+(define-method (equal? (id1 <matrix-id>) (id2 <matrix-id>))
+  (and (equal? (matrix-id-type     id1) (matrix-id-type     id2))
+       (equal? (matrix-id-server   id1) (matrix-id-server   id2))
+       (equal? (matrix-id-identity id1) (matrix-id-identity id2))))
+
 
 (define-method (matrix-type->char (identity <symbol>))
   (let ((result (find (lambda (e) (equal? (cdr e) identity)) %type-mapping)))
