@@ -44,23 +44,35 @@
    #:getter       matrix-client-session
    #:setter       matrix-client-session-set!)
 
+  ;; Synchronization thread.
+  ;;
   ;; <thread>
   (sync-thread
    #:init-value   #f
    #:getter       matrix-client-sync-thread
    #:setter       matrix-client-sync-thread-set!)
 
+  ;; The client will be checking the server for updates once per this timeout.
+  ;;
+  ;; <number>
   (sync-timeout
    #:init-value   30000
    #:init-keyword #:sync-timeout
    #:getter       matrix-client-sync-timeout)
 
+  ;; A point in time to continue a sync from.
+  ;;
   ;; <string>
   (sync-token
    #:init-value   #f
    #:getter       matrix-client-sync-token
    #:setter       matrix-client-sync-token-set!)
 
+  ;; The ID of a filter created using the filter API or a <filter> object.
+  ;; Passing the filter object is best suited to one off requests. Creating a
+  ;; filter using the filter API is recommended for clients that reuse the
+  ;; same filter multiple times, for example in long poll requests.
+  ;;
   ;; <string> or <filter>
   (sync-filter
    #:init-value   %default-filter
