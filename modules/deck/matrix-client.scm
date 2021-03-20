@@ -18,7 +18,8 @@
             matrix-client-ephemeral-callbacks
             matrix-client-ephemeral-callbacks-set!
 
-            matrix-client-start!))
+            matrix-client-start!
+            matrix-client-stop!))
 
 
 
@@ -173,4 +174,8 @@
                    (lambda ()
                      (matrix-client-main-loop matrix-client timeout)))))
     (matrix-client-sync-thread-set! matrix-client thread)))
+
+(define-method (matrix-client-stop! (matrix-client <matrix-client>))
+  (cancel-thread (matrix-client-sync-thread matrix-client))
+  (join-thread (matrix-client-sync-thread matrix-client)))
 
