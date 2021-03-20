@@ -176,6 +176,12 @@
                              #:query (session-token/alist session))))
     (make <room> #:session session #:id room-id)))
 
+(define-method (session-join-room (session <session>)
+                                  (room-id <string>))
+  (session-join-room session (string->matrix-id room-id)))
+
+
+
 (define-method (session-joined-rooms (session <session>))
   (let ((result (client-get (session-client session)
                             "/_matrix/client/r0/joined_rooms"
