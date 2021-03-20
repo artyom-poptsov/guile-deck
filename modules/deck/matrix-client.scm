@@ -18,8 +18,6 @@
             matrix-client-ephemeral-callbacks
             matrix-client-ephemeral-callbacks-set!
 
-            matrix-client-add-callback!
-
             matrix-client-start!))
 
 
@@ -80,13 +78,6 @@
    #:getter       matrix-client-sync-filter)
 
   ;; <list> of <procedure>
-  (callbacks
-   #:init-value   '()
-   #:init-keyword #:callbacks
-   #:getter       matrix-client-callbacks
-   #:setter       matrix-client-callbacks-set!)
-
-  ;; <list> of <procedure>
   (presence-callbacks
    #:init-value   '()
    #:init-keyword #:presence-callbacks
@@ -137,32 +128,6 @@
 ;; Check if an OBJECT is a <matrix-client> instance.
 (define-method (matrix-client? object)
   (is-a? <matrix-client> object))
-
-
-
-(define-method (matrix-client-add-callback! (matrix-client <matrix-client>)
-                                            (callback      <procedure>))
-  (matrix-client-callbacks-set!
-   matrix-client
-   (cons callback (matrix-client-callbacks matrix-client))))
-
-(define-method (matrix-client-add-presence-callback! (matrix-client <matrix-client>)
-                                                     (callback      <procedure>))
-  (matrix-client-presence-callbacks-set!
-   matrix-client
-   (cons callback (matrix-client-presence-callbacks matrix-client))))
-
-(define-method (matrix-client-add-rooms-callback! (matrix-client <matrix-client>)
-                                                  (callback      <procedure>))
-  (matrix-client-rooms-callbacks-set!
-   matrix-client
-   (cons callback (matrix-client-rooms-callbacks matrix-client))))
-
-(define-method (matrix-client-add-ephemeral-callback! (matrix-client <matrix-client>)
-                                                      (callback      <procedure>))
-  (matrix-client-ephemeral-callbacks-set!
-   matrix-client
-   (cons callback (matrix-client-ephemeral-callbacks matrix-client))))
 
 
 
