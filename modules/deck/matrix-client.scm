@@ -164,8 +164,8 @@
 
     (when (state-rooms-leave-available? state)
       (let ((updates (state-rooms-leave state)))
-        (for-each (lambda (udpate)
-                    (for-each (lambda (proc) (proc leave))
+        (for-each (lambda (update)
+                    (for-each (lambda (proc) (proc update))
                               (matrix-client-on-leave matrix-client)))
                   updates)))
 
