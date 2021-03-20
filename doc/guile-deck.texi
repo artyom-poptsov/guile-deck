@@ -342,6 +342,70 @@ Convert a @var{filter} instance to a JSON string.
 
 @subsection State
 
+@deffn {Class} <state>
+This class describes a Matrix state.
+
+See @url{https://matrix.org/docs/api/client-server/#!/Room32participation/sync}.
+@end deffn
+
+@deffn {Scheme Procedure} state-account-data (state <state>)
+Get the global private data created by this user as a list of
+@code{<matrix-event>}.
+@end deffn
+
+@deffn {Scheme Procedure} state-device-lists (state <state>)
+Get the information on end-to-end device updates.
+@end deffn
+
+@deffn {Scheme Procedure} state-device-one-time-keys-count (state <state>)
+Get the information on end-to-end encryption keys.
+@end deffn
+
+@deffn {Scheme Procedure} state-next-batch (state <state>)
+Get the batch token to supply in the since param of the next @code{/sync}
+request.
+@end deffn
+
+@deffn {Scheme Procedure} state-presense (state <state>)
+Get the updates to the presence status of other users.
+@end deffn
+
+@deffn {Scheme Procedure} state-rooms (state <state>)
+Get the updates to rooms.
+@end deffn
+
+@deffn {Scheme Procedure} state-to-device (state <state>)
+Get the information on the send-to-device messages for the client device.
+@end deffn
+
+@deffn {Scheme Procedure} state-rooms-invite (state <state>)
+Get the updates to rooms related to invitations.
+@end deffn
+
+@deffn {Scheme Procedure} state-rooms-invite-available? (state <state>)
+Check if invitation updates available.
+@end deffn
+
+@deffn {Scheme Procedure} state-rooms-join (state <state>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} state-rooms-join-available? (state <state>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} state-rooms-leave (state <state>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} state-rooms-leave-available? (state <state>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} alist->state (alist <list>)
+Convert an associative list @var{alist} to a @code{<state>} instance.
+@end deffn
+
 @node GNU Free Documentation License
 @appendix GNU Free Documentation License
 
