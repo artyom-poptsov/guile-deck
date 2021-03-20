@@ -255,23 +255,31 @@ This class describes a Matrix network session.
 @end deffn
 
 @deffn {Scheme Procedure} session? x
-TODO:
+Check if @var{x} is a @code{<session>} instance.
 @end deffn
 
 @deffn {Scheme Procedure} session-token/alist (session <session>)
-TODO:
+Returns the @var{session} token as an associative list suitable for converting
+to a JSON object.
 @end deffn
 
 @deffn {Scheme Procedure} session-user-id (session <session>)
-TODO:
+Get the @var{session} user ID as a @code{<matrix-id>} instance.
 @end deffn
 
 @deffn {Scheme Procedure} session-devices (session <session>)
-TODO:
+Get the list of the known @var{session} devices.
 @end deffn
 
 @deffn {Scheme Procedure} session-sync (session <session>) [#:filter=#f] [#:since=#f] [#:full-state=#f] [#:set-presense=#f] [#:timeout=#f]
-TODO:
+Synchronise the client's state with the latest state on the server. Clients
+use this API when they first log in to get an initial snapshot of the state on
+the server, and then continue to call this API to get incremental deltas to
+the state, and to receive new messages.
+
+See
+@url{https://matrix.org/docs/api/client-server/#!/Room32participation/sync,
+client-server documentation}
 @end deffn
 
 @deffn {Scheme Procedure} session-create-filter (session <session>) (filter <filter>)
