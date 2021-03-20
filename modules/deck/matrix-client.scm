@@ -143,7 +143,6 @@
                                 #:filter filter)))
     (matrix-client-sync-token-set! matrix-client (state-next-batch state))
     (when (state-presense-events-available? state)
-      (format #t "presence: ~a~%" presence)
       (for-each (lambda (event)
                   (for-each (lambda (proc) (proc event))
                             (matrix-client-presence-callbacks matrix-client)))
