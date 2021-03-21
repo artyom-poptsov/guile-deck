@@ -203,7 +203,7 @@
   (define (handle-presence events)
     (for-each
      (lambda (event)
-       (for-each (lambda (proc) (proc event))
+       (for-each (lambda (proc) (proc matrix-client event))
                  (matrix-client-presence-callbacks matrix-client)))
      (vector->list events)))
 
@@ -211,7 +211,7 @@
     (for-each
      (lambda (update)
        (matrix-client-room-add! matrix-client (room-update-id update))
-       (for-each (lambda (proc) (proc update))
+       (for-each (lambda (proc) (proc matrix-client update))
                  (matrix-client-on-invite matrix-client)))
      updates))
 
