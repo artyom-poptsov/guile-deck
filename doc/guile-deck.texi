@@ -248,6 +248,41 @@ Get the list of members for the @var{room}.
 Returns 3 values: an event list, ``start'' and ``end'' tokens.
 @end deffn
 
+@deffn {Scheme Procedure} room-messages room [#:limit=10] [#:from=#f] [#:to=#f] [#:filter=#f]
+Get a list of message and state events for a @var{room}. It uses pagination
+query parameters to paginate history in the room.
+
+@var{room} must be a @code{<room>} instance.
+@end deffn
+
+@deffn {Scheme Procedure} room-state (room <room>)
+Get the state events for the current state of a @var{room}.
+@end deffn
+
+@deffn  {Scheme Procedure} room-event (room <room>) (event-id <matrix-id>)
+@deffnx {Scheme Procedure} room-event (room <room>) (event-id <string>)
+Get a single event based on @var{event-id}. You must have permission to
+retrieve this event e.g. by being a member in the room for this event.
+@end deffn
+
+@deffn {Scheme Procedure} room-send (room <room>) (type <string>) (body <list>) [(transaction-id <string>)]
+Send a message event of a @var{type} with the given @var{body} to a
+@var{room}. Message events allow access to historical events and pagination,
+making them suited for "once-off" activity in a room.
+
+@var{body} must be an associative list.
+
+If no @var{transaction-id} is specified, the current time is used as
+transaction ID.
+
+Example:
+@lisp
+(room-send room "m.room.message"
+           `(("body"    . "howdy!")
+             ("msgtype" . "m.text")))
+@end lisp
+@end deffn
+
 @subsection Session
 
 @deffn {Class} <session>
