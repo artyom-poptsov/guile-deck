@@ -3,6 +3,8 @@
   #:use-module (ice-9 threads)
   #:use-module (deck core types state)
   #:use-module (deck core types filter)
+  #:use-module (deck core types matrix-id)
+  #:use-module (deck core room)
   #:use-module (deck core session)
   #:export (<matrix-client>
             matrix-client?
@@ -17,6 +19,8 @@
             matrix-client-on-leave
             matrix-client-ephemeral-callbacks
             matrix-client-ephemeral-callbacks-set!
+            matrix-client-room
+            matrix-client-rooms
 
             matrix-client-start!
             matrix-client-stop!))
@@ -78,6 +82,11 @@
    #:init-keyword #:sync-filter
    #:getter       matrix-client-sync-filter)
 
+  ;; <hash-table>
+  (rooms
+   #:init-value   (make-hash-table 10)
+   #:getter       matrix-client-rooms)
+
   ;; <list> of <procedure>
   (presence-callbacks
    #:init-value   '()
@@ -130,6 +139,29 @@
 (define-method (matrix-client? object)
   (is-a? <matrix-client> object))
 
+;; Get a <room> instance by its ROOM-ID from the internal <matrix-client> hash
+;; table of rooms.
+(define-method (matrix-client-room (client <matrix-client>) (room-id <string>))
+  (hash-ref (matrix-client-rooms client) room-id))
+
+;; The same as above, only takes a ROOM-ID as a <matrix-id> instead of a
+;; <string>.
+(define-method (matrix-client-room (client <matrix-client>) (room-id <matrix-id>))
+  (matrix-client-room client (matrix-id->string room-id)))
+
+;; Add a new room with ROOM-ID to the hash table of rooms if it is not present
+;; there yet.
+(define-method (matrix-client-room-add! (client <matrix-client>) (room-id <string>))
+  (unless (hashq-ref (matrix-client-rooms client) room-id)
+    (hash-set! (matrix-client-rooms client)
+               room-id
+               (make <room>
+                 #:session (matrix-client-session client)
+                 #:id      room-id))))
+
+(define-method (matrix-client-room-add! (client <matrix-client>) (room-id <matrix-id>))
+  (matrix-client-room-add! client (matrix-id->string room-id)))
+
 
 
 ;; The main loop of the client.
@@ -150,18 +182,24 @@
 
     (when (state-rooms-invite-available? state)
       (for-each (lambda (update)
+                  (matrix-client-room-add! matrix-client
+                                           (room-update-id update))
                   (for-each (lambda (proc) (proc update))
                             (matrix-client-on-invite matrix-client)))
                 (state-rooms-invite state)))
 
     (when (state-rooms-join-available? state)
       (for-each (lambda (update)
-                  (for-each (lambda (proc) (proc update))
+                  (matrix-client-room-add! matrix-client
+                                           (room-update-id update))
+                  (for-each (lambda (proc) (proc matrix-client update))
                             (matrix-client-on-update matrix-client)))
                 (state-rooms-join state)))
 
     (when (state-rooms-leave-available? state)
       (for-each (lambda (update)
+                  (matrix-client-room-add! matrix-client
+                                           (room-update-id update))
                   (for-each (lambda (proc) (proc update))
                             (matrix-client-on-leave matrix-client)))
                 (state-rooms-leave state)))
