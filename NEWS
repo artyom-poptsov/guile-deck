@@ -7,7 +7,8 @@ Copyright (C) Artyom V. Poptsov <poptsov.artyom@gmail.com>
   are permitted in any medium without royalty provided the copyright
   notice and this notice are preserved.
 
-* Unreleased
+* Changes in version 0.1.0 (2020-03-21)
+** Release of the first version of Guile-Deck
 
 Local Variables:
 mode: org
