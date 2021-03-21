@@ -61,6 +61,12 @@ Appendices
 
 * GNU Free Documentation License::  The license of this manual.
 
+Indices
+
+* Type Index::
+* Procedure Index::
+* Concept Index::
+
 @end menu
 
 @contents
@@ -445,9 +451,6 @@ TODO:
 Convert an associative list @var{alist} to a @code{<state>} instance.
 @end deffn
 
-@node GNU Free Documentation License
-@appendix GNU Free Documentation License
-
 @section Matrix Client
 
 @deffn {Class} <matrix-client>
@@ -493,6 +496,11 @@ Start the @var{matrix-client}.
 Stop the @var{matrix-client}.
 @end deffn
 
+@node GNU Free Documentation License
+@appendix GNU Free Documentation License
+
 @include fdl.texi
+
+@include indices.texi
 
 @bye

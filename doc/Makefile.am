@@ -23,6 +23,7 @@ info_TEXINFOS = guile-deck.texi
 
 guile_udev_TEXINFOS = \
 	guile-deck.texi	\
+	indices.texi	\
 	fdl.texi
 
 ## Makefile.am ends here
