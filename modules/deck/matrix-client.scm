@@ -131,7 +131,40 @@
                       (cadr (memq #:session initargs)))))
 
     (unless session
-      (error "No session provided"))))
+      (error "No session provided")))
+
+  (let ((on-invite (and (memq #:on-invite initargs)
+                        (cadr (memq #:on-invite initargs)))))
+    (when on-invite
+      (cond
+       ((procedure? on-invite)
+        (slot-set! matrix-client 'on-invite-callbacks (list on-invite)))
+       ((list? on-invite)
+        (slot-set! matrix-client 'on-invite-callbacks on-invite))
+       (else
+        (error "#:on-invite must be a <list> of <procedure> or a <procedure>")))))
+
+  (let ((on-update (and (memq #:on-update initargs)
+                        (cadr (memq #:on-update initargs)))))
+    (when on-update
+      (cond
+       ((procedure? on-update)
+        (slot-set! matrix-client 'on-update-callbacks (list on-update)))
+       ((list? on-update)
+        (slot-set! matrix-client 'on-update-callbacks on-update))
+       (else
+        (error "#:on-update must be a <list> of <procedure> or a <procedure>")))))
+
+  (let ((on-leave (and (memq #:on-leave initargs)
+                       (cadr (memq #:on-leave initargs)))))
+    (when on-leave
+      (cond
+       ((procedure? on-leave)
+        (slot-set! matrix-client 'on-leave-callbacks (list on-leave)))
+       ((list? on-leave)
+        (slot-set! matrix-client 'on-leave-callbacks on-leave))
+       (else
+        (error "#:on-leave must be a <list> of <procedure> or a <procedure>"))))))
 
 
 
