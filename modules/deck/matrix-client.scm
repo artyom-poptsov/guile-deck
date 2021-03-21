@@ -1,6 +1,7 @@
 (define-module (deck matrix-client)
   #:use-module (oop goops)
   #:use-module (ice-9 threads)
+  #:use-module (ice-9 hash-table)
   #:use-module (deck core types state)
   #:use-module (deck core types filter)
   #:use-module (deck core types matrix-id)
@@ -110,6 +111,16 @@
    #:init-keyword #:on-update
    #:getter       matrix-client-on-update)
 
+  (on-timeline-event-callbacks
+   #:init-value   (make-hash-table)
+   #:init-keyword #:on-timeline-event
+   #:getter       matrix-client-on-timeline-event
+   #:setter       matrix-client-on-timeline-event-set!)
+
+  ;; (on-state-event-callbacks
+  ;;  #:init-value   (make-hash-table)
+  ;;  #:getter       matrix-client-on-state-event-callbacks)
+
   ;; Callbacks that called when the current user left a room.
   ;;
   ;; <list> of <procedure> | <procedure>
@@ -164,7 +175,22 @@
        ((list? on-leave)
         (slot-set! matrix-client 'on-leave-callbacks on-leave))
        (else
-        (error "#:on-leave must be a <list> of <procedure> or a <procedure>"))))))
+        (error "#:on-leave must be a <list> of <procedure> or a <procedure>")))))
+
+  (let ((on-timeline-event (and (memq #:on-timeline-event initargs)
+                                (cadr (memq #:on-timeline-event initargs)))))
+    (when on-timeline-event
+      (cond
+       ((list? on-timeline-event)
+        (matrix-client-on-timeline-event-set!
+         matrix-client
+         (alist->hash-table on-timeline-event)))
+       ((hash-table? on-timeline-event)
+        (matrix-client-on-timeline-event-set! matrix-client
+                                              on-timeline-event))
+       (else
+        (error "#:on-timeline-event must be an associative list or a hash table"
+               on-timeline-event))))))
 
 
 
@@ -220,7 +246,18 @@
      (lambda (update)
        (matrix-client-room-add! matrix-client (room-update-id update))
        (for-each (lambda (proc) (proc matrix-client update))
-                 (matrix-client-on-update matrix-client)))
+                 (matrix-client-on-update matrix-client))
+
+       (let ((timeline  (room-update-content:timeline update))
+             (callbacks (matrix-client-on-timeline-event matrix-client)))
+         (when timeline
+           (for-each
+            (lambda (event)
+              (let* ((type (assoc-ref event "type"))
+                     (proc (hash-ref callbacks type)))
+                (when (procedure? proc)
+                  (proc matrix-client (room-update-id update) event))))
+            (vector->list (timeline:events timeline))))))
      updates))
 
   (define (handle-leave updates)
