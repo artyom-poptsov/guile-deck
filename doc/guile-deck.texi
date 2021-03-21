@@ -470,8 +470,23 @@ Get the callbacks for updates to rooms the user joined to.
 Get the callbacks for leaving updates.
 @end deffn
 
+@deffn  {Scheme Procedure} matrix-client-room (matrix-client <matrix-client>) (room-id <string>)
+@deffnx {Scheme Procedure} matrix-client-room (matrix-client <matrix-client>) (room-id <matrix-id>)
+Get a @code{<room>} instance by its @var{room-id} from the internal
+@var{matrix-client} hash table of rooms.
+@end deffn
+
+@deffn  {Scheme Procedure} matrix-client-rooms (matrix-client <matrix-client>)
+Get all the fetched rooms from the @var{matrix-client} as a hash table where
+keys are string room IDs and values are @code{<room>} instances.
+@end deffn
+
 @deffn {Scheme Procedure} matrix-client-start! (matrix-client <matrix-client>)
 Start the @var{matrix-client}.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-client-stop! (matrix-client <matrix-client>)
+Stop the @var{matrix-client}.
 @end deffn
 
 @include fdl.texi
