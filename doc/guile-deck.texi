@@ -383,6 +383,10 @@ This class describes a Matrix state.
 See @url{https://matrix.org/docs/api/client-server/#!/Room32participation/sync}.
 @end deffn
 
+@deffn {Scheme Procedure} state? object
+Check if a @var{object} is an instance of @code{<state>} class.
+@end deffn
+
 @deffn {Scheme Procedure} state-account-data (state <state>)
 Get the global private data created by this user as a list of
 @code{<matrix-event>}.
