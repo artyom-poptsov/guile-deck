@@ -1,6 +1,7 @@
 (define-module (deck core session)
   #:use-module (oop goops)
   #:use-module (deck core types matrix-id)
+  #:use-module (deck core types matrix-content-uri)
   #:use-module (deck core types device)
   #:use-module (deck core types turn-server)
   #:use-module (deck core types state)
