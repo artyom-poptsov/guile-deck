@@ -21,7 +21,7 @@ AUTOMAKE_OPTIONS = gnu
 
 info_TEXINFOS = guile-deck.texi
 
-guile_udev_TEXINFOS = \
+guile_deck_TEXINFOS = \
 	guile-deck.texi	\
 	indices.texi	\
 	fdl.texi
