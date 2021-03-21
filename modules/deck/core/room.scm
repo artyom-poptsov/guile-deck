@@ -325,6 +325,9 @@
 
 (define-generic room-send)
 
+;; Send a message event to a ROOM. Message events allow access to historical
+;; events and pagination, making them suited for "once-off" activity in a
+;; room.
 (define-method (room-send (room <room>)
                           (type <string>)
                           (body <list>)
@@ -344,9 +347,9 @@
           (string->matrix-id (assoc-ref result "event_id"))))
         (error "Could not send an event" room type body transaction-id))))
 
+;; This version of 'room-send' uses the current time as a transaction ID.
 (define-method (room-send (room <room>) (type <string>) (body <list>))
-  (room-send room type body ""))
-
+  (room-send room type body (number->string (current-time))))
 
 
 
