@@ -200,6 +200,37 @@
 ;; The main loop of the client.
 (define-method (matrix-client-main-loop (matrix-client <matrix-client>)
                                         (timeout       <number>))
+  (define (handle-presence events)
+    (for-each
+     (lambda (event)
+       (for-each (lambda (proc) (proc event))
+                 (matrix-client-presence-callbacks matrix-client)))
+     (vector->list events)))
+
+  (define (handle-invite updates)
+    (for-each
+     (lambda (update)
+       (matrix-client-room-add! matrix-client (room-update-id update))
+       (for-each (lambda (proc) (proc update))
+                 (matrix-client-on-invite matrix-client)))
+     updates))
+
+  (define (handle-updates updates)
+    (for-each
+     (lambda (update)
+       (matrix-client-room-add! matrix-client (room-update-id update))
+       (for-each (lambda (proc) (proc matrix-client update))
+                 (matrix-client-on-update matrix-client)))
+     updates))
+
+  (define (handle-leave updates)
+    (for-each
+     (lambda (update)
+       (matrix-client-room-add! matrix-client (room-update-id update))
+       (for-each (lambda (proc) (proc update))
+                 (matrix-client-on-leave matrix-client)))
+     updates))
+
   (let* ((session (matrix-client-session matrix-client))
          (token   (matrix-client-sync-token matrix-client))
          (filter  (matrix-client-sync-filter matrix-client))
@@ -207,35 +238,18 @@
                                 #:since  token
                                 #:filter filter)))
     (matrix-client-sync-token-set! matrix-client (state-next-batch state))
+
     (when (state-presense-events-available? state)
-      (for-each (lambda (event)
-                  (for-each (lambda (proc) (proc event))
-                            (matrix-client-presence-callbacks matrix-client)))
-                (vector->list (state-presense-events state))))
+      (handle-presence (state-presense-events state)))
 
     (when (state-rooms-invite-available? state)
-      (for-each (lambda (update)
-                  (matrix-client-room-add! matrix-client
-                                           (room-update-id update))
-                  (for-each (lambda (proc) (proc update))
-                            (matrix-client-on-invite matrix-client)))
-                (state-rooms-invite state)))
+      (handle-invite (state-rooms-invite state)))
 
     (when (state-rooms-join-available? state)
-      (for-each (lambda (update)
-                  (matrix-client-room-add! matrix-client
-                                           (room-update-id update))
-                  (for-each (lambda (proc) (proc matrix-client update))
-                            (matrix-client-on-update matrix-client)))
-                (state-rooms-join state)))
+      (handle-updates (state-rooms-join state)))
 
     (when (state-rooms-leave-available? state)
-      (for-each (lambda (update)
-                  (matrix-client-room-add! matrix-client
-                                           (room-update-id update))
-                  (for-each (lambda (proc) (proc update))
-                            (matrix-client-on-leave matrix-client)))
-                (state-rooms-leave state)))
+      (handle-leave (state-rooms-leave state)))
 
     (usleep timeout)
     (matrix-client-main-loop matrix-client timeout)))
