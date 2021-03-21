@@ -227,7 +227,7 @@
     (for-each
      (lambda (update)
        (matrix-client-room-add! matrix-client (room-update-id update))
-       (for-each (lambda (proc) (proc update))
+       (for-each (lambda (proc) (proc matrix-client update))
                  (matrix-client-on-leave matrix-client)))
      updates))
 
