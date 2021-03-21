@@ -1,5 +1,3 @@
-## Makefile.am -- Config file for GNU Automake.
-##
 ## Copyright (C) 2021 Artyom V. Poptsov <poptsov.artyom@gmail.com>
 ##
 ## This file is part of Guile-Deck.
@@ -15,31 +13,36 @@
 ## General Public License for more details.
 ##
 ## You should have received a copy of the GNU General Public License
-## along with Guile-Deck.  If not, see <http://www.gnu.org/licenses/>.
+## along with Guile-Deck.  If not, see
+## <http://www.gnu.org/licenses/>.
 
-ACLOCAL_AMFLAGS = -I build-aux
-
-SUBDIRS = build-aux modules/deck tests doc examples
+bin_SCRIPTS = hello-bot.scm send-message.scm
+hello_bot_scm_SOURCES = hello-bot.scm.in
+send_message_scm_SOURCES = send-message.scm.in
 
 EXTRA_DIST = \
-	.dir-locals.el
+	hello-bot.scm.in	\
+	send-message.scm.in
 
-gen-ChangeLog:
-	if test -d .git; then				\
-	  $(top_srcdir)/build-aux/gitlog-to-changelog	\
-	    2bea8c70..HEAD > $(distdir)/cl-t;		\
-	  rm -f $(distdir)/ChangeLog;			\
-	  mv $(distdir)/cl-t $(distdir)/ChangeLog;	\
-	fi
+SOURCES = \
+	hello-bot.scm.in	\
+	send-message.scm.in
 
-dist-hook: gen-ChangeLog
-.PHONY: gen-ChangeLog
+examplesdir = $(pkgdatadir)/examples
+dist_examples_DATA = \
+	hello-bot.scm		\
+	send-message.scm
 
-clean-go:
-	-$(RM) $(GOBJECTS)
-.PHONY: clean-go
+substitute = sed -e 's,[@]GUILE[@],$(GUILE),g'
+
+SUFFIXES = .in
+
+.in:
+	$(MKDIR_P) "`dirname "$@"`"
+	$(substitute) "$^" > "$@.tmp" && 	\
+	chmod +x "$@.tmp" &&			\
+	mv "$@.tmp" "$@"
 
 CLEANFILES = \
-	$(GOBJECTS)
+	$(bin_SCRIPTS)
 
-# Makefile.am ends here

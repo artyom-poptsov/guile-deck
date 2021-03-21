@@ -61,6 +61,7 @@ AC_CONFIG_FILES([
         modules/deck/core/net/Makefile
         modules/deck/core/types/Makefile
         doc/Makefile
+        examples/Makefile
 ])
 
 dnl texinfo package required to make the documentation in Texinfo format.

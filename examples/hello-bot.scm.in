@@ -1,5 +1,5 @@
-#!/usr/bin/guile-2.2 \
--L modules -e main -s
+#!@GUILE@ \
+--debug -e main -s
 !#
 
 ;; Usage example:
