@@ -30,8 +30,7 @@
           (format #t "room: ~a~%" room)
           (room-send room "m.room.message"
                      `(("body"    . "howdy!")
-                       ("msgtype" . "m.text"))
-                     (number->string (current-time))))))))
+                       ("msgtype" . "m.text"))))))))
 
 
 (define (main args)
