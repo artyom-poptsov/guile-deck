@@ -23,7 +23,14 @@
             <room-update>
             list->room-update
             room-update-id
-            room-update-content))
+            room-update-content
+            room-update-content:timeline
+            timeline:limited?
+            timeline:prev-batch
+            timeline:events
+            room-update-content:ephemeral
+            room-update-content:account-data
+            room-update-content:state))
 
 
 ;; See <https://matrix.org/docs/api/client-server/#!/Room32participation/sync>
@@ -113,6 +120,27 @@
 (define-method (equal? (obj1 <room-update>) (obj2 <room-update>))
   (and (equal? (room-update-id obj1) (room-update-id obj2))
        (equal? (room-update-content obj1) (room-update-content obj2))))
+
+(define-method (room-update-content:timeline (update <room-update>))
+  (assoc-ref (room-update-content update) "timeline"))
+
+(define-method (room-update-content:ephemeral (update <room-update>))
+  (assoc-ref (room-update-content update) "ephemeral"))
+
+(define-method (room-update-content:account-data (update <room-update>))
+  (assoc-ref (room-update-content update) "account_data"))
+
+(define-method (room-update-content:state (update <room-update>))
+  (assoc-ref (room-update-content update) "state"))
+
+(define-method (timeline:limited? (timeline <list>))
+  (assoc-ref timeline "limited"))
+
+(define-method (timeline:prev-batch (timeline <list>))
+  (assoc-ref timeline "prev_batch"))
+
+(define-method (timeline:events (timeline <list>))
+  (assoc-ref timeline "events"))
 
 
 
