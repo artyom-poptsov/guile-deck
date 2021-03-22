@@ -79,6 +79,11 @@
 (define-method (matrix-content-uri? object)
   (is-a? object <matrix-content-uri>))
 
+(define-method (equal? (obj1 <matrix-content-uri>) (obj2 <matrix-content-uri>))
+  (and (equal? (matrix-content-uri-protocol obj1) (matrix-content-uri-protocol obj2))
+       (equal? (matrix-content-uri-server   obj1) (matrix-content-uri-server   obj2))
+       (equal? (matrix-content-uri-media-id obj1) (matrix-content-uri-media-id obj2))))
+
 
 
 (define-method (matrix-content-uri-protocol (string <string>))

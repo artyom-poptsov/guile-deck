@@ -32,10 +32,16 @@
   "example.org"
   (matrix-content-uri-server "mxc://example.org/test"))
 
-
 (test-equal "matrix-content-uri-server"
   "test"
   (matrix-content-uri-media-id "mxc://example.org/test"))
+
+(test-equal "string->matrix-content-uri"
+  (make <matrix-content-uri>
+             #:server   "matrix.org"
+             #:protocol "mxc"
+             #:media-id "test")
+  (string->matrix-content-uri "mxc://matrix.org/test"))
 
 
 (define exit-status (test-runner-fail-count (test-runner-current)))
