@@ -7,6 +7,15 @@
 
 (test-begin "filter")
 
+(test-assert "event: event-filter?"
+  (and (event-filter? (make <event-filter>
+                         #:limit       10
+                         #:not-senders '("@bob:matrix.org" "@malory:matrix.org")
+                         #:not-types   '("some-excluded-type-1" "some-excluded-type-2")
+                         #:senders     '("@alice:matrix.org")
+                         #:types       '("some-type-1")))
+       (not (event-filter? "not a filter"))))
+
 (test-equal "event: filter->alist: All fields present"
   `(("limit"       . 10)
     ("not_senders" . ,(vector "@bob:matrix.org" "@malory:matrix.org"))
