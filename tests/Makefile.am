@@ -19,6 +19,7 @@
 
 SCM_TESTS = \
 	matrix-id.scm	\
+	matrix-content-uri.scm	\
 	matrix-event.scm	\
 	device.scm	\
 	state.scm	\
