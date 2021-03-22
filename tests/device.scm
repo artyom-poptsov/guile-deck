@@ -7,6 +7,18 @@
 
 (test-begin "device")
 
+(test-equal "equal?"
+  (make <device>
+    #:id                  "id"
+    #:display-name        "name"
+    #:last-seen-ip        "ip"
+    #:last-seen-timestamp "timestamp")
+  (make <device>
+    #:id                  "id"
+    #:display-name        "name"
+    #:last-seen-ip        "ip"
+    #:last-seen-timestamp "timestamp"))
+
 (test-equal "alist->device"
   (make <device>
     #:id "id"
