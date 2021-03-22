@@ -33,6 +33,7 @@
   #:use-module (web response)
   #:use-module (json)
   #:export (<client>
+            client?
             client-server-uri
             client-build-uri
             client-get
@@ -56,6 +57,9 @@
    #:init-keyword #:debug?
    #:getter       client-debug?
    #:setter       client-set-debug!))
+
+(define-method (client? object)
+  (is-a? object <client>))
 
 
 

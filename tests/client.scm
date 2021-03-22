@@ -7,6 +7,14 @@
 
 (test-begin "http-client")
 
+(test-assert "client?"
+  (and (client? (make <client>
+                  #:server (build-uri 'http
+                                      #:host "example.org"
+                                      #:port 80
+                                      #:path "/")))
+       (not (client? "not a client"))))
+
 (test-equal "uri-parameters->string"
   "a=b&c=d"
   (uri-parameters->string '(("a" . "b") ("c" . "d"))))
