@@ -1,4 +1,4 @@
-(define-module (deck core error)
+(define-module (deck core common error)
   #:use-module (oop goops)
   #:export (deck-error))
 

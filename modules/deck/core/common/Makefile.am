@@ -19,18 +19,14 @@
 
 include $(top_srcdir)/build-aux/am/guilec
 
-SUBDIRS = common types net
-
 SOURCES = \
-	room.scm	\
-	mac.scm		\
-	session.scm
+	error.scm
 
 GOBJECTS = $(SOURCES:%.scm=%.go)
-moddir=$(guilesitedir)/deck/core/
+moddir=$(guilesitedir)/deck/core/common/
 nobase_dist_mod_DATA = $(SOURCES)
 
-ccachedir=$(libdir)/guile/$(GUILE_EFFECTIVE_VERSION)/site-ccache/deck/core/
+ccachedir=$(libdir)/guile/$(GUILE_EFFECTIVE_VERSION)/site-ccache/deck/core/common/
 nobase_nodist_ccache_DATA = $(GOBJECTS)
 
 # Make sure source files are installed first, so that the mtime of
@@ -47,7 +43,7 @@ SUFFIXES = .scm .go
 guilec_opts = --load-path=$(abs_top_srcdir)/modules/
 .scm.go:
 	$(AM_V_GUILEC)$(guilec_env) $(GUILEC) $(guilec_opts) \
-		--output=$@ $<
+	--output=$@ $<
 
 clean-go:
 	-$(RM) $(GOBJECTS)
@@ -57,4 +53,3 @@ CLEANFILES = \
 	$(GOBJECTS)
 
 # Makefile.am ends here
-

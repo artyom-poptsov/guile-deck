@@ -58,6 +58,7 @@ AC_CONFIG_FILES([
         build-aux/m4/Makefile
         modules/deck/Makefile
         modules/deck/core/Makefile
+        modules/deck/core/common/Makefile
         modules/deck/core/net/Makefile
         modules/deck/core/types/Makefile
         doc/Makefile
