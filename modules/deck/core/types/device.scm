@@ -79,7 +79,7 @@
 (define-method (display (device <device>) (port <port>))
   (format port "#<device ~a ~a>"
           (device-id device)
-          (number->string (object-address pipe) 16)))
+          (number->string (object-address device) 16)))
 
 (define-method (write (device <device>) (port <port>))
   (display device port))
