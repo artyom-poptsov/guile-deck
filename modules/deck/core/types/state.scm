@@ -178,7 +178,7 @@
 (define-method (display (state <state>) (port <port>))
   (format port "#<state next-batch: ~a ~a>"
           (state-next-batch state)
-          (number->string (object-address pipe) 16)))
+          (number->string (object-address state) 16)))
 
 (define-method (write (state <state>) (port <port>))
   (display state port))
