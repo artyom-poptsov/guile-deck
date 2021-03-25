@@ -91,7 +91,7 @@
   (format port "#<matrix-event ~a type: ~a ~a>"
           (matrix-event-id/string event)
           (matrix-event-type event)
-          (number->string (object-address pipe) 16)))
+          (number->string (object-address event) 16)))
 
 (define-method (write (event <matrix-event>) (port <port>))
   (display event port))
