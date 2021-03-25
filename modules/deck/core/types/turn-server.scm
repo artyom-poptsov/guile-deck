@@ -65,7 +65,7 @@
 
 (define-method (display (turn-server <turn-server>) (port <port>))
   (format port "#<turn-server ~a>"
-          (number->string (object-address pipe) 16)))
+          (number->string (object-address turn-server) 16)))
 
 (define-method (write (turn-server <turn-server>) (port <port>))
   (display turn-server port))
