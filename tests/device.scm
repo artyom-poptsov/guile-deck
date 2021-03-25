@@ -16,6 +16,10 @@
                   #:last-seen-timestamp "timestamp"))
        (not (device? "not a device"))))
 
+(test-error "missing device ID"
+  'misc-error
+  (make <device>))
+
 (test-assert "display"
   (let ((output (with-output-to-string
                   (lambda ()

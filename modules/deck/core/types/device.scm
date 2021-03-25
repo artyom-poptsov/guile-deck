@@ -92,6 +92,13 @@
   (next-method)
   (display device (current-output-port)))
 
+(define-method (initialize (device <device>) initargs)
+  (next-method)
+  (let ((device-id (and (memq #:id initargs)
+                        (cadr (memq #:id initargs)))))
+    (unless device-id
+      (error "No device ID provided"))))
+
 
 
 (define (device? object)
