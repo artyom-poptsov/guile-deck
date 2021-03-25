@@ -1,5 +1,6 @@
 (use-modules (srfi srfi-64)
              (srfi srfi-26)
+             (ice-9 regex)
              (oop goops)
              (deck core types filter))
 
@@ -15,6 +16,12 @@
                          #:senders     '("@alice:matrix.org")
                          #:types       '("some-type-1")))
        (not (event-filter? "not a filter"))))
+
+(test-assert "event: display"
+  (let ((output (with-output-to-string
+                  (lambda ()
+                    (display (make <event-filter>))))))
+    (string-match "#<event-filter [0-9a-z]+>" output)))
 
 (test-equal "event: filter->alist: All fields present"
   `(("limit"       . 10)
@@ -40,6 +47,14 @@
                   #:types       '("some-type-1"))))
     (filter->alist filter)))
 
+
+
+(test-assert "state: display"
+  (let ((output (with-output-to-string
+                  (lambda ()
+                    (display (make <state-filter>))))))
+    (string-match "#<state-filter [0-9a-z]+>" output)))
+
 (test-equal "state: filter->alist"
   `(("limit"        . 10)
     ("not_senders"  . ,(vector "@bob:matrix.org" "@malory:matrix.org"))
@@ -64,6 +79,14 @@
                   #:rooms        '("!included-room:matrix.org"))))
     (filter->alist filter)))
 
+
+
+(test-assert "room: display"
+  (let ((output (with-output-to-string
+                  (lambda ()
+                    (display (make <room-filter>))))))
+    (string-match "#<room-filter [0-9a-z]+>" output)))
+
 (test-equal "room: filter->alist"
   `(("account_data"  . (("limit" . 10)))
     ("ephemeral"     . (("limit" . 20)))
@@ -81,6 +104,14 @@
                   #:state          (make <state-filter> #:types '("some-type-1"))
                   #:timeline       (make <event-filter> #:senders '("@alice:matrix.org")))))
     (filter->alist filter)))
+
+
+
+(test-assert "filter: display"
+  (let ((output (with-output-to-string
+                  (lambda ()
+                    (display (make <filter>))))))
+    (string-match "#<filter [0-9a-z]+>" output)))
 
 (test-equal "filter: filter->alist"
   `(("account_data" . (("limit" . 10)))

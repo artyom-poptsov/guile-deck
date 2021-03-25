@@ -96,6 +96,21 @@
 (define-method (event-filter? object)
   (is-a? object <event-filter>))
 
+(define-method (display (filter <event-filter>) (port <port>))
+  (format port "#<event-filter ~a>"
+          (number->string (object-address filter) 16)))
+
+(define-method (write (filter <event-filter>) (port <port>))
+  (display filter port))
+
+(define-method (display (filter <event-filter>))
+  (next-method)
+  (display filter (current-output-port)))
+
+(define-method (write (filter <event-filter>))
+  (next-method)
+  (display filter (current-output-port)))
+
 (define-generic filter->alist)
 
 ;; Convert a FILTER instance to an association list suitable for using with
@@ -152,6 +167,21 @@
 
 (define-method (room-filter? object)
   (is-a? object <room-filter>))
+
+(define-method (display (filter <room-filter>) (port <port>))
+  (format port "#<room-filter ~a>"
+          (number->string (object-address filter) 16)))
+
+(define-method (write (filter <room-filter>) (port <port>))
+  (display filter port))
+
+(define-method (display (filter <room-filter>))
+  (next-method)
+  (display filter (current-output-port)))
+
+(define-method (write (filter <room-filter>))
+  (next-method)
+  (display filter (current-output-port)))
 
 ;; Convert a ROOM-FILTER instance to an association list suitable for using
 ;; with the Matrix API.
@@ -233,6 +263,21 @@
 (define-method (state-filter? object)
   (is-a? object <state-filter>))
 
+(define-method (display (filter <state-filter>) (port <port>))
+  (format port "#<state-filter ~a>"
+          (number->string (object-address filter) 16)))
+
+(define-method (write (filter <state-filter>) (port <port>))
+  (display filter port))
+
+(define-method (display (filter <state-filter>))
+  (next-method)
+  (display filter (current-output-port)))
+
+(define-method (write (filter <state-filter>))
+  (next-method)
+  (display filter (current-output-port)))
+
 (define-method (filter->alist (state-filter <state-filter>))
   (make-sieved-list
    (cons-or-null "limit" (state-filter-limit state-filter))
@@ -306,6 +351,25 @@
 
 (define-method (filter? object)
   (is-a? object <filter>))
+
+
+
+(define-method (display (filter <filter>) (port <port>))
+  (format port "#<filter ~a>"
+          (number->string (object-address filter) 16)))
+
+(define-method (write (filter <filter>) (port <port>))
+  (display filter port))
+
+(define-method (display (filter <filter>))
+  (next-method)
+  (display filter (current-output-port)))
+
+(define-method (write (filter <filter>))
+  (next-method)
+  (display filter (current-output-port)))
+
+
 
 (define-method (filter->alist (filter <filter>))
   (make-sieved-list
