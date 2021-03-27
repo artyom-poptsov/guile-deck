@@ -18,6 +18,7 @@
 ## along with Guile-Deck.  If not, see <http://www.gnu.org/licenses/>.
 
 SCM_TESTS = \
+	common.scm	\
 	matrix-id.scm	\
 	matrix-content-uri.scm	\
 	matrix-event.scm	\
