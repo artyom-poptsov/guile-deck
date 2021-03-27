@@ -20,7 +20,8 @@
 include $(top_srcdir)/build-aux/am/guilec
 
 SOURCES = \
-	error.scm
+	error.scm	\
+	list.scm
 
 GOBJECTS = $(SOURCES:%.scm=%.go)
 moddir=$(guilesitedir)/deck/core/common/

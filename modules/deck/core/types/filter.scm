@@ -29,6 +29,7 @@
 (define-module (deck core types filter)
   #:use-module (oop goops)
   #:use-module (json)
+  #:use-module (deck core common list)
   #:export (<filter>
             filter?
             ;; alist->filter
@@ -46,20 +47,6 @@
             <state-filter>
             state-filter?
             ))
-
-(define-syntax cons-or-null
-  (syntax-rules ()
-    ((_ key value)
-     (if (not (equal? value 'undefined))
-         (cons key value)
-         '()))
-    ((_ key value converter)
-     (if (not (equal? value 'undefined))
-         (cons key (converter value))
-         '()))))
-
-(define (make-sieved-list . elements)
-  (delete '() elements))
 
 
 (define-class <event-filter> ()
