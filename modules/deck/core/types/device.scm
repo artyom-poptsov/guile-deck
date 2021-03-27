@@ -25,6 +25,7 @@
 
 (define-module (deck core types device)
   #:use-module (oop goops)
+  #:use-module (deck core common error)
   #:export (<device>
             device?
             device-id
@@ -97,7 +98,7 @@
   (let ((device-id (and (memq #:id initargs)
                         (cadr (memq #:id initargs)))))
     (unless device-id
-      (error "No device ID provided"))))
+      (deck-error "No device ID provided"))))
 
 
 

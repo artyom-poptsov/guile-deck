@@ -25,6 +25,7 @@
 
 (define-module (deck core room)
   #:use-module (oop goops)
+  #:use-module (deck core common error)
   #:use-module (deck core types matrix-event)
   #:use-module (deck core types matrix-id)
   #:use-module (deck core types matrix-content-uri)
@@ -82,19 +83,19 @@
                  (cadr (memq #:id initargs)))))
 
     (unless id
-      (error "No room Id was provided"))
+      (deck-error "No room Id was provided"))
 
     (cond
      ((string? id)
       (let ((matrix-id (string->matrix-id id)))
         (unless (equal? (matrix-id-type matrix-id) 'room)
-          (error "Wrong Matrix ID for room" matrix-id))
+          (deck-error "Wrong Matrix ID for room" matrix-id))
         (room-id-set! room matrix-id)))
      ((matrix-id? id)
       (unless (equal? (matrix-id-type id) 'room)
-        (error "Wrong Matrix ID for room" id)))
+        (deck-error "Wrong Matrix ID for room" id)))
      (else
-      (error "Wrong Matrix ID for room" id)))))
+      (deck-error "Wrong Matrix ID for room" id)))))
 
 
 
@@ -136,7 +137,7 @@
 
 (define-method (assert-token (room <room>))
   (unless (room-has-access-token? room)
-    (error "Not logged in")))
+    (deck-error "Not logged in" room)))
 
 
 ;; Room-specific request methods.
@@ -367,10 +368,10 @@
     (if result
         (cond
          ((assoc-ref result "error")
-          (error (assoc-ref result "error") room type body transaction-id))
+          (deck-error (assoc-ref result "error") room type body transaction-id))
          (else
           (string->matrix-id (assoc-ref result "event_id"))))
-        (error "Could not send an event" room type body transaction-id))))
+        (deck-error "Could not send an event" room type body transaction-id))))
 
 ;; This version of 'room-send' uses the current time as a transaction ID.
 (define-method (room-send (room <room>) (type <string>) (body <list>))

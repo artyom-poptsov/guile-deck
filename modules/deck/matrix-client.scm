@@ -28,6 +28,7 @@
   #:use-module (oop goops)
   #:use-module (ice-9 threads)
   #:use-module (ice-9 hash-table)
+  #:use-module (deck core common error)
   #:use-module (deck core types state)
   #:use-module (deck core types filter)
   #:use-module (deck core types matrix-id)
@@ -168,7 +169,7 @@
                       (cadr (memq #:session initargs)))))
 
     (unless session
-      (error "No session provided")))
+      (deck-error "No session provided")))
 
   (let ((on-invite (and (memq #:on-invite initargs)
                         (cadr (memq #:on-invite initargs)))))
@@ -179,7 +180,7 @@
        ((list? on-invite)
         (slot-set! matrix-client 'on-invite-callbacks on-invite))
        (else
-        (error "#:on-invite must be a <list> of <procedure> or a <procedure>")))))
+        (deck-error "#:on-invite must be a <list> of <procedure> or a <procedure>")))))
 
   (let ((on-update (and (memq #:on-update initargs)
                         (cadr (memq #:on-update initargs)))))
@@ -190,7 +191,7 @@
        ((list? on-update)
         (slot-set! matrix-client 'on-update-callbacks on-update))
        (else
-        (error "#:on-update must be a <list> of <procedure> or a <procedure>")))))
+        (deck-error "#:on-update must be a <list> of <procedure> or a <procedure>")))))
 
   (let ((on-leave (and (memq #:on-leave initargs)
                        (cadr (memq #:on-leave initargs)))))
@@ -201,7 +202,7 @@
        ((list? on-leave)
         (slot-set! matrix-client 'on-leave-callbacks on-leave))
        (else
-        (error "#:on-leave must be a <list> of <procedure> or a <procedure>")))))
+        (deck-error "#:on-leave must be a <list> of <procedure> or a <procedure>")))))
 
   (let ((on-timeline-event (and (memq #:on-timeline-event initargs)
                                 (cadr (memq #:on-timeline-event initargs)))))
@@ -215,8 +216,8 @@
         (matrix-client-on-timeline-event-set! matrix-client
                                               on-timeline-event))
        (else
-        (error "#:on-timeline-event must be an associative list or a hash table"
-               on-timeline-event))))))
+        (deck-error "#:on-timeline-event must be an associative list or a hash table"
+                    on-timeline-event))))))
 
 
 

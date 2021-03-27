@@ -17,7 +17,7 @@
        (not (device? "not a device"))))
 
 (test-error "missing device ID"
-  'misc-error
+  'deck-error
   (make <device>))
 
 (test-assert "display"

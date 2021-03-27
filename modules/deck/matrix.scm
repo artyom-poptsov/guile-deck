@@ -32,6 +32,7 @@
   #:use-module (srfi srfi-8)
   #:use-module (json)
   #:use-module (web uri)
+  #:use-module (deck core common error)
   #:use-module (deck core net client)
   #:use-module (deck core types matrix-id)
   #:use-module (deck core mac)
@@ -72,7 +73,7 @@
                           (cadr (memq #:home-server initargs)))))
 
     (unless home-server
-      (error "No home server URI provided"))
+      (deck-error "No home server URI provided"))
 
     (matrix-client-set! matrix (make <client> #:server home-server))))
 
@@ -134,7 +135,7 @@
                                  (user     . ,user)
                                  (password . ,password)))))
     (unless response
-      (error "Could not authenticate"))
+      (deck-error "Could not authenticate"))
     (format #f "matrix-login: response: ~a~%" response)
     (make <session>
       #:client  (matrix-client matrix)

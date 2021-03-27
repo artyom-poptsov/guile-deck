@@ -26,6 +26,7 @@
 
 (define-module (deck core session)
   #:use-module (oop goops)
+  #:use-module (deck core common error)
   #:use-module (deck core types matrix-id)
   #:use-module (deck core types matrix-content-uri)
   #:use-module (deck core types device)
@@ -137,10 +138,10 @@
     (if result
         (cond
          ((assoc-ref result "error")
-          (error (assoc-ref result "error")))
+          (deck-error (assoc-ref result "error")))
          (else
           (alist->state result)))
-        (error "Could not make a request" session))))
+        (deck-error "Could not make a request" session))))
 
 ;; Uploads a new filter definition to the homeserver. Returns a filter ID that
 ;; may be used in future requests to restrict which events are returned to the
@@ -155,11 +156,11 @@
                              (filter->alist filter)
                              #:query (session-token/alist session))))
     (unless result
-      (error "Could not make a request" session))
+      (deck-error "Could not make a request" session))
 
     (cond
      ((assoc-ref result "error")
-      (error (assoc-ref result "error")))
+      (deck-error (assoc-ref result "error")))
      (else
       (assoc-ref result "filter_id")))))
 
@@ -176,7 +177,7 @@
     (if result
         (cond
          ((assoc-ref result "error")
-          (error (assoc-ref result "error") session))
+          (deck-error (assoc-ref result "error") session))
          (else
           (map alist->device
                (vector->list (assoc-ref result "devices"))))))))
@@ -214,7 +215,7 @@
                             "/_matrix/client/r0/joined_rooms"
                             #:query (session-token/alist session))))
     (unless result
-      (error "Could not get the list of joined rooms"))
+      (deck-error "Could not get the list of joined rooms"))
     (map (lambda (id) (make <room> #:session session #:id id))
          (vector->list (assoc-ref result "joined_rooms")))))
 
@@ -241,10 +242,10 @@
     (if result
         (cond
          ((assoc-ref result "error")
-          (error (assoc-ref result "error")))
+          (deck-error (assoc-ref result "error")))
          (else
           (string->matrix-id (assoc-ref result "user_id"))))
-        (error "Could not make a whoami request" session))))
+        (deck-error "Could not make a whoami request" session))))
 
 
 
@@ -256,10 +257,10 @@
     (if result
         (cond
          ((assoc-ref result "error")
-          (error (assoc-ref result "error")))
+          (deck-error (assoc-ref result "error")))
          (else
           (string->matrix-content-uri (assoc-ref result "avatar_url"))))
-        (error "Could not make a request" session))))
+        (deck-error "Could not make a request" session))))
 
 
 
@@ -272,9 +273,9 @@
     (if result
         (cond
          ((assoc-ref result "error")
-          (error (assoc-ref result "error")))
+          (deck-error (assoc-ref result "error")))
          (else
           (alist->turn-server result)))
-        (error "Could not make a request" session))))
+        (deck-error "Could not make a request" session))))
 
 

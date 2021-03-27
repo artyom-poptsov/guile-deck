@@ -28,6 +28,7 @@
   #:use-module (oop goops)
   #:use-module (srfi srfi-1)
   #:use-module (ice-9 regex)
+  #:use-module (deck core common error)
   #:export (<matrix-id>
             matrix-id?
             matrix-id-type
@@ -134,7 +135,7 @@
               #:type       type
               #:identity   identity
               #:server     server)
-            (error "Wrong matrix ID" string)))))))
+            (deck-error "Wrong matrix ID" string)))))))
 
 
 
