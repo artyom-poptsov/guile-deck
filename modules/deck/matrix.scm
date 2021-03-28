@@ -50,7 +50,7 @@
 
 (define-class <matrix> ()
   ;; <string>
-  (shared_secret
+  (shared-secret
    #:init-keyword #:shared-secret
    #:init-value   #f
    #:getter       matrix-shared-secret)
