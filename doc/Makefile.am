@@ -22,6 +22,9 @@ AUTOMAKE_OPTIONS = gnu
 info_TEXINFOS = guile-deck.texi
 
 guile_deck_TEXINFOS = \
+	api-matrix.texi	\
+	api-matrix-client.texi	\
+	api-core.texi	\
 	guile-deck.texi	\
 	indices.texi	\
 	fdl.texi

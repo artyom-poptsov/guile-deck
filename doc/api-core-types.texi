@@ -1,0 +1,242 @@
+@c -*-texinfo-*-
+@c This file is part of Guile-Deck Reference Manual.
+@c Copyright (C) 2021 Artyom V. Poptsov
+@c See the file guile-deck.texi for copying conditions.
+
+@node Core Types
+@section Core Types
+
+@subsection Devices
+
+@deftp {Data Types} <device> device-id display-name last-seen-ip last-seen-timestamp
+See @url{https://matrix.org/docs/api/client-server/#!/Device32management/getDevices}.
+
+@table @samp
+
+@item @var{device-id}
+@strong{required} Identifier of this device.
+
+Type: @code{<string>}
+
+@item @var{display-name}
+Display name set by the user for this device. Absent if no name has been set.
+
+Type: @code{<string>}
+
+@item @var{last-seen-ip}
+The IP address where this device was last seen. (May be a few minutes out of
+date, for efficiency reasons).
+
+Type: @code{<string>}
+
+@item @var{last-seen-timestamp}
+The timestamp (in milliseconds since the unix epoch) when this devices was
+last seen. (May be a few minutes out of date, for efficiency reasons).
+
+Type: @code{<number>}
+
+@end table
+@end deftp
+
+@deffn {Scheme Procedure} device? object
+Check if @var{object} is an instance of the @code{<device>} class.
+@end deffn
+
+@deffn {Scheme Procedure} device-id (device <device>)
+Get the @var{device} ID.
+@end deffn
+
+@deffn {Scheme Procedure} device-display-name (device <device>)
+Get the @var{device} display name.
+@end deffn
+
+@deffn {Scheme Procedure} device-last-seen-ip (device <device>)
+Get the @var{device} last seen IP address.
+@end deffn
+
+@deffn {Scheme Procedure} device-last-seen-timestamp (device <device>)
+The timestamp (in milliseconds since the unix epoch) when this @var{device}
+was last seen.
+@end deffn
+
+@deffn {Scheme Procedure} alist->device (alist <list>)
+Convert an associative list @var{alist} to a @code{<device>} instance.
+@end deffn
+
+@subsection Filters
+
+@deftp {Data Type} <filter> account-data event-fields event-format presence room
+Matrix filter.
+
+See
+@url{https://matrix.org/docs/api/client-server/#!/Room32participation/defineFilter}.
+@end deftp
+
+@deftp {Data Type} <event-filter> limit not-senders not-types senders types
+TODO:
+@end deftp
+
+@deftp {Data Type} <room-filter> account-data ephemeral include-leave? not-rooms rooms state timeline
+TODO:
+@end deftp
+
+@deftp {Data Type} <state-filter> limit not-senders not-types senders types contains-url? include-redundant-members? lazy-load-members? not-rooms rooms
+TODO:
+@end deftp
+
+@deffn {Scheme Procedure} filter? object
+Check if an @var{object} is a @code{<filter>} instance.
+@end deffn
+
+@deffn {Scheme Procedure} filter->alist (filter <filter>)
+Convert a @var{filter} instance to an alist.
+@end deffn
+
+@deffn  {Scheme Procedure} filter->json-string (filter <filter>)
+@deffnx {Scheme Procedure} filter->json-string (filter <room-filter>)
+@deffnx {Scheme Procedure} filter->json-string (filter <state-filter>)
+@deffnx {Scheme Procedure} filter->json-string (filter <event-filter>)
+Convert a @var{filter} instance to a JSON string.
+@end deffn
+
+@subsection Matrix Content URI
+
+@deftp {Data Type} <matrix-content-uri> server protocol media-id
+TODO:
+@end deftp
+
+@deffn {Scheme Procedure} matrix-content-uri? object
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} matrix-content-uri-protocol (string <string>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} matrix-content-uri-server (string <string>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} matrix-content-uri-media-id (string <string>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} string->matrix-content-uri (string <string>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} matrix-content-uri->string (uri <matrix-content-uri>)
+TODO:
+@end deffn
+
+@subsection Matrix ID
+
+@deftp {Data Type} <matrix-id> type server identity
+TODO:
+@end deftp
+
+@deffn {Scheme Procedure} matrix-id? object
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} matrix-id-type (id <matrix-id>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} matrix-id-identity (id <matrix-id>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} matrix-id-server (id <matrix-id>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} matrix-type->char (identity <symbol>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} char->matrix-type (ch <char>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} matrix-id->string (id <matrix-id>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} string->matrix-id (string <string>)
+TODO:
+@end deffn
+
+@subsection State
+
+@deftp {Data Type} <state>
+This class describes a Matrix state.
+
+See @url{https://matrix.org/docs/api/client-server/#!/Room32participation/sync}.
+@end deftp
+
+@deffn {Scheme Procedure} state? object
+Check if a @var{object} is an instance of @code{<state>} class.
+@end deffn
+
+@deffn {Scheme Procedure} state-account-data (state <state>)
+Get the global private data created by this user as a list of
+@code{<matrix-event>}.
+@end deffn
+
+@deffn {Scheme Procedure} state-device-lists (state <state>)
+Get the information on end-to-end device updates.
+@end deffn
+
+@deffn {Scheme Procedure} state-device-one-time-keys-count (state <state>)
+Get the information on end-to-end encryption keys.
+@end deffn
+
+@deffn {Scheme Procedure} state-next-batch (state <state>)
+Get the batch token to supply in the since param of the next @code{/sync}
+request.
+@end deffn
+
+@deffn {Scheme Procedure} state-presense (state <state>)
+Get the updates to the presence status of other users.
+@end deffn
+
+@deffn {Scheme Procedure} state-rooms (state <state>)
+Get the updates to rooms.
+@end deffn
+
+@deffn {Scheme Procedure} state-to-device (state <state>)
+Get the information on the send-to-device messages for the client device.
+@end deffn
+
+@deffn {Scheme Procedure} state-rooms-invite (state <state>)
+Get the updates to rooms related to invitations.
+@end deffn
+
+@deffn {Scheme Procedure} state-rooms-invite-available? (state <state>)
+Check if invitation updates available.
+@end deffn
+
+@deffn {Scheme Procedure} state-rooms-join (state <state>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} state-rooms-join-available? (state <state>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} state-rooms-leave (state <state>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} state-rooms-leave-available? (state <state>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} alist->state (alist <list>)
+Convert an associative list @var{alist} to a @code{<state>} instance.
+@end deffn
+
+@c Local Variables:
+@c TeX-master: "guile-deck.texi"
+@c End:

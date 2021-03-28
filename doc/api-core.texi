@@ -1,0 +1,202 @@
+@c -*-texinfo-*-
+@c This file is part of Guile-Deck Reference Manual.
+@c Copyright (C) 2021 Artyom V. Poptsov
+@c See the file guile-deck.texi for copying conditions.
+
+@node Core
+@section Core
+
+@subsection MAC
+
+@deffn {Scheme Procedure} bin->hex bytevector
+Convert a @var{bytevector} to a HEX string.
+@end deffn
+
+@deffn {Scheme Procedure} generate-mac (shared-secret <string>) (data <list>)
+Generate a MAC based on a @var{shared-secret} and @var{data}.
+@end deffn
+
+@subsection Room
+@deftp {Data Type} <room>
+This class describes a Matrix room.
+@end deftp
+
+@deffn {Scheme Procedure} room? x
+Check if a @var{x} is a <room> instance.
+@end deffn
+
+@deffn {Scheme Procedure} room-alias (room <room>)
+
+@end deffn
+
+@deffn {Scheme Procedure} room-id (room <room>)
+Get the Matrix ID for a given @var{room}.
+@end deffn
+
+@deffn {Scheme Procedure} room-id/string (room <room>)
+Get the Matrix ID as a string for a given @var{room}.
+@end deffn
+
+@deffn {Scheme Procedure} room-session (room <room>)
+Get the current session for a given @var{room}.
+@end deffn
+
+@deffn {Scheme Procedure} room-access-token (room <room>)
+Get the access token for a given @var{room}.
+@end deffn
+
+@deffn {Scheme Procedure} room-has-access-token? (room <room>)
+Check if a @var{room} has an access token.
+@end deffn
+
+@deffn {Scheme Procedure} room-invite (room <room>) (user-id <matrix-id>)
+@deffnx {Scheme Procedure} room-invite (room <room>) (user-id <string>)
+Invite a user with a @var{user-id} to the @var{room}.
+@end deffn
+
+@deffn {Scheme Procedure} room-join (room <room>)
+Join a @var{room}.
+@end deffn
+
+@deffn {Scheme Procedure} room-leave (room <room>)
+Leave a @var{room}.
+@end deffn
+
+@deffn {Scheme Procedure} room-ban (room <room>) (user-id <matrix-id>) (reason <string>)
+@deffnx {Scheme Procedure} room-ban (room <room>) (user-id <matrix-id>)
+Ban a user with @var{user-id} in the @var{room}. If the user is currently in
+the room, also kick them. When a user is banned from a room, they may not join
+it or be invited to it until they are unbanned.
+
+The caller must have the required power level in order to perform this
+operation.
+@end deffn
+
+@deffn {Scheme Procedure} room-unban (room <room>) (user-id <matrix-id>)
+Unban a user with @var{user-id} from the @var{room}. This allows them to be
+invited to the room, and join if they would otherwise be allowed to join
+according to its join rules.
+
+The caller must have the required power level in order to perform this
+operation.
+@end deffn
+
+@deffn {Scheme Procedure} room-receipt (room <room>) (event <matrix-event>) [#:type=``m.read''] [#:receipt='()]
+This API updates the marker in a @var{room} for the given receipt @var{type}
+to the @var{event} specified.
+@end deffn
+
+@deffn {Scheme Procedure} room-members (room <room>) [#:at=#f] [#:membership=#f] [#:not-membership=#f]
+Get the list of members for the @var{room}.
+
+Returns 3 values: an event list, ``start'' and ``end'' tokens.
+@end deffn
+
+@deffn {Scheme Procedure} room-messages room [#:limit=10] [#:from=#f] [#:to=#f] [#:filter=#f]
+Get a list of message and state events for a @var{room}. It uses pagination
+query parameters to paginate history in the room.
+
+@var{room} must be a @code{<room>} instance.
+@end deffn
+
+@deffn {Scheme Procedure} room-state (room <room>)
+Get the state events for the current state of a @var{room}.
+@end deffn
+
+@deffn  {Scheme Procedure} room-event (room <room>) (event-id <matrix-id>)
+@deffnx {Scheme Procedure} room-event (room <room>) (event-id <string>)
+Get a single event based on @var{event-id}. You must have permission to
+retrieve this event e.g. by being a member in the room for this event.
+@end deffn
+
+@deffn {Scheme Procedure} room-send (room <room>) (type <string>) (body <list>) [(transaction-id <string>)]
+Send a message event of a @var{type} with the given @var{body} to a
+@var{room}. Message events allow access to historical events and pagination,
+making them suited for "once-off" activity in a room.
+
+@var{body} must be an associative list.
+
+If no @var{transaction-id} is specified, the current time is used as
+transaction ID.
+
+Example:
+@lisp
+(room-send room "m.room.message"
+           `(("body"    . "howdy!")
+             ("msgtype" . "m.text")))
+@end lisp
+@end deffn
+
+@subsection Session
+
+@deftp {Data Type} <session>
+This class describes a Matrix network session.
+@end deftp
+
+@deffn {Scheme Procedure} session? x
+Check if @var{x} is a @code{<session>} instance.
+@end deffn
+
+@deffn {Scheme Procedure} session-token/alist (session <session>)
+Returns the @var{session} token as an associative list suitable for converting
+to a JSON object.
+@end deffn
+
+@deffn {Scheme Procedure} session-user-id (session <session>)
+Get the @var{session} user ID as a @code{<matrix-id>} instance.
+@end deffn
+
+@deffn {Scheme Procedure} session-devices (session <session>)
+Get the list of the known @var{session} devices.
+@end deffn
+
+@deffn {Scheme Procedure} session-sync (session <session>) [#:filter=#f] [#:since=#f] [#:full-state=#f] [#:set-presense=#f] [#:timeout=#f]
+Synchronise the client's state with the latest state on the server. Clients
+use this API when they first log in to get an initial snapshot of the state on
+the server, and then continue to call this API to get incremental deltas to
+the state, and to receive new messages.
+
+See
+@url{https://matrix.org/docs/api/client-server/#!/Room32participation/sync,
+client-server documentation}
+@end deffn
+
+@deffn {Scheme Procedure} session-create-filter (session <session>) (filter <filter>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} session-create-room (session <session>) (name <string>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} session-join-room (session <session>) (room-id <matrix-id>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} session-joined-rooms (session <session>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} session-logout (session <session>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} session-logout/all (session <session>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} session-whoami (session <session>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} session-avatar-uri (session <session>)
+TODO:
+@end deffn
+
+@deffn {Scheme Procedure} session-voip-turn-server (session <session>)
+TODO:
+@end deffn
+
+@c Local Variables:
+@c TeX-master: "guile-deck.texi"
+@c End:

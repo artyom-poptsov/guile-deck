@@ -1,0 +1,90 @@
+@c -*-texinfo-*-
+@c This file is part of Guile-Deck Reference Manual.
+@c Copyright (C) 2021 Artyom V. Poptsov
+@c See the file guile-deck.texi for copying conditions.
+
+@node Matrix Client
+@section Matrix Client
+
+@deftp {Data type} <matrix-client> session sync-timeout sync-filter presence-callbacks on-invite on-timeline-event on-leave ephemeral-callbacks
+This class describes a Matrix asynchronous client.
+
+The constructor of the class throws @code{deck-error} on errors.
+
+@table @samp
+@item @var{session}
+@strong{required} Session that will be used for communication with the server.
+
+@item @var{sync-timeout}
+The client will be checking the server for updates once per this timeout.
+
+Type: @code{number}.
+
+@item @var{sync-filter}
+The ID of a filter created using the filter API or a @code{<filter>} object.
+Passing the filter object is best suited to one off requests. Creating a
+filter using the filter API is recommended for clients that reuse the same
+filter multiple times, for example in long poll requests.
+
+Type: @code{<filter>} or @code{<string>}.
+
+@item @var{presence-callbacks}
+
+@item @var{on-invite}
+Callbacks that handle room invites.
+
+@item @var{on-update}
+Callbacks that handle updates to joined rooms.
+
+@item @var{on-leave}
+Callbacks that called when the current user left a room.
+
+@item @var{on-timeline-event}
+
+@item @var{ephemeral-callbacks}
+
+@end table
+@end deftp
+
+@deffn {Scheme Procedure} matrix-client? object
+Check if @var{object} is a @code{<matrix-client>} instance.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-client-session (matrix-client <matrix-client>)
+Get the current session from a @var{matrix-client}.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-client-on-invite (matrix-client <matrix-client>)
+Get the callbacks for invitation updates.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-client-on-update (matrix-client <matrix-client>)
+Get the callbacks for updates to rooms the user joined to.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-client-on-leave (matrix-client <matrix-client>)
+Get the callbacks for leaving updates.
+@end deffn
+
+@deffn  {Scheme Procedure} matrix-client-room (matrix-client <matrix-client>) (room-id <string>)
+@deffnx {Scheme Procedure} matrix-client-room (matrix-client <matrix-client>) (room-id <matrix-id>)
+Get a @code{<room>} instance by its @var{room-id} from the internal
+@var{matrix-client} hash table of rooms.
+@end deffn
+
+@deffn  {Scheme Procedure} matrix-client-rooms (matrix-client <matrix-client>)
+Get all the fetched rooms from the @var{matrix-client} as a hash table where
+keys are string room IDs and values are @code{<room>} instances.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-client-start! (matrix-client <matrix-client>)
+Start the @var{matrix-client}.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-client-stop! (matrix-client <matrix-client>)
+Stop the @var{matrix-client}.
+@end deffn
+
+@c Local Variables:
+@c TeX-master: "guile-deck.texi"
+@c End:

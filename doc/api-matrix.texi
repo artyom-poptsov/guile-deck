@@ -1,0 +1,47 @@
+@c -*-texinfo-*-
+@c This file is part of Guile-Deck Reference Manual.
+@c Copyright (C) 2021 Artyom V. Poptsov
+@c See the file guile-deck.texi for copying conditions.
+
+@node Matrix
+@section Matrix
+
+These procedures are available from the module @code{(deck matrix)}.
+
+@deftp {Data Type} <matrix>
+This class provides an entry point for Matrix network.
+@end deftp
+
+@deffn {Scheme Procedure} matrix-shared-secret matrix
+Get the shared secret from the @var{matrix} object.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-server matrix
+Get the server URI from the @var{matrix} object.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-versions matrix
+Gets the versions of the specification supported by the a @var{matrix}
+instance.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-debug-mode? matrix
+Check if a @var{matrix} instance is in the debug mode.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-register matrix user password [#:admin?=#f] [#:device-id=#f]
+Register a new user on the @var{matrix} server with the specified password.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-login matrix type user password
+Try to authenticate on a @var{matrix} server with the given credentials.
+Return a new session instance.
+@end deffn
+
+@deffn {Scheme Procedure} matrix-request-nonce matrix type user password
+Get 'nonce' hash from a server.
+@end deffn
+
+@c Local Variables:
+@c TeX-master: "guile-deck.texi"
+@c End:
