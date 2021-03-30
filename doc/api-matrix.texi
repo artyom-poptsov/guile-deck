@@ -8,8 +8,32 @@
 
 These procedures are available from the module @code{(deck matrix)}.
 
-@deftp {Data Type} <matrix>
+@deftp {Class} <matrix> #:home-server [#:shared-secret=#f] [#:debug-mode?=#f]
 This class provides an entry point for Matrix network.
+
+Constructor parameters:
+@table @asis
+@item <uri> #:home-server
+@strong{required} The home server value.
+
+@item <string> #:shared-secret
+Sets a shared secret for superuser tasks on a server. The secret can be used
+for user registration on servers where registration is disabled.
+
+@item <boolean> #:debug-mode?
+Enable or disable the debug mode.
+
+@end table
+
+Usage example:
+@lisp
+(let ((m (make <matrix>
+               #:home-server (build-uri 'https #:host "matrix.org"
+               #:debug-mode  #t))))
+  ;; ...
+  )
+@end lisp
+
 @end deftp
 
 @deffn {Scheme Procedure} matrix-shared-secret matrix
