@@ -137,7 +137,11 @@
     (unless response
       (deck-error "Could not authenticate"))
 
-    (make <session>
-      #:client  (matrix-client matrix)
-      #:user-id (string->matrix-id (assoc-ref response "user_id"))
-      #:token   (assoc-ref response "access_token"))))
+    (cond
+     ((assoc-ref response "error")
+      (deck-error (assoc-ref result "error")))
+     (else
+      (make <session>
+        #:client  (matrix-client matrix)
+        #:user-id (string->matrix-id (assoc-ref response "user_id"))
+        #:token   (assoc-ref response "access_token"))))))
