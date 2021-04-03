@@ -328,27 +328,21 @@ Constructor parameters:
 @end deftp
 
 @deffn {Scheme Procedure} matrix-content-uri? object
-TODO:
+Check if an @var{object} is a @code{<matrix-content-uri>} instance.
 @end deffn
 
-@deffn {Scheme Procedure} matrix-content-uri-protocol (string <string>)
-TODO:
-@end deffn
-
-@deffn {Scheme Procedure} matrix-content-uri-server (string <string>)
-TODO:
-@end deffn
-
-@deffn {Scheme Procedure} matrix-content-uri-media-id (string <string>)
-TODO:
+@deffn  {Scheme Procedure} matrix-content-uri-protocol (string <string>)
+@deffnx {Scheme Procedure} matrix-content-uri-server (string <string>)
+@deffnx {Scheme Procedure} matrix-content-uri-media-id (string <string>)
+@code{<matrix-content-uri>} getters for fields.
 @end deffn
 
 @deffn {Scheme Procedure} string->matrix-content-uri (string <string>)
-TODO:
+Convert a @var{string} to a @code{<matrix-content-uri>} instance.
 @end deffn
 
 @deffn {Scheme Procedure} matrix-content-uri->string (uri <matrix-content-uri>)
-TODO:
+Convert an @var{uri} to a @code{<string>}.
 @end deffn
 
 @c -----------------------------------------------------------------------------
@@ -483,19 +477,20 @@ Check if invitation updates available.
 @end deffn
 
 @deffn {Scheme Procedure} state-rooms-join (state <state>)
-TODO:
+Get the events from a @var{state} for the rooms the user joined in.
 @end deffn
 
 @deffn {Scheme Procedure} state-rooms-join-available? (state <state>)
-TODO:
+Check if any events for the rooms the user joined in are available.
 @end deffn
 
 @deffn {Scheme Procedure} state-rooms-leave (state <state>)
-TODO:
+The rooms that the user has left or been banned from, mapped as room ID to
+room information.
 @end deffn
 
 @deffn {Scheme Procedure} state-rooms-leave-available? (state <state>)
-TODO:
+Check if ``leave'' events available.
 @end deffn
 
 @deffn {Scheme Procedure} alist->state (alist <list>)
