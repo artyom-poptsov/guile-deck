@@ -62,7 +62,7 @@
 
   ;; <string>
   (identity
-   #:init-value   #:f
+   #:init-value   #f
    #:init-keyword #:identity
    #:getter       matrix-id-identity))
 
