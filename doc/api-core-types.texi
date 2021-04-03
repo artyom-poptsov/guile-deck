@@ -7,6 +7,7 @@
 @section Core Types
 
 @subsection Devices
+@cindex Devices
 
 @deftp {Class} <device> #:id [#:display-name=#f] [#:last-seen-ip=#f] @
        [#:last-seen-timestamp=#f]
@@ -59,12 +60,53 @@ Convert an associative list @var{alist} to a @code{<device>} instance.
 @end deffn
 
 @subsection Filters
+@cindex Filters
 
-@deftp {Data Type} <filter> account-data event-fields event-format presence room
+@deftp {Class} <filter> @
+       [#:account-data='undefined] @
+       [#:event-fields='undefined] @
+       [#:event-format='undefined] @
+       [#:presence='undefined] @
+       [#:room='undefined]
 Matrix filter.
 
 See
 @url{https://matrix.org/docs/api/client-server/#!/Room32participation/defineFilter}.
+
+@table @asis
+
+@item #:account-data event-filter
+The user account data that isn't associated with rooms to include.
+
+Type: @code{<event-filter>} or @code{undefined} symbol.
+
+@item #:event-fields fields
+List of event fields to include. If this list is absent then all fields are
+included. The entries may include '.' characters to indicate sub-fields. So
+['content.body'] will include the 'body' field of the 'content' object. A
+literal '.' character in a field name may be escaped using a '\'. A server may
+include more fields than were requested.
+
+Type: @code{<list>} of @code{<string>} or @code{undefined} symbol.
+
+@item #:event-format (format <symbol>)
+The format to use for events. 'client' will return the events in a format
+suitable for clients. 'federation' will return the raw event as received over
+federation. The default is 'client'.
+
+Allowed values: @code{client}, @code{federation}, @code{undefined}.
+
+@item #:presence filter
+The presence updates to include.
+
+Type: @code{<event-filter>} or @code{undefined} symbol.
+
+@item #:room filter
+Filters to be applied to room data.
+
+Type: @code{<event-filter>} or @code{undefined} symbol.
+
+@end table
 @end deftp
 
 @deftp {Data Type} <event-filter> limit not-senders not-types senders types
