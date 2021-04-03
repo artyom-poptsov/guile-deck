@@ -112,6 +112,7 @@ Type: @code{<event-filter>} or @code{undefined} symbol.
 @end deftp
 
 @c -----------------------------------------------------------------------------
+@subsubsection Event Filter
 
 @deftp {Class} <event-filter> @
        [#:limit='undefined] @
@@ -160,6 +161,7 @@ a wildcard to match any sequence of characters.
 @end deftp
 
 @c -----------------------------------------------------------------------------
+@subsubsection Room Filter
 
 @deftp {Class} <room-filter> @
        [#:account-data='undefined] @
@@ -209,6 +211,9 @@ The message and state update events to include for rooms.
 
 @end deftp
 
+@c -----------------------------------------------------------------------------
+@subsubsection State Filter
+
 @deftp {Data Type} <state-filter> limit not-senders not-types senders types contains-url? include-redundant-members? lazy-load-members? not-rooms rooms
 TODO:
 @end deftp
@@ -228,6 +233,7 @@ Convert a @var{filter} instance to an alist.
 Convert a @var{filter} instance to a JSON string.
 @end deffn
 
+@c -----------------------------------------------------------------------------
 @subsection Matrix Content URI
 
 @deftp {Data Type} <matrix-content-uri> server protocol media-id
