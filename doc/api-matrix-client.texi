@@ -32,19 +32,30 @@ filter multiple times, for example in long poll requests.
 Type: @code{<filter>} or @code{<string>}.
 
 @item #:presence-callbacks (procedures <list>)
+TODO:
 
-@item #:on-invite (procedures <list>)
-Callbacks that handle room invites.
+@item #:on-invite procedure
+A callback (or a list of callbacks) that handles room invites.
 
-@item #:on-update (procedures <list>)
-Callbacks that handle updates to joined rooms.
+@item #:on-update procedure
+A callback (or a list of callbacks) that handles updates to joined rooms.
 
-@item #:on-leave (procedures <list>)
-Callbacks that called when the current user left a room.
+@item #:on-leave procedure
+A callback (or a list of callbacks) that called when the current user left a
+room.
 
-@item #:on-timeline-event (procedures <list>)
+@item #:on-timeline-event handlers
+An associative list of event handlers that takes the following form:
+
+@lisp
+`(("m.room.message" . ,(lambda (client event-room-id event) ...)))
+@end lisp
+
+This can be also specified as a hash table where keys are event types and
+values are procedures to handle specific events.
 
 @item #:ephemeral-callbacks (procedures <list>)
+TODO:
 
 @end table
 @end deftp
@@ -58,7 +69,7 @@ Get the current session from a @var{matrix-client}.
 @end deffn
 
 @deffn {Scheme Procedure} matrix-client-on-invite (matrix-client <matrix-client>)
-Get the callbacks for invitation updates.
+Get the callbacks for invitation updates from a @var{matrix-client}.
 @end deffn
 
 @deffn {Scheme Procedure} matrix-client-on-update (matrix-client <matrix-client>)
