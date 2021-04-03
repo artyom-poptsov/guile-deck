@@ -112,6 +112,26 @@ Type: @code{<event-filter>} or @code{undefined} symbol.
 @end deftp
 
 @c -----------------------------------------------------------------------------
+
+@deffn {Scheme Procedure} filter? object
+Check if an @var{object} is a @code{<filter>} instance.
+@end deffn
+
+@deffn  {Scheme Procedure} filter->alist (filter <filter>)
+@deffnx {Scheme Procedure} filter->alist (filter <room-filter>)
+@deffnx {Scheme Procedure} filter->alist (filter <state-filter>)
+@deffnx {Scheme Procedure} filter->alist (filter <event-filter>)
+Convert a @var{filter} instance to an alist.
+@end deffn
+
+@deffn  {Scheme Procedure} filter->json-string (filter <filter>)
+@deffnx {Scheme Procedure} filter->json-string (filter <room-filter>)
+@deffnx {Scheme Procedure} filter->json-string (filter <state-filter>)
+@deffnx {Scheme Procedure} filter->json-string (filter <event-filter>)
+Convert a @var{filter} instance to a JSON string.
+@end deffn
+
+@c -----------------------------------------------------------------------------
 @subsubsection Event Filter
 
 @deftp {Class} <event-filter> @
@@ -214,30 +234,97 @@ The message and state update events to include for rooms.
 @c -----------------------------------------------------------------------------
 @subsubsection State Filter
 
-@deftp {Data Type} <state-filter> limit not-senders not-types senders types contains-url? include-redundant-members? lazy-load-members? not-rooms rooms
-TODO:
+@deftp {Data Type} <state-filter> @
+       [#:limit='undefined] @
+       [#:not-senders='undefined] @
+       [#:not-types='undefined] @
+       [#:senders='undefined] @
+       [#:types='undefined]
+       [#:contains-url?='undefined] @
+       [#:include-redundant-members?='undefined] @
+       [#:lazy-load-members?='undefined] @
+       [#:not-rooms='undefined] @
+       [#:rooms='undefined]
+
+Constructor parameters:
+
+@table @asis
+
+@item  #:limit (value <number>)
+@itemx #:limit (value <symbol>)
+The maximum number of events to return.
+
+@item  #:not-senders (value <list>)
+@itemx #:not-senders (value <symbol>)
+A list of sender IDs to exclude. If @code{undefined} then no senders are
+excluded. A matching sender will be excluded even if it is listed in the
+``senders'' filter.
+
+@item  #:senders (value <list>)
+@itemx #:senders (value <symbol>)
+A list of senders IDs to include. If @code{undefined} then all senders are
+included.
+
+@item  #:not-types (value <list>)
+@itemx #:not-types (value <symbol>)
+A list of event types to exclude. If @code{undefined} then no event types are
+excluded. A matching type will be excluded even if it is listed in the
+``types'' filter. A ``*'' can be used as a wildcard to match any sequence of
+characters.
+
+@item  #:types (value <list>)
+@itemx #:types (value <symbol>)
+A list of event types to include. If @code{undefined} then all event types are
+included. A ``*'' can be used as a wildcard to match any sequence of
+characters.
+
+@item  #:not-rooms (value <list>)
+@itemx #:not-rooms (value <symbol>)
+A list of senders IDs to include. If @code{undefined} then all senders are
+included.
+
+@item  #:rooms (value <list>)
+@itemx #:rooms (value <symbol>)
+A list of room IDs to include. If @code{undefined} then all rooms are
+included.
+
+@item  #:contains-url? (value <boolean>)
+@itemx #:contains-url? (value <symbol>)
+If @code{#t}, includes only events with a url key in their content. If
+@code{#f}, excludes those events. If @code{undefined}, URL key is not
+considered for filtering.
+
+@item  #:include-redundant-members? (value <list>)
+@itemx #:include-redundant-members? (value <symbol>)
+If @code{#t}, sends all membership events for all events, even if they have
+already been sent to the client. Does not apply unless ``lazy_load_members''
+is @code{#t}. Defaults to @code{#t} when @code{undefined}.
+
+@item  #:lazy-load-members? (value <list>)
+@itemx #:lazy-load-members? (value <symbol>)
+If @code{#t}, enables lazy-loading of membership events. Defaults to @code{#f}
+when @code{undefined}.
+
+@end table
+
 @end deftp
-
-@deffn {Scheme Procedure} filter? object
-Check if an @var{object} is a @code{<filter>} instance.
-@end deffn
-
-@deffn {Scheme Procedure} filter->alist (filter <filter>)
-Convert a @var{filter} instance to an alist.
-@end deffn
-
-@deffn  {Scheme Procedure} filter->json-string (filter <filter>)
-@deffnx {Scheme Procedure} filter->json-string (filter <room-filter>)
-@deffnx {Scheme Procedure} filter->json-string (filter <state-filter>)
-@deffnx {Scheme Procedure} filter->json-string (filter <event-filter>)
-Convert a @var{filter} instance to a JSON string.
-@end deffn
 
 @c -----------------------------------------------------------------------------
 @subsection Matrix Content URI
 
-@deftp {Data Type} <matrix-content-uri> server protocol media-id
-TODO:
+@deftp {Class} <matrix-content-uri> @
+       [#:server=#f] @
+       [#:protocol=''mxc''] @
+       [#:media-id=#f]
+
+Constructor parameters:
+
+@table @asis
+@item #:server (value <string>)
+@item #:protocol (value <string>)
+@item #:media-id (value <string>)
+@end table
+
 @end deftp
 
 @deffn {Scheme Procedure} matrix-content-uri? object
@@ -266,8 +353,19 @@ TODO:
 
 @subsection Matrix ID
 
-@deftp {Data Type} <matrix-id> type server identity
-TODO:
+@deftp {Class} <matrix-id> @
+       [#:type=#f] @
+       [#:server=#f] @
+       [#:identity=#f]
+
+Constructor parameters:
+
+@table @asis
+@item #:type (value <symbol>)
+@item #:server (value <string>)
+@item #:identity (value <string>)
+@end table
+
 @end deftp
 
 @deffn {Scheme Procedure} matrix-id? object
@@ -304,10 +402,46 @@ TODO:
 
 @subsection State
 
-@deftp {Data Type} <state>
+@deftp {Class} <state> @
+       #:next-batch @
+       [#:account-data=#f] @
+       [#:device-lists=#f] @
+       [#:device-one-time-keys-count=#f] @
+       [#:presence=#f] @
+       [#:rooms=#f] @
+       [#:to-device=#f]
 This class describes a Matrix state.
 
 See @url{https://matrix.org/docs/api/client-server/#!/Room32participation/sync}.
+
+Constructor parameters:
+
+@table @asis
+@item #:next-batch (value <string>)
+@strong{required} The batch token to supply in the since param of the next
+``/sync'' request.
+
+@item #:account-data (value <list>)
+The global private data created by this user.
+
+@item #:device-lists (value <list>)
+Information on end-to-end device updates.
+
+@item #:device-one-time-keys-count value
+Information on end-to-end encryption keys.
+
+@item #:presence (value <list>)
+A @code{<list>} of @code{<matrix-event>}. The updates to the presence status
+of other users.
+
+@item #:rooms value
+Updates to rooms.
+
+@item #:to-device value
+Information on the send-to-device messages for the client device.
+
+@end table
+
 @end deftp
 
 @deffn {Scheme Procedure} state? object
