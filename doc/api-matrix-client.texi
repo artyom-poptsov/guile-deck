@@ -6,42 +6,45 @@
 @node Matrix Client
 @section Matrix Client
 
-@deftp {Data type} <matrix-client> session sync-timeout sync-filter presence-callbacks on-invite on-timeline-event on-leave ephemeral-callbacks
+@deftp {Data type} <matrix-client> #:session [#:sync-timeout=30000] @
+       [#:sync-filter=%default-filter] [#:presence-callbacks='()] @
+       [#:on-invite='()] [#:on-timeline-event=()] [#:on-leave='()] @
+       [#:ephemeral-callbacks='()]
 This class describes a Matrix asynchronous client.
 
 The constructor of the class throws @code{deck-error} on errors.
 
-@table @samp
-@item @var{session}
+Constructor parameters:
+
+@table @asis
+@item #:session (session <session>)
 @strong{required} Session that will be used for communication with the server.
 
-@item @var{sync-timeout}
+@item #:sync-timeout (timeout <number>)
 The client will be checking the server for updates once per this timeout.
 
-Type: @code{number}.
-
-@item @var{sync-filter}
-The ID of a filter created using the filter API or a @code{<filter>} object.
-Passing the filter object is best suited to one off requests. Creating a
-filter using the filter API is recommended for clients that reuse the same
+@item #:sync-filter filter
+The ID of a @var{filter} created using the filter API or a @code{<filter>}
+object. Passing the filter object is best suited to one off requests. Creating
+a filter using the filter API is recommended for clients that reuse the same
 filter multiple times, for example in long poll requests.
 
 Type: @code{<filter>} or @code{<string>}.
 
-@item @var{presence-callbacks}
+@item #:presence-callbacks (procedures <list>)
 
-@item @var{on-invite}
+@item #:on-invite (procedures <list>)
 Callbacks that handle room invites.
 
-@item @var{on-update}
+@item #:on-update (procedures <list>)
 Callbacks that handle updates to joined rooms.
 
-@item @var{on-leave}
+@item #:on-leave (procedures <list>)
 Callbacks that called when the current user left a room.
 
-@item @var{on-timeline-event}
+@item #:on-timeline-event (procedures <list>)
 
-@item @var{ephemeral-callbacks}
+@item #:ephemeral-callbacks (procedures <list>)
 
 @end table
 @end deftp
