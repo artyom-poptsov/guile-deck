@@ -7,6 +7,39 @@ Copyright (C) Artyom V. Poptsov <poptsov.artyom@gmail.com>
   are permitted in any medium without royalty provided the copyright
   notice and this notice are preserved.
 
+* Unreleased
+** Global changes
+*** Guile-Deck procedures now throw 'guile-deck' errors
+    The error reporting procedures are in (deck core common error) module.
+** (deck core common list): New module
+   The module contains common procedures for working with lists.
+** (deck matrix)
+*** "shared_secret" class field renamed to "shared-secret"
+*** (matrix-login): Improve error reporting
+    Now the procedure throws 'guile-deck' error when a server responds with
+    error.
+** (deck core net client)
+*** New method: client?
+** (deck core types matrix-content-uri)
+*** (equals?): New generic method
+** (deck core types device)
+*** (initialize): Make sure that device ID is provided
+*** (display, write): Fix the format
+** (deck core types filter)
+*** (display, write): Implement custom class printers
+** (deck core types matrix-event)
+*** (display, write): Fix the format
+** (deck core types matrix-id)
+*** The "identity" field is #f by default now
+** (deck core types state)
+*** Fix a typo: "presense" -> "presence"
+    All methods are renamed accordingly.
+*** (display, write): Fix the format
+** (deck core error)
+*** Rename to (deck core common error)
+** Improve the Texinfo documentation
+** Expand the test suite
+
 * Changes in version 0.1.0 (2020-03-21)
 ** Release of the first version of Guile-Deck
 
