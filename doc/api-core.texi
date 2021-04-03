@@ -17,8 +17,25 @@ Generate a MAC based on a @var{shared-secret} and @var{data}.
 @end deffn
 
 @subsection Room
-@deftp {Data Type} <room>
+@deftp {Class} <room> #:id [#:session=#f] [#:alias=#f]
 This class describes a Matrix room.
+
+Constructor parameters:
+
+@table @asis
+
+@item #:id id
+@strong{required} A Matrix ID of the room. Must be a string or a
+@code{<matrix-id>} instance.
+
+@item #:session (session <session>)
+A @code{<session>} instance that will be used for requests.
+
+@item #:alias (session <matrix-id>)
+A @code{<matrix-id>} instance that holds the room alias.
+
+@end table
+
 @end deftp
 
 @deffn {Scheme Procedure} room? x
@@ -129,8 +146,23 @@ Example:
 
 @subsection Session
 
-@deftp {Data Type} <session>
+@deftp {Class} <session> [#:client=#f] [#:user-id=#f] [#:token=#f]
 This class describes a Matrix network session.
+
+Constructor parameters:
+
+@table @asis
+@item #:client (client <client>)
+A Matrix @var{client} instance.
+
+@item #:user-id (id <matrix-id>)
+An ID of the logged in user.
+
+@item #:token (token <string>)
+An authentication token provided by the server.
+
+@end table
+
 @end deftp
 
 @deffn {Scheme Procedure} session? x
@@ -162,39 +194,69 @@ client-server documentation}
 @end deffn
 
 @deffn {Scheme Procedure} session-create-filter (session <session>) (filter <filter>)
-TODO:
+Uploads a new @var{filter} definition to the homeserver. Returns a filter ID
+as a @code{<string>} that may be used in future requests to restrict which
+events are returned to the client.
+
+Throws @code{guile-deck} error on errors.
+
+See
+@url{https://matrix.org/docs/api/client-server/#!/Room32participation/defineFilter}
 @end deffn
 
 @deffn {Scheme Procedure} session-create-room (session <session>) (name <string>)
-TODO:
+Create a new room on a server with the given @var{name}.
+
+Return a new @code{<room>} instance.
+
+Throws @code{guile-deck} error on errors.
 @end deffn
 
 @deffn {Scheme Procedure} session-join-room (session <session>) (room-id <matrix-id>)
-TODO:
+Join a room with the given @var{room-id}.
+
+Returns a new @code{<room>} instance.
 @end deffn
 
 @deffn {Scheme Procedure} session-joined-rooms (session <session>)
-TODO:
+Get all the rooms that the current user joined to as a list of @code{<room>}
+instances.
+
+Throws @code{guile-deck} error on errors.
 @end deffn
 
 @deffn {Scheme Procedure} session-logout (session <session>)
-TODO:
+Finish the current session.
+
+Returns a server response in JSON format.
 @end deffn
 
 @deffn {Scheme Procedure} session-logout/all (session <session>)
-TODO:
+Finish all active sessions of the current user.
+
+Returns a server response in JSON format.
 @end deffn
 
 @deffn {Scheme Procedure} session-whoami (session <session>)
-TODO:
+Fetch the user ID from the server.
+
+Returns the ID as a @code{<matrix-id>} instance.
+
+Throws @code{guile-deck} error on errors.
 @end deffn
 
 @deffn {Scheme Procedure} session-avatar-uri (session <session>)
-TODO:
+Get the user avatar URI.
+
+Returns the avatar URI as a @code{<matrix-content-uri>} instance.
+
+Throws @code{guile-deck} error on errors.
 @end deffn
 
 @deffn {Scheme Procedure} session-voip-turn-server (session <session>)
-TODO:
+This API provides credentials for the client to use when initiating calls.
+
+See @url{https://matrix.org/docs/api/client-server/#!/VOIP/getTurnServer}
 @end deffn
 
 @c Local Variables:
