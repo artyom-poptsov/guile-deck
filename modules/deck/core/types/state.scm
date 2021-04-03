@@ -33,9 +33,9 @@
             state-device-lists
             state-device-one-time-keys-count
             state-next-batch
-            state-presense
-            state-presense-events
-            state-presense-events-available?
+            state-presence
+            state-presence-events
+            state-presence-events-available?
             state-rooms
             state-rooms-invite
             state-rooms-invite-available?
@@ -89,9 +89,9 @@
   ;; The updates to the presence status of other users.
   ;;
   ;; <list> of <matrix-event>
-  (presense
-   #:init-keyword  #:presense
-   #:getter        state-presense)
+  (presence
+   #:init-keyword  #:presence
+   #:getter        state-presence)
 
   ;; Updates to rooms.
   (rooms
@@ -199,7 +199,7 @@
        (equal? (state-device-one-time-keys-count s1)
                (state-device-one-time-keys-count s2))
        (equal? (state-next-batch                 s1) (state-next-batch s2))
-       (equal? (state-presense                   s1) (state-presense s2))
+       (equal? (state-presence                   s1) (state-presence s2))
        (equal? (state-rooms                      s1) (state-rooms s2))
        (equal? (state-to-device                  s1) (state-to-device s2))))
 
@@ -228,11 +228,11 @@
       (state-rooms-join-available? state)
       (state-rooms-leave-available? state)))
 
-(define-method (state-presense-events (state <state>))
-  (assoc-ref (state-presense state) "events"))
+(define-method (state-presence-events (state <state>))
+  (assoc-ref (state-presence state) "events"))
 
-(define-method (state-presense-events-available? (state <state>))
-  (> (vector-length (state-presense-events state)) 0))
+(define-method (state-presence-events-available? (state <state>))
+  (> (vector-length (state-presence-events state)) 0))
 
 
 
@@ -246,7 +246,7 @@
       #:device-lists (assoc-ref alist "device_lists")
       #:device-one-time-keys-count (assoc-ref alist "device_one_time_keys_count")
       #:next-batch   (assoc-ref alist "next_batch")
-      #:presense     (assoc-ref alist "presence")
+      #:presence     (assoc-ref alist "presence")
       #:rooms        `(,(if (or (not invite) (null? invite))
                             (cons "invite" '())
                             (cons "invite" (map list->room-update invite)))

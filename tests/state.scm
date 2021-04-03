@@ -13,7 +13,7 @@
     #:device-lists               2
     #:device-one-time-keys-count 3
     #:next-batch                 4
-    #:presense                   5
+    #:presence                   5
     #:rooms                      '(("invite")
                                    ("join")
                                    ("leave"))
@@ -28,9 +28,9 @@
                                                    ("leave")))
                   ("to_device"                  . 7))))
 
-(test-assert "state-presense-events-available?"
-  (let ((state (make <state> #:presense `(("events" . ,(vector "this" "is" "event"))))))
-    (state-presense-events-available? state)))
+(test-assert "state-presence-events-available?"
+  (let ((state (make <state> #:presence `(("events" . ,(vector "this" "is" "event"))))))
+    (state-presence-events-available? state)))
 
 (test-equal "list->room-update"
   (make <room-update>
