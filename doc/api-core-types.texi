@@ -351,6 +351,7 @@ TODO:
 TODO:
 @end deffn
 
+@c -----------------------------------------------------------------------------
 @subsection Matrix ID
 
 @deftp {Class} <matrix-id> @
@@ -369,37 +370,32 @@ Constructor parameters:
 @end deftp
 
 @deffn {Scheme Procedure} matrix-id? object
-TODO:
+Check if an @var{object} is a @code{<matrix-id>} instance.
 @end deffn
 
-@deffn {Scheme Procedure} matrix-id-type (id <matrix-id>)
-TODO:
-@end deffn
-
-@deffn {Scheme Procedure} matrix-id-identity (id <matrix-id>)
-TODO:
-@end deffn
-
-@deffn {Scheme Procedure} matrix-id-server (id <matrix-id>)
-TODO:
+@deffn  {Scheme Procedure} matrix-id-type (id <matrix-id>)
+@deffnx {Scheme Procedure} matrix-id-identity (id <matrix-id>)
+@deffnx {Scheme Procedure} matrix-id-server (id <matrix-id>)
+Matrix ID instance fields getters.
 @end deffn
 
 @deffn {Scheme Procedure} matrix-type->char (identity <symbol>)
-TODO:
+Convert an @var{identity} symbol to a character.
 @end deffn
 
 @deffn {Scheme Procedure} char->matrix-type (ch <char>)
-TODO:
+Convert a character @var{ch} to a matrix type symbol.
 @end deffn
 
 @deffn {Scheme Procedure} matrix-id->string (id <matrix-id>)
-TODO:
+Convert a matrix @var{id} to a string.
 @end deffn
 
 @deffn {Scheme Procedure} string->matrix-id (string <string>)
-TODO:
+Convert a @var{string} to a @code{<matrix-id>} instance.
 @end deffn
 
+@c -----------------------------------------------------------------------------
 @subsection State
 
 @deftp {Class} <state> @
