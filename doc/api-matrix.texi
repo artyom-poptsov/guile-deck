@@ -12,15 +12,16 @@ These procedures are available from the module @code{(deck matrix)}.
 This class provides an entry point for Matrix network.
 
 Constructor parameters:
+
 @table @asis
-@item <uri> #:home-server
+@item #:home-server (server <uri>)
 @strong{required} The home server value.
 
-@item <string> #:shared-secret
+@item #:shared-secret (shared-secret <string>)
 Sets a shared secret for superuser tasks on a server. The secret can be used
 for user registration on servers where registration is disabled.
 
-@item <boolean> #:debug-mode?
+@item #:debug-mode? (enabled? <boolean>)
 Enable or disable the debug mode.
 
 @end table
@@ -53,7 +54,8 @@ instance.
 Check if a @var{matrix} instance is in the debug mode.
 @end deffn
 
-@deffn {Scheme Procedure} matrix-register matrix user password [#:admin?=#f] [#:device-id=#f]
+@deffn {Scheme Procedure} matrix-register matrix user password @
+       [#:admin?=#f] [#:device-id=#f]
 Register a new user on the @var{matrix} server with the specified password.
 @end deffn
 
