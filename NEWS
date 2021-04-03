@@ -7,7 +7,7 @@ Copyright (C) Artyom V. Poptsov <poptsov.artyom@gmail.com>
   are permitted in any medium without royalty provided the copyright
   notice and this notice are preserved.
 
-* Unreleased
+* Changes in version 0.2.0 (2021-04-03)
 ** Global changes
 *** Guile-Deck procedures now throw 'guile-deck' errors
     The error reporting procedures are in (deck core common error) module.
