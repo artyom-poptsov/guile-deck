@@ -8,34 +8,29 @@
 
 @subsection Devices
 
-@deftp {Data Types} <device> device-id display-name last-seen-ip last-seen-timestamp
+@deftp {Class} <device> #:id [#:display-name=#f] [#:last-seen-ip=#f] @
+       [#:last-seen-timestamp=#f]
 See @url{https://matrix.org/docs/api/client-server/#!/Device32management/getDevices}.
 
-@table @samp
+Constructor parameters:
 
-@item @var{device-id}
+@table @asis
+@item #:id (server <string>)
 @strong{required} Identifier of this device.
 
-Type: @code{<string>}
-
-@item @var{display-name}
+@item #:display-name (name <string>)
 Display name set by the user for this device. Absent if no name has been set.
 
-Type: @code{<string>}
-
-@item @var{last-seen-ip}
+@item #:last-seen-ip (ip <string>)
 The IP address where this device was last seen. (May be a few minutes out of
 date, for efficiency reasons).
 
-Type: @code{<string>}
-
-@item @var{last-seen-timestamp}
+@item #:last-seen-timestamp (ip <number>)
 The timestamp (in milliseconds since the unix epoch) when this devices was
 last seen. (May be a few minutes out of date, for efficiency reasons).
 
-Type: @code{<number>}
-
 @end table
+
 @end deftp
 
 @deffn {Scheme Procedure} device? object
