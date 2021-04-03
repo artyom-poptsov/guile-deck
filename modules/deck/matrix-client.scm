@@ -303,8 +303,8 @@
                                 #:filter filter)))
     (matrix-client-sync-token-set! matrix-client (state-next-batch state))
 
-    (when (state-presense-events-available? state)
-      (handle-presence (state-presense-events state)))
+    (when (state-presence-events-available? state)
+      (handle-presence (state-presence-events state)))
 
     (when (state-rooms-invite-available? state)
       (handle-invite (state-rooms-invite state)))
