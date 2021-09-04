@@ -232,7 +232,8 @@
   (assoc-ref (state-presence state) "events"))
 
 (define-method (state-presence-events-available? (state <state>))
-  (> (vector-length (state-presence-events state)) 0))
+  (and (state-presence-events state)
+       (> (vector-length (state-presence-events state)) 0)))
 
 
 
