@@ -139,7 +139,7 @@
 
     (cond
      ((assoc-ref response "error")
-      (deck-error (assoc-ref result "error")))
+      (deck-error (assoc-ref response "error")))
      (else
       (make <session>
         #:client  (matrix-client matrix)
