@@ -170,7 +170,7 @@
     (unless session
       (deck-error "No session provided")))
 
-  (let ((on-invite (construtor-argument #:on-invite initargs)))
+  (let ((on-invite (constructor-argument #:on-invite initargs)))
     (when on-invite
       (cond
        ((procedure? on-invite)
