@@ -32,6 +32,22 @@
   (let ((state (make <state> #:presence `(("events" . ,(vector "this" "is" "event"))))))
     (state-presence-events-available? state)))
 
+(test-equal "state-presence-events-available?: #f"
+  #f
+  (let ((state (make <state> #:presence #f)))
+    (state-presence-events-available? state)))
+
+(test-equal "state-rooms-invite"
+  '()
+  (let ((state (make <state> #:rooms '(("invite")))))
+    (state-rooms-invite state)))
+
+(test-equal "state-rooms-invite-available?: empty list"
+  #f
+  (let ((state (make <state> #:rooms '(("invite")))))
+    (state-rooms-invite-available? state)))
+
+
 (test-equal "list->room-update"
   (make <room-update>
     #:id      (string->matrix-id "!some-id:matrix.org")
