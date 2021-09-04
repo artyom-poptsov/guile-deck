@@ -26,6 +26,7 @@
 (define-module (deck core room)
   #:use-module (oop goops)
   #:use-module (deck core common error)
+  #:use-module (deck core common list)
   #:use-module (deck core types matrix-event)
   #:use-module (deck core types matrix-id)
   #:use-module (deck core types matrix-content-uri)
