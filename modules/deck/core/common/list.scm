@@ -25,7 +25,7 @@
 
 (define-module (deck core common list)
   #:use-module (oop goops)
-  #:export (construtor-argument
+  #:export (constructor-argument
             cons-or-null
             make-sieved-list))
 
