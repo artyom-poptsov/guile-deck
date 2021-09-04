@@ -74,6 +74,14 @@
          (equal? (matrix-id-identity id) "room-id")
          (equal? (matrix-id-server id)   "example.org"))))
 
+(test-error "string->matrix-id: error: wrong type"
+  'deck-error
+  (string->matrix-id "^test:example.org"))
+
+(test-error "string->matrix-id: error: wrong format"
+  'deck-error
+  (string->matrix-id "!test;example.org"))
+
 
 (test-equal "string->matrix-id: event identity"
   "abc123"
