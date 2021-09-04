@@ -25,7 +25,8 @@
 
 (define-module (deck core common list)
   #:use-module (oop goops)
-  #:export (cons-or-null
+  #:export (construtor-argument
+            cons-or-null
             make-sieved-list))
 
 (define-syntax cons-or-null
@@ -41,5 +42,9 @@
 
 (define (make-sieved-list . elements)
   (delete '() elements))
+
+(define (construtor-argument keyword initargs)
+  (and (memq keyword initargs)
+       (cadr (memq keyword initargs))))
 
 ;;; error.scm ends here.

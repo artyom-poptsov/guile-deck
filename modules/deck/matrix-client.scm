@@ -29,6 +29,7 @@
   #:use-module (ice-9 threads)
   #:use-module (ice-9 hash-table)
   #:use-module (deck core common error)
+  #:use-module (deck core common list)
   #:use-module (deck core types state)
   #:use-module (deck core types filter)
   #:use-module (deck core types matrix-id)
@@ -165,14 +166,11 @@
 
 (define-method (initialize (matrix-client <matrix-client>) initargs)
   (next-method)
-  (let ((session (and (memq #:session initargs)
-                      (cadr (memq #:session initargs)))))
-
+  (let ((session (construtor-argument #:session initargs)))
     (unless session
       (deck-error "No session provided")))
 
-  (let ((on-invite (and (memq #:on-invite initargs)
-                        (cadr (memq #:on-invite initargs)))))
+  (let ((on-invite (construtor-argument #:on-invite initargs)))
     (when on-invite
       (cond
        ((procedure? on-invite)
@@ -182,8 +180,7 @@
        (else
         (deck-error "#:on-invite must be a <list> of <procedure> or a <procedure>")))))
 
-  (let ((on-update (and (memq #:on-update initargs)
-                        (cadr (memq #:on-update initargs)))))
+  (let ((on-update (construtor-argument #:on-update initargs)))
     (when on-update
       (cond
        ((procedure? on-update)
@@ -193,8 +190,7 @@
        (else
         (deck-error "#:on-update must be a <list> of <procedure> or a <procedure>")))))
 
-  (let ((on-leave (and (memq #:on-leave initargs)
-                       (cadr (memq #:on-leave initargs)))))
+  (let ((on-leave (construtor-argument #:on-leave initargs)))
     (when on-leave
       (cond
        ((procedure? on-leave)
@@ -204,8 +200,7 @@
        (else
         (deck-error "#:on-leave must be a <list> of <procedure> or a <procedure>")))))
 
-  (let ((on-timeline-event (and (memq #:on-timeline-event initargs)
-                                (cadr (memq #:on-timeline-event initargs)))))
+  (let ((on-timeline-event (construtor-argument #:on-timeline-event initargs)))
     (when on-timeline-event
       (cond
        ((list? on-timeline-event)

@@ -33,6 +33,7 @@
   #:use-module (json)
   #:use-module (web uri)
   #:use-module (deck core common error)
+  #:use-module (deck core common list)
   #:use-module (deck core net client)
   #:use-module (deck core types matrix-id)
   #:use-module (deck core mac)
@@ -69,8 +70,7 @@
 
 (define-method (initialize (matrix <matrix>) initargs)
   (next-method)
-  (let ((home-server (and (memq #:home-server initargs)
-                          (cadr (memq #:home-server initargs)))))
+  (let ((home-server (construtor-argument #:home-server initargs)))
 
     (unless home-server
       (deck-error "No home server URI provided"))

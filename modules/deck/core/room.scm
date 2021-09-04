@@ -79,8 +79,7 @@
 
 (define-method (initialize (room <room>) initargs)
   (next-method)
-  (let ((id (and (memq #:id initargs)
-                 (cadr (memq #:id initargs)))))
+  (let ((id (construtor-argument #:id initargs)))
 
     (unless id
       (deck-error "No room Id was provided"))
