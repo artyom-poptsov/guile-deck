@@ -166,7 +166,7 @@
 
 (define-method (initialize (matrix-client <matrix-client>) initargs)
   (next-method)
-  (let ((session (construtor-argument #:session initargs)))
+  (let ((session (constructor-argument #:session initargs)))
     (unless session
       (deck-error "No session provided")))
 
@@ -180,7 +180,7 @@
        (else
         (deck-error "#:on-invite must be a <list> of <procedure> or a <procedure>")))))
 
-  (let ((on-update (construtor-argument #:on-update initargs)))
+  (let ((on-update (constructor-argument #:on-update initargs)))
     (when on-update
       (cond
        ((procedure? on-update)
@@ -190,7 +190,7 @@
        (else
         (deck-error "#:on-update must be a <list> of <procedure> or a <procedure>")))))
 
-  (let ((on-leave (construtor-argument #:on-leave initargs)))
+  (let ((on-leave (constructor-argument #:on-leave initargs)))
     (when on-leave
       (cond
        ((procedure? on-leave)
@@ -200,7 +200,7 @@
        (else
         (deck-error "#:on-leave must be a <list> of <procedure> or a <procedure>")))))
 
-  (let ((on-timeline-event (construtor-argument #:on-timeline-event initargs)))
+  (let ((on-timeline-event (constructor-argument #:on-timeline-event initargs)))
     (when on-timeline-event
       (cond
        ((list? on-timeline-event)

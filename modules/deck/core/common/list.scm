@@ -43,7 +43,7 @@
 (define (make-sieved-list . elements)
   (delete '() elements))
 
-(define (construtor-argument keyword initargs)
+(define (constructor-argument keyword initargs)
   (and (memq keyword initargs)
        (cadr (memq keyword initargs))))
 

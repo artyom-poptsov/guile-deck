@@ -79,7 +79,7 @@
 
 (define-method (initialize (room <room>) initargs)
   (next-method)
-  (let ((id (construtor-argument #:id initargs)))
+  (let ((id (constructor-argument #:id initargs)))
 
     (unless id
       (deck-error "No room Id was provided"))

@@ -70,7 +70,7 @@
 
 (define-method (initialize (matrix <matrix>) initargs)
   (next-method)
-  (let ((home-server (construtor-argument #:home-server initargs)))
+  (let ((home-server (constructor-argument #:home-server initargs)))
 
     (unless home-server
       (deck-error "No home server URI provided"))
