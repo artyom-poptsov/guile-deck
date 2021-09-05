@@ -131,6 +131,7 @@ and it will give you a suggestion.
 @include api-matrix.texi
 @include api-matrix-client.texi
 @include api-core.texi
+@include api-core-session.texi
 @include api-core-types.texi
 
 @node GNU Free Documentation License

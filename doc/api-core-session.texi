@@ -1,0 +1,152 @@
+@c -*-texinfo-*-
+@c This file is part of Guile-Deck Reference Manual.
+@c Copyright (C) 2021 Artyom V. Poptsov
+@c See the file guile-deck.texi for copying conditions.
+
+@node Session
+@section Session
+
+@deftp {Class} <session> @
+               [#:client=#f] @
+               [#:user-id=#f] @
+               [#:token=#f]
+
+This class describes a Matrix client session. Usually this class is obtained
+by means of @code{matrix-login} call on @code{<matrix>} class.
+
+@table @asis
+@item #:client (client <client>)
+@item #:user-id (id <matrix-id>)
+@item #:token (token <string>)
+@end table
+
+@end deftp
+
+@deffn {Scheme Procedure} session? x
+Check if @var{x} is a @code{<session>} instance.
+@end deffn
+
+@deffn {Scheme Procedure} session-user-id (session <session>)
+Get @var{session} user ID.
+@end deffn
+
+@deffn {Scheme Procedure} session-devices session
+Gets information about all devices for the current user.
+
+See
+@url{https://matrix.org/docs/api/client-server/#!/Device32management/getDevices}.
+@end deffn
+
+@deffn {Scheme Procedure} session-capabilities (session <session>)
+Gets information about the server's supported feature set and other relevant
+capabilities.
+
+See
+@url{https://matrix.org/docs/api/client-server/#!/Capabilities/getCapabilities}.
+@end deffn
+
+@deffn {Scheme Procedure} session-sync @
+               [#:filter=#f] @
+               [#:since=#f] @
+               [#:full-state=#f] @
+               [#:set-presense=#f] @
+               [#:timeout=#f]
+
+Synchronize the client's state with the latest state on the server. Clients
+use this API when they first log in to get an initial snapshot of the state on
+the server, and then continue to call this API to get incremental deltas to
+the state, and to receive new messages.
+
+See
+@url{https://matrix.org/docs/api/client-server/#!/Room32participation/sync}.
+
+@end deffn
+
+@deffn {Scheme Procedure} session-create-filter @
+               (session <session>) @
+               (filter <filter>)
+
+Uploads a new @var{filter} definition to the homeserver. Returns a filter ID
+that may be used in future requests to restrict which events are returned to
+the client.
+
+See
+@url{https://matrix.org/docs/api/client-server/#!/Room32participation/defineFilter}.
+@end deffn
+
+@deffn {Scheme Procedure} session-whoami (session <session>)
+Gets information about the owner of a @var{session} access token.
+
+See
+@url{https://matrix.org/docs/api/client-server/#!/User32data/getTokenOwner}.
+@end deffn
+
+@subsection Room management
+
+@deffn {Scheme Procedure} session-create-room @
+               (session <session>) @
+               (name    <string>)
+Create a new room with various configuration options.
+
+See
+@url{https://matrix.org/docs/api/client-server/#!/Room32creation/createRoom}.
+@end deffn
+
+@deffn {Scheme Procedure} session-join-room @
+               (session <session>) @
+               (room-id <matrix-id>)
+
+This API starts a user participating in a particular room specified by a
+@var{room-id}, if that user is allowed to participate in that room. After this
+call, the client is allowed to see all current state events in the room, and
+all subsequent events associated with the room until the user leaves the room.
+
+See
+@url{https://matrix.org/docs/api/client-server/#!/Room32membership/joinRoom}.
+@end deffn
+
+@deffn {Scheme Procedure} session-joined-rooms (session <session>)
+This API returns a list of the user's current rooms.
+
+See
+@url{https://matrix.org/docs/api/client-server/#!/Room32membership/getJoinedRooms}.
+@end deffn
+
+@subsection Logout
+
+@deffn {Scheme Procedure} session-logout (session <session>)
+Invalidates an existing access token, so that it can no longer be used for
+authorization. The device associated with the access token is also deleted.
+
+See
+@url{https://matrix.org/docs/api/client-server/#!/Session32management/logout}.
+@end deffn
+
+@deffn {Scheme Procedure} session-logout/all (session <session>)
+Invalidates all access tokens for a user, so that they can no longer be used
+for authorization. This includes the access token that made this request. All
+devices for the user are also deleted.
+
+See
+@url{https://matrix.org/docs/api/client-server/#!/Session32management/logout_all}.
+@end deffn
+
+@subsection Avatars
+
+@deffn {Scheme Procedure} session-avatar-uri (session <session>)
+Get the user's avatar URL. This API may be used to fetch the user's own avatar
+URL or to query the URL of other users; either locally or on remote
+homeservers.
+
+See
+@url{https://matrix.org/docs/api/client-server/#!/User32data/getAvatarUrl}.
+@end deffn
+
+
+@c @deffn {Scheme Procedure}
+
+@c @end deffn
+
+@c Local Variables:
+@c TeX-master: "guile-deck.texi"
+@c End:
