@@ -62,6 +62,15 @@ See
 
 @end deffn
 
+@cindex Third Party Identifiers
+@deffn {Scheme Procedure} session-3pid (session <session>)
+Gets a list of the third party identifiers that the homeserver has associated
+with the user's account.
+
+See
+@url{https://matrix.org/docs/api/client-server/#!/User32data/getAccount3PIDs}.
+@end deffn
+
 @deffn {Scheme Procedure} session-create-filter @
                (session <session>) @
                (filter <filter>)
