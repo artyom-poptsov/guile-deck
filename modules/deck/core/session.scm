@@ -39,6 +39,7 @@
             session?
             session-user-id
             session-devices
+            session-capabilities
             session-token
             session-token/alist
             session-client
@@ -181,6 +182,17 @@
          (else
           (map alist->device
                (vector->list (assoc-ref result "devices"))))))))
+
+
+
+;; Gets information about the server's supported feature set and other
+;; relevant capabilities.
+;;
+;; Description:
+;;   <https://matrix.org/docs/api/client-server/#!/Capabilities/getCapabilities>
+(define-method (session-capabilities (session <session>))
+  (client-get (session-client session) "/_matrix/client/r0/capabilities"
+              #:query (session-token/alist session)))
 
 
 
