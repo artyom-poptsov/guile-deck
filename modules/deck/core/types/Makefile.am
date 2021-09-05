@@ -23,6 +23,7 @@ SOURCES = \
 	matrix-id.scm	\
 	matrix-content-uri.scm	\
 	matrix-event.scm 	\
+	third-party-identifier.scm \
 	device.scm		\
 	turn-server.scm		\
 	state.scm		\

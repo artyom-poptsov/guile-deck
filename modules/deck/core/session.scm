@@ -29,6 +29,7 @@
   #:use-module (deck core common error)
   #:use-module (deck core types matrix-id)
   #:use-module (deck core types matrix-content-uri)
+  #:use-module (deck core types third-party-identifier)
   #:use-module (deck core types device)
   #:use-module (deck core types turn-server)
   #:use-module (deck core types state)
@@ -38,6 +39,7 @@
   #:export (<session>
             session?
             session-user-id
+            session-3pid
             session-devices
             session-capabilities
             session-token
@@ -99,6 +101,23 @@
 
 (define-method (session-token/alist (session <session>))
   `(("access_token" . ,(session-token session))))
+
+(define-method (session-3pid (session <session>))
+  (let ((result (client-get (session-client session)
+                            "/_matrix/client/r0/account/3pid"
+                            #:query (session-token/alist session))))
+
+    (unless result
+      (deck-error "Could not make a request" session))
+
+    (cond
+     ((assoc-ref result "error")
+      (deck-error (assoc-ref result "error")))
+     (else
+      (let ((threepids (assoc-ref result "threepids")))
+        (format (current-error-port) "threepids: ~A~%" threepids)
+        (map alist->third-party-identifier
+             (vector->list threepids)))))))
 
 
 ;; Synchronise the client's state with the latest state on the server. Clients
