@@ -115,7 +115,6 @@
       (deck-error (assoc-ref result "error")))
      (else
       (let ((threepids (assoc-ref result "threepids")))
-        (format (current-error-port) "threepids: ~A~%" threepids)
         (map alist->third-party-identifier
              (vector->list threepids)))))))
 
