@@ -81,6 +81,14 @@
 
 
 
+(define-method (equal? (s1 <turn-server>) (s2 <turn-server>))
+  (and (equal? (turn-server-password s1) (turn-server-password s2))
+       (equal? (turn-server-ttl      s1) (turn-server-ttl      s2))
+       (equal? (turn-server-uris     s1) (turn-server-uris     s2))
+       (equal? (turn-server-username s1) (turn-server-username s2))))
+
+
+
 (define (turn-server? object)
   (is-a? object <turn-server>))
 
