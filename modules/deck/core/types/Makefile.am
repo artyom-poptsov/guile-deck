@@ -24,6 +24,7 @@ SOURCES = \
 	matrix-content-uri.scm	\
 	matrix-event.scm 	\
 	third-party-identifier.scm \
+	presence.scm		\
 	device.scm		\
 	turn-server.scm		\
 	state.scm		\
