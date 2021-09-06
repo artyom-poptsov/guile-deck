@@ -63,20 +63,21 @@
 
 
 
-(define-method (display (turn-server <turn-server>) (port <port>))
+(define-method (%display (turn-server <turn-server>) (port <port>))
   (format port "#<turn-server ~a>"
           (number->string (object-address turn-server) 16)))
 
+(define-method (display (turn-server <turn-server>) (port <port>))
+  (%display turn-server port))
+
 (define-method (write (turn-server <turn-server>) (port <port>))
-  (display turn-server port))
+  (%display turn-server port))
 
 (define-method (display (turn-server <turn-server>))
-  (next-method)
-  (display turn-server (current-output-port)))
+  (%display turn-server (current-output-port)))
 
 (define-method (write (turn-server <turn-server>))
-  (next-method)
-  (display turn-server (current-output-port)))
+  (%display turn-server (current-output-port)))
 
 
 
