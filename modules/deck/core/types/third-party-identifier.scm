@@ -81,6 +81,18 @@
   (%display 3pid (current-output-port)))
 
 
+(define-method (equal? (3pid-1 <third-party-identifier>)
+                       (3pid-2 <third-party-identifier>))
+  (and (equal? (third-party-identifier-added-at     3pid-1)
+               (third-party-identifier-added-at     3pid-2))
+       (equal? (third-party-identifier-validated-at 3pid-1)
+               (third-party-identifier-validated-at 3pid-2))
+       (equal? (third-party-identifier-address      3pid-1)
+               (third-party-identifier-address      3pid-2))
+       (equal? (third-party-identifier-medium       3pid-1)
+               (third-party-identifier-medium       3pid-2))))
+
+
 
 (define-method (alist->third-party-identifier (alist <list>))
   (make <third-party-identifier>

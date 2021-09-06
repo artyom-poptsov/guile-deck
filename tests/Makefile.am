@@ -22,6 +22,7 @@ SCM_TESTS = \
 	matrix-id.scm	\
 	matrix-content-uri.scm	\
 	matrix-event.scm	\
+	third-party-identifier.scm \
 	device.scm	\
 	state.scm	\
 	filter.scm	\
