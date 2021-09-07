@@ -30,7 +30,9 @@
             presence-currently-active?
             presence-last-active-ago
             presence-status
-            presence-status-message))
+            presence-status-message
+            alist->presence
+            presence->alist))
 
 
 
@@ -93,5 +95,20 @@
                (presence-status            p2))
        (equal? (presence-status-message    p1)
                (presence-status-message    p2))))
+
+
+
+(define-method (alist->presence (alist <list>))
+  (make <presence>
+    #:currently-active? (assoc-ref alist "currently_active")
+    #:last-active-ago   (assoc-ref alist "last_active_ago")
+    #:status            (assoc-ref alist "presence")
+    #:status-message    (assoc-ref alist "status_msg")))
+
+(define-method (presence->alist (presence <presence>))
+  `(("currently_active" . ,(presence-currently-active? presence))
+    ("last_active_ago"  . ,(presence-last-active-ago   presence))
+    ("presence"         . ,(presence-status            presence))
+    ("status_msg"       . ,(presence-status-message    presence))))
 
 ;;; presence.scm ends here.

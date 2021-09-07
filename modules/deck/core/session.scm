@@ -30,6 +30,7 @@
   #:use-module (deck core types matrix-id)
   #:use-module (deck core types matrix-content-uri)
   #:use-module (deck core types third-party-identifier)
+  #:use-module (deck core types presence)
   #:use-module (deck core types device)
   #:use-module (deck core types turn-server)
   #:use-module (deck core types state)
@@ -40,6 +41,7 @@
             session?
             session-user-id
             session-3pid
+            session-presence
             session-devices
             session-capabilities
             session-token
@@ -291,6 +293,27 @@
          (else
           (string->matrix-content-uri (assoc-ref result "avatar_url"))))
         (deck-error "Could not make a request" session))))
+
+
+
+(define-generic session-presence)
+
+(define-method (session-presence (session <session>) (user-id <matrix-id>))
+  (let ((result (client-get (session-client session)
+                            (format #f
+                                    "/_matrix/client/r0/presence/~a/status"
+                                    (matrix-id->string user-id))
+                            #:query (session-token/alist session))))
+    (if result
+        (cond
+         ((assoc-ref result "error")
+          (deck-error (assoc-ref result "error")))
+         (else
+          (alist->presence result)))
+        (deck-error "Could not make a request" session))))
+
+(define-method (session-presence (session <session>))
+  (session-presence session (session-user-id session)))
 
 
 
