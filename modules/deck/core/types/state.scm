@@ -25,6 +25,7 @@
 ;;; Code:
 
 (define-module (deck core types state)
+  #:use-module (scheme documentation)
   #:use-module (oop goops)
   #:use-module (deck core types matrix-id)
   #:export (<state>
@@ -59,8 +60,10 @@
             room-update-content:state))
 
 
-;; See <https://matrix.org/docs/api/client-server/#!/Room32participation/sync>
-(define-class <state> ()
+
+(define-class-with-docs <state> ()
+  "See <https://matrix.org/docs/api/client-server/#!/Room32participation/sync>"
+
   ;; The global private data created by this user.
   ;;
   ;; <list> of <matrix-event>
@@ -105,8 +108,9 @@
 
 
 
-;; This class describes an update to a room.
-(define-class <room-update> ()
+(define-class-with-docs <room-update> ()
+  "This class describes an update to a room."
+
   ;; ID of the room.
   ;;
   ;; <matrix-id>
@@ -137,8 +141,8 @@
   (next-method)
   (display update (current-output-port)))
 
-;; Convert a list LST from a "sync" response to a room update.
 (define-method (list->room-update (lst <list>))
+  "Convert a list LST from a "sync" response to a room update."
   (make <room-update>
     #:id      (string->matrix-id (car lst))
     #:content (cdr lst)))
@@ -171,6 +175,7 @@
 
 
 (define-method (state? object)
+  "Check if an OBJECT is a <state> instance."
   (is-a? <state> object))
 
 
@@ -238,6 +243,7 @@
 
 
 (define-method (alist->state (alist <list>))
+  "Convert an ALIST to a <state> instance.  Return the new instance."
   (let* ((rooms-updates (assoc-ref alist "rooms"))
          (invite        (assoc-ref rooms-updates "invite"))
          (join          (assoc-ref rooms-updates "join"))
