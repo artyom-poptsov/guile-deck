@@ -24,6 +24,7 @@
 ;;; Code:
 
 (define-module (deck core types device)
+  #:use-module (scheme documentation)
   #:use-module (oop goops)
   #:use-module (deck core common error)
   #:export (<device>
@@ -35,10 +36,12 @@
             alist->device))
 
 
-;; Description:
-;;   <https://matrix.org/docs/api/client-server/#!/Device32management/getDevices>
+(define-class-with-docs <device> ()
+  "Device information.
 
-(define-class <device> ()
+Description:
+<https://matrix.org/docs/api/client-server/#!/Device32management/getDevices>"
+
   ;; REQUIRED.  Identifier of this device.
   ;;
   ;; <string>
@@ -103,11 +106,13 @@
 
 
 (define (device? object)
+  "Check if an OBJECT is a <device> instance."
   (is-a? object <device>))
 
 
 
 (define-method (equal? (d1 <device>) (d2 <device>))
+  "Check if a device D1 is equal to a device D2."
   (and (equal? (device-id d1) (device-id d2))
        (equal? (device-display-name d1) (device-display-name d2))
        (equal? (device-last-seen-ip d1) (device-last-seen-ip d2))
@@ -115,8 +120,8 @@
 
 
 
-;; Convert an alist to a <device> instance.
 (define-method (alist->device (alist <list>))
+  "Convert an alist to a <device> instance."
   (make <device>
     #:id (assoc-ref alist "device_id")
     #:display-name (assoc-ref alist "display_name")
