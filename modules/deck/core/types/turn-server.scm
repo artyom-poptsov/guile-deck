@@ -24,6 +24,7 @@
 ;;; Code:
 
 (define-module (deck core types turn-server)
+  #:use-module (scheme documentation)
   #:use-module (oop goops)
   #:use-module (deck core types matrix-id)
   #:export (<turn-server>
@@ -35,8 +36,9 @@
             alist->turn-server))
 
 
-;; See <https://matrix.org/docs/api/client-server/#!/VOIP/getTurnServer>
-(define-class <turn-server> ()
+(define-class-with-docs <turn-server> ()
+  "See <https://matrix.org/docs/api/client-server/#!/VOIP/getTurnServer>"
+
   ;; <string>
   (password
    #:init-value   #f
