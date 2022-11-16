@@ -17,16 +17,14 @@
 ## <http://www.gnu.org/licenses/>.
 
 bin_SCRIPTS = hello-bot.scm send-message.scm
-hello_bot_scm_SOURCES = hello-bot.scm.in
-send_message_scm_SOURCES = send-message.scm.in
 
 EXTRA_DIST = \
 	hello-bot.scm.in	\
 	send-message.scm.in
 
-SOURCES = \
-	hello-bot.scm.in	\
-	send-message.scm.in
+BUILT_SOURCES = \
+	hello-bot.scm	\
+	send-message.scm
 
 examplesdir = $(pkgdatadir)/examples
 dist_examples_DATA = \
@@ -46,4 +44,3 @@ SUFFIXES = .in
 
 CLEANFILES = \
 	$(bin_SCRIPTS)
-
