@@ -23,7 +23,7 @@ SUBDIRS = core
 
 SOURCES = matrix.scm matrix-client.scm
 
-moddir=$(prefix)/share/guile/site/$(GUILE_EFFECTIVE_VERSION)/deck
+moddir=$(datadir)/guile/site/$(GUILE_EFFECTIVE_VERSION)/deck
 godir=$(libdir)/guile/$(GUILE_EFFECTIVE_VERSION)/site-ccache/deck
 
 SUFFIXES = .scm .go
